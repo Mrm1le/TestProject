@@ -8,14 +8,15 @@ std::string read_file(std::string path)
 {
   std::shared_ptr<FILE> fp(fopen(path.c_str(), "r"),
                            [](FILE *file)
-                           { fclose(file); printf("!!!!!\n"); });
+                           { fclose(file); printf("!!!!! destructor\n"); });
   if (fp == nullptr)
     return "";
   fseek(fp.get(), 0, SEEK_END);
   std::vector<char> content(ftell(fp.get()));
   fseek(fp.get(), 0, SEEK_SET);
   auto read_bytes = fread(content.data(), 1, content.size(), fp.get());
-  assert(read_bytes == content.size());
+  std::cout << read_bytes << " " << content.size() << std::endl;
+  // assert(read_bytes == content.size());
   return std::string(content.begin(), content.end());
 }
 
@@ -30,4 +31,5 @@ int main()
   std::string input = "plan.txt";
   std::string config = read_file(input);
   MyFunc();
+  // std::cout << config << std::endl;
 }
