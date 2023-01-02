@@ -13,7 +13,7 @@ void Counter()
    boost::lock_guard<boost::mutex> lock(mutex);
  
    int i = ++count;
-   std::cout << "count == " << i << std::endl;
+   std::cout << "count ==  " << i << std::endl;
 }
  
 int main() 
