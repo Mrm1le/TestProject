@@ -5,7 +5,7 @@
 
 void dumpCrash()
 {
-    char *pStr = "test_content";
+    char *pStr = "test_content1";
     // free(pStr);
     printf("%c", pStr[0]);
 }
