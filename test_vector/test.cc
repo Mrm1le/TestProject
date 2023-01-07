@@ -3,11 +3,18 @@
 #include <iostream>
 #include <numeric>
 #include <algorithm>
+#include <functional>
 
 bool IsShorter(const std::string &s1, const std::string &s2)
 {
     return s1.size() < s2.size();
 }
+
+bool CheckSize(const std::string &s, std::size_t sz)
+{
+    return s.size() <= sz;
+}
+
 int main()
 {
     std::vector<std::string> svec;
@@ -87,7 +94,20 @@ int main()
     std::for_each(std::find_if(svec.begin(), svec.end(), [biggest_length](const std::string &s)
                                { return s.size() < biggest_length; }),
                   svec.end(), [](const std::string &s)
-                  { std::cout << s << " "; }); //捕获局部变量biggest_length
+                  { std::cout << s << " "; }); // 捕获局部变量biggest_length
+    std::cout << std::endl;
+
+    std::cout << "equal to 000 times: "
+              << std::count_if(svec.cbegin(), svec.cend(), [](const std::string &s)
+                               { return s == "000"; })
+              << std::endl;
+
+    // 用bind代替lambd函数, 传入find_if算法
+    std::for_each(std::find_if(svec.begin(), svec.end(),
+                               std::bind(CheckSize, std::placeholders::_1, biggest_length)),
+                  svec.end(), [](const std::string &s)
+                  { std::cout << s << " "; }); // 捕获局部变量biggest_length
+    std::cout << std::endl;
 
     std::cout << "end success" << std::endl;
     return 0;
