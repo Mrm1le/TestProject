@@ -17,7 +17,7 @@ ax.plot(x, y, 'b-', label='trajectory')
 # 绘制箭头
 dx = np.cos(angle)
 dy = np.sin(angle)
-# ax.quiver(x, y, dx, dy)
+ax.quiver(x, y, dx, dy)
 
 ax.set_xlabel('x')
 ax.set_ylabel('y')
@@ -70,7 +70,7 @@ with open('curve.txt', 'r') as file:
             # print("cent ", center_x, " ", center_y)
             # 调用函数绘制圆弧
             plot_arc(center_x, center_y, radius, start_x, start_y, end_x, end_y)
-        elif(len(info) == 3):
+        elif(len(info) == 4):
             inflection_points_x.append(float(info[1]))
             inflection_points_y.append(float(info[2]))
 # 显示图形
