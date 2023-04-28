@@ -1,8 +1,9 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
-#include <Eigen/Dense>
+#include </usr/include/eigen3/Eigen/Dense>
 #include <fstream>
+#include <unistd.h>
 using namespace Eigen;
 
 enum Direction
@@ -108,6 +109,7 @@ bool IsCircleClockWise(const Circle &circle)
 Circle fitCircleToPoints(const std::vector<Point> &points)
 {
     int n = points.size();
+    printf("n = %d\n", n);
     MatrixXd A(n, 3);
     VectorXd b(n);
 
@@ -117,13 +119,15 @@ Circle fitCircleToPoints(const std::vector<Point> &points)
         A(i, 1) = points[i].y;
         A(i, 2) = 1;
         b(i) = -1 * points[i].x * points[i].x - points[i].y * points[i].y;
+        printf("LINE %x %lf %lf %lf %lf\n", __LINE__, A(i, 0), A(i, 1), A(i, 2), b(i));
     }
 
     VectorXd x = A.jacobiSvd(ComputeThinU | ComputeThinV).solve(b);
-
+    printf(" %lf %lf %lf\n", x(0), x(1), x(2));
     double centerX = -x(0) / 2;
     double centerY = -x(1) / 2;
     double radius = std::sqrt(centerX * centerX + centerY * centerY - x(2));
+
 
     Circle circle;
     circle.centerX = centerX;
@@ -146,24 +150,62 @@ std::vector<Point> read_trajectory(const std::string &filename)
     return points;
 }
 
+std::vector<std::tuple<int, int>> DetectYawConsistency(std::vector<Point> trajectory, int n) {
+    std::vector<std::tuple<int, int>> results = {};
+    int count = 1;
+    double heading = trajectory[0].heading;
+    int startId = 0;
+
+    for (int i = 1; i < trajectory.size(); ++i) {
+        if (trajectory[i].heading == heading) {
+            count++;
+        } else {
+            if (count >= n) {
+                int tmp = i - 1;
+                auto result = std::make_tuple(startId, tmp);
+                results.emplace_back(result);
+                std::cout << "Yaw consistency detected from id " << startId << " to id " << i - 1 << std::endl;
+            }
+            count = 1;
+            heading = trajectory[i].heading;
+            startId = i;
+        }
+    }
+
+    if (count >= n) {
+        std::cout << "Yaw consistency detected from id " << startId << " to id " << trajectory.size() - 1 << std::endl;
+    }
+    return results;
+}
+
 // 比较函数，按照元组中的第一个 int 值进行升序排序
 bool compareTuple(const std::tuple<int, Point, Direction> &t1, const std::tuple<int, Point, Direction> &t2)
 {
     return std::get<0>(t1) < std::get<0>(t2);
 }
-
+int straight_length = 0;
 int main()
 {
     // setp1 粗拟合
-    auto trajectory = read_trajectory("/home/thj/Desktop/TestProject/test_curvefitting/newfitting/trajectory.txt");
+    auto trajectory = read_trajectory("/home/thj/Desktop/TestProject/test_curvefitting/newfitting/worker_trajectory.txt");
+    
+    // auto straight_trajectory.assign(trajectory.begin(), trajectory.end());
+    if(trajectory[0].x < 1e-3 && trajectory[0].y < 1e-3)
+        std::reverse(trajectory.begin(), trajectory.end());
+    int origin_size = trajectory.size();
+    trajectory.erase(std::remove_if(trajectory.begin(), trajectory.end(), [](Point point)
+                                    { return std::abs(point.x - 0) < 1e-3 && std::abs(point.heading - M_PI_2) < 1e-3; }),
+                     trajectory.end());
 
     // 分段拟合圆弧
+    straight_length = origin_size - trajectory.size();
     std::vector<Circle> circles;
-    const int segmentLength = 10;                                              // 每段轨迹的长度
+    const int segmentLength = 8;                                              // 每段轨迹的长度
     std::vector<std::tuple<int, Point, Direction>> shift_points = {};          // 换挡点(id, coordinate， direction)
+    std::vector<std::tuple<int, Point, Direction>> straight_points = {};       // 直线段(id, coordinate， direction)
     std::vector<std::tuple<int, Point, Direction>> inflection_points = {};     // 折点(id, coordinate， direction)
     std::vector<std::tuple<int, Point, Direction>> new_inflection_points = {}; // 折点(id, coordinate， direction) 补全方向信息
-    std::vector<std::tuple<int, Point, Direction>> inflection_points_ = {};    // 折点(id, coordinate， direction) 最终的折点信息
+    std::vector<std::tuple<int, Point, Direction, double>> inflection_points_ = {};    // 折点(id, coordinate， direction, 半径) 最终的折点信息
 
     // 添加起点到折点信息中
     if (isAngleGreater90(Vector{trajectory[0].x, trajectory[0].y, trajectory[1].x, trajectory[1].y}, trajectory[0].heading)) // Backward
@@ -181,6 +223,16 @@ int main()
             else
                 shift_points.emplace_back(std::make_tuple(i, Point{trajectory[i + 1].x, trajectory[i + 1].y}, Forward));
     }
+
+    // 识别直线段
+    auto straight_seg = DetectYawConsistency(trajectory, 8);
+    printf("trajectory size: %d, straight suze %d\n", trajectory.size(), straight_seg.size());
+    if (!straight_seg.empty())
+        for (auto i : straight_seg) {
+            straight_points.emplace_back(std::make_tuple(std::get<0>(i), trajectory[std::get<0>(i)], Unknown));
+            straight_points.emplace_back(std::make_tuple(std::get<1>(i), trajectory[std::get<1>(i)], Unknown));
+        }
+
     // 识别折点
     for (int i = segmentLength; i < trajectory.size(); i += segmentLength)
     {
@@ -196,14 +248,47 @@ int main()
             {
                 inflection_points.erase(inflection_points.begin() + i);
                 --i;
+                break;
             }
         }
     }
+    
     // 换挡点添加到折点中
     inflection_points.insert(inflection_points.end(), shift_points.begin(), shift_points.end());
 
+    std::sort(inflection_points.begin(), inflection_points.end(), compareTuple);
+    
+    // 剔除相邻点
+    for (int i = 1; i < inflection_points.size(); ++i)
+    {
+        for (int j = 0; j < straight_seg.size(); ++j)
+        {
+            if (std::get<0>(inflection_points[i]) >= std::get<0>(straight_seg[j]) &&
+                std::get<0>(inflection_points[i]) <= std::get<1>(straight_seg[j]))
+            {
+                inflection_points.erase(inflection_points.begin() + i);
+                --i;
+                break;
+            }
+        }
+    }
+    
+
+    //直线段添加到折点中
+    inflection_points.insert(inflection_points.end(), straight_points.begin(), straight_points.end());
+
     // 使用 std::sort 对 折点 进行排序，传入自定义的比较函数 compareTuple
     std::sort(inflection_points.begin(), inflection_points.end(), compareTuple);
+
+    // 防止直线段距起点太近，这时把直线段起点删掉，直接用起点来连
+    for (int j = 0; j < straight_seg.size(); ++j)
+    {
+        if (std::abs(std::get<0>(inflection_points[0]) - std::get<0>(inflection_points[1])) < segmentLength / 2)
+        {
+            inflection_points.erase(inflection_points.begin() + 1);
+            break;
+        }
+    }
 
     // 把轨迹上最后一个点添加到折点
     if (trajectory.size() - std::get<0>(inflection_points.back()) > (segmentLength / 2))
@@ -232,10 +317,11 @@ int main()
         std::vector<Point> segmentPoints(trajectory.begin() + std::get<0>(new_inflection_points[i]),
                                          trajectory.begin() + std::get<0>(new_inflection_points[i + 1]) + 1);
 
-        // std::for_each(segmentPoints.begin(), segmentPoints.end(), [](Point point){
-        //     std::cout << point.x << " ";
-        // });
-        // std::cout << std::endl;
+        std::cout << std::get<0>(new_inflection_points[i])  << " " << std::get<0>(new_inflection_points[i + 1]) + 1 << std::endl; 
+        std::for_each(segmentPoints.begin(), segmentPoints.end(), [](Point point){
+            std::cout << point.x << " " << point.y << std::endl;
+        });
+        std::cout << std::endl;
         Circle circle = fitCircleToPoints(segmentPoints);
         static Circle circle_last = {};
         // std::cerr << std::sqrt(std::pow(circle.centerX - circle_last.centerX, 2) + std::pow(circle.centerY - circle_last.centerY, 2)) << " "
@@ -243,8 +329,12 @@ int main()
         // 粗拟合，合并相似轨迹
         if (std::sqrt(std::pow(circle.centerX - circle_last.centerX, 2) + std::pow(circle.centerY - circle_last.centerY, 2)) < 0.1 &&
             std::abs(circle.radius - circle_last.radius) < 0.1)
-            new_inflection_points.erase(new_inflection_points.begin() + i);
+            new_inflection_points.erase(new_inflection_points.begin() + i); //没用迭代器，不担心失效问题
         memcpy(&circle_last, &circle, sizeof(Circle));
+    }
+    for (auto i : new_inflection_points)
+    {
+        printf("newinflection points: %d, %lf, %lf, %d\n", std::get<0>(i), std::get<1>(i).x, std::get<1>(i).y, std::get<2>(i));
     }
 
     // 拟合圆弧
@@ -259,6 +349,13 @@ int main()
         // std::cout << std::endl;
         Circle circle = fitCircleToPoints(segmentPoints);
         circles.emplace_back(circle);
+        printf("circle: %lf, %lf, %lf\n", circle.centerX, circle.centerY, circle.radius);
+        printf("std::get<0>(new_inflection_points[i]): %d\n", std::get<0>(new_inflection_points[i]));
+        printf("std::get<0>(new_inflection_points[i] + 1): %d\n", std::get<0>(new_inflection_points[i + 1]));
+        for(auto i : segmentPoints)
+        {
+            printf("segmentPoints: %lf, %lf, %lf\n", i.x, i.y, i.heading);
+        }
     }
 
     for (int i = 0; i < circles.size(); ++i)
@@ -266,23 +363,23 @@ int main()
         if (IsCircleClockWise(circles[i]))
         {
             if (std::get<2>(new_inflection_points[i]) == Forward)
-                inflection_points_.emplace_back(std::make_tuple(std::get<0>(new_inflection_points[i]), std::get<1>(new_inflection_points[i]), ForwardRight));
+                inflection_points_.emplace_back(std::make_tuple(std::get<0>(new_inflection_points[i]), std::get<1>(new_inflection_points[i]), ForwardRight, circles[i].radius));
             else if (std::get<2>(new_inflection_points[i]) == Backward)
-                inflection_points_.emplace_back(std::make_tuple(std::get<0>(new_inflection_points[i]), std::get<1>(new_inflection_points[i]), BackwardLeft));
+                inflection_points_.emplace_back(std::make_tuple(std::get<0>(new_inflection_points[i]), std::get<1>(new_inflection_points[i]), BackwardLeft, circles[i].radius));
             else
-                inflection_points_.emplace_back(std::make_tuple(std::get<0>(new_inflection_points[i]), std::get<1>(new_inflection_points[i]), std::get<2>(inflection_points_[i - 1])));
+                inflection_points_.emplace_back(std::make_tuple(std::get<0>(new_inflection_points[i]), std::get<1>(new_inflection_points[i]), std::get<2>(inflection_points_[i - 1]), circles[i].radius));
         }
         else
         {
             if (std::get<2>(new_inflection_points[i]) == Forward)
-                inflection_points_.emplace_back(std::make_tuple(std::get<0>(new_inflection_points[i]), std::get<1>(new_inflection_points[i]), ForwardLeft));
+                inflection_points_.emplace_back(std::make_tuple(std::get<0>(new_inflection_points[i]), std::get<1>(new_inflection_points[i]), ForwardLeft, circles[i].radius));
             else if (std::get<2>(new_inflection_points[i]) == Backward)
-                inflection_points_.emplace_back(std::make_tuple(std::get<0>(new_inflection_points[i]), std::get<1>(new_inflection_points[i]), BackwardRight));
+                inflection_points_.emplace_back(std::make_tuple(std::get<0>(new_inflection_points[i]), std::get<1>(new_inflection_points[i]), BackwardRight, circles[i].radius));
             else
-                inflection_points_.emplace_back(std::make_tuple(std::get<0>(new_inflection_points[i]), std::get<1>(new_inflection_points[i]), std::get<2>(inflection_points_[i - 1])));
+                inflection_points_.emplace_back(std::make_tuple(std::get<0>(new_inflection_points[i]), std::get<1>(new_inflection_points[i]), std::get<2>(inflection_points_[i - 1]), circles[i].radius));
         }
     }
-    inflection_points_.emplace_back(std::make_tuple(std::get<0>(new_inflection_points.back()), std::get<1>(new_inflection_points.back()), std::get<2>(inflection_points_.back())));
+    inflection_points_.emplace_back(std::make_tuple(std::get<0>(new_inflection_points.back()), std::get<1>(new_inflection_points.back()), std::get<2>(inflection_points_.back()), circles.back().radius));
 
     // 圆弧交界处平滑处理
     // for (int i = 0; i < circles.size() - 1; i++)
@@ -311,7 +408,8 @@ int main()
     for (int i = 0; i < inflection_points_.size(); i++)
     {
         std::cout << std::get<0>(inflection_points_[i]) << " " << std::get<1>(inflection_points_[i]).x << " "
-                  << std::get<1>(inflection_points_[i]).y << " " << std::get<2>(inflection_points_[i]) << std::endl;
+                  << std::get<1>(inflection_points_[i]).y << " " << std::get<2>(inflection_points_[i]) << " "
+                  << std::get<3>(inflection_points_[i]) << std::endl;
     }
 
     // step 2: 细拟合

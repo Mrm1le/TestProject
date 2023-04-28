@@ -37,5 +37,12 @@ int main()
     std::cout << pi << std::endl;
     // auto s2 = s;
     // s == s2;
+    
+    double gx = 0.000002 / 0.2;
+    double gy = 0.03 / 0.2;
+    double gtheta = 0.05 / 0.2;
+    std::string aa = std::to_string(gx) + "_" + std::to_string(gy) + "_" +
+            std::to_string(gtheta);
+    std::cout << aa << std::endl;
     return 0;
 }

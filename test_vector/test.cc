@@ -4,6 +4,7 @@
 #include <numeric>
 #include <algorithm>
 #include <functional>
+#include <unistd.h>
 
 bool IsShorter(const std::string &s1, const std::string &s2)
 {
@@ -24,7 +25,7 @@ int main()
     std::cout << svec.size() << "/" << svec.max_size() << std::endl;
     svec.push_back("2");
     std::cout << "svec capacity " << svec.capacity() << std::endl;
-    svec.reserve(10); // 一次性分配可容纳十个元素的内存
+    svec.reserve(100000000); // 一次性分配可容纳十个元素的内存
     std::cout << "svec capacity " << svec.capacity() << std::endl;
 
     std::vector<std::string> b(20, "nothng");                // 一种构造方式
@@ -110,5 +111,7 @@ int main()
     std::cout << std::endl;
 
     std::cout << "end success" << std::endl;
+
+    pause();
     return 0;
 }

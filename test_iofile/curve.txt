@@ -1,0 +1,4 @@
+Curve Information:
+Curve Type: Circle
+Center: (0, 0)
+Radius: 5.0

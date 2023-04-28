@@ -1,5 +1,5 @@
 points = []
-with open('/home/thj/Desktop/TestProject/test_curvefitting/newfitting/trajectory.txt', 'r') as f:
+with open('/home/thj/Desktop/TestProject/test_curvefitting/newfitting/worker_trajectory.txt', 'r') as f:
     for line in f:
         x, y, angle = map(float, line.strip().split())
         points.append((x, y, angle))
@@ -29,12 +29,25 @@ history_y = []
 inflection_points_x = []
 inflection_points_y = []
 def plot_arc(center_x, center_y, radius, start_x, start_y, end_x, end_y):
+    
     # 生成圆弧上的点
     start_angle = np.arctan2(start_y - center_y, start_x - center_x)
     end_angle = np.arctan2(end_y - center_y, end_x - center_x)
+    if abs(end_angle - start_angle) >= np.pi:
+        if end_angle > start_angle:
+            end_angle -= 2 * np.pi
+        else:
+            start_angle -= 2 * np.pi
+
+
     angle = np.linspace(start_angle, end_angle, 100)  # 可以调整点的数量
-    x = center_x + radius * np.cos(angle)
-    y = center_y + radius * np.sin(angle)
+    if radius < 1e3:
+        x = center_x + radius * np.cos(angle)
+        y = center_y + radius * np.sin(angle)
+    else:
+        x = [start_x, end_x]
+        y = [start_y, end_y]
+        
     # print(x)
 
     # 绘制起始点和终点
@@ -70,7 +83,7 @@ with open('curve.txt', 'r') as file:
             # print("cent ", center_x, " ", center_y)
             # 调用函数绘制圆弧
             plot_arc(center_x, center_y, radius, start_x, start_y, end_x, end_y)
-        elif(len(info) == 4):
+        elif(len(info) == 5):
             inflection_points_x.append(float(info[1]))
             inflection_points_y.append(float(info[2]))
 # 显示图形

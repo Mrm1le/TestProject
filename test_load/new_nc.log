@@ -1,0 +1,540 @@
+   1575 root      20   0   42.6g   1.8g   1.0g S  83.3   7.6  22:57.97 /app/m/common/bin/mfrlaunch --wait file -c /app/m/modules/startup_config/config/mfr_merge_system.yaml -m mfrrpc://172.31.254.38:2211
+   3021 root      20   0   37.7g   2.6g   1.0g S  83.3  10.7  20:31.28 /app/m/common/bin/mfrlaunch --wait file -c /app/m/modules/startup_config/config/mfr_merge_perception_planning.yaml -m mfrrpc://172.31.254.38:2211
+   3654 root      20   0   60.4g   3.0g 121720 S  16.7  12.4   3:08.36 /app/m/common/bin/mfrlaunch file -c /app/m/modules/ws2_recorder/launch/cfdi_mfr_node.yaml -m mfrrpc://172.31.254.38:2211
+   2710 root      20   0   28.6g   2.0g 995.9m S  11.1   8.4   3:19.14 ./mfrlaunch --wait file -c /app/m/modules/np_planning/launch/planning_mfr_node.yaml -m mfrrpc://127.0.0.1:2211
+   3368 root      20   0 1389068  90840  47120 S  11.1   0.4   2:45.97 ./mfrlaunch --wait file -c /app/m/modules/control/launch/controller_mfr_node_ls7.yaml -m mfrrpc://127.0.0.1:2211
+     12 root      20   0       0      0      0 S   5.6   0.0   1:06.71 [ksoftirqd/0]
+    103 root     -51   0       0      0      0 S   5.6   0.0   0:14.56 [irq/171-b950000]
+    310 root     -51   0       0      0      0 S   5.6   0.0   0:25.43 [irq/142-host_sy]
+    811 root      20   0       0      0      0 I   5.6   0.0   0:05.75 [kworker/u22:6-dce-async-ipc-wq]
+   1845 root      rt   0   25196   5824   1548 S   5.6   0.0   1:24.27 ./Scheduler 0
+   1852 root      20   0 7784460  80296  42388 S   5.6   0.3   2:05.68 ./CpApControlService_FreeRunning 1
+   1861 root      20   0   15.4g  79240  47500 S   5.6   0.3   1:35.37 ./CpApSensorService_FreeRunning 10
+   1873 root     -41   0   10.9g 190396 111400 S   5.6   0.7   1:56.12 ./CpApLidar_FreeRunning 22
+   1879 root      20   0 7533812  84556  46756 S   5.6   0.3   1:02.05 ./CpApMFFService_FreeRunning 28
+   1885 root      20   0   33704   6716   2692 S   5.6   0.0   0:16.10 ./CpApISTClient 34
+   1887 root      20   0   41668   7532   3352 S   5.6   0.0   0:35.18 ./CpCdMiddlewareQM_PH00 36
+   3334 root      20   0 1907916 199512  75320 S   5.6   0.8   0:59.62 ./mfrlaunch --wait file -c /app/m/modules/map_provider/launch/map_provider_mfr_node.yaml -m mfrrpc://127.0.0.1:2211
+   3508 root      20   0   29.3g 166776  71112 S   5.6   0.7   2:49.48 ./mfrlaunch --wait file -c /app/m/modules/MFF/resource/launch_mff_main.yaml -m mfrrpc://127.0.0.1:2211
+   3509 root      20   0  612812  76620  42720 S   5.6   0.3   0:50.54 ./mfrlaunch --wait file -c /app/m/modules/MFF/resource/launch_mff_ce.yaml -m mfrrpc://127.0.0.1:2211
+   4418 root      20   0 6721812  87032  47192 S   5.6   0.3   1:35.29 ./mfrlaunch --wait file -c /app/m/modules/pe_monitor/launch/pe_monitor_mfr_node.yaml -m mfrrpc://127.0.0.1:2211
+   6745 root      20   0 2061008 108908  39808 S   5.6   0.4   1:17.66 /app/im/common/bin/mfrlaunch file -c /app/im/modules/dmz_recorder/launch/cfdi_mfr_node.yaml -m mfrrpc://127.0.0.1:2211
+  11765 root      20   0    8128   3480   2584 R   5.6   0.0   0:00.03 top 1 -d 1 -n 120 -c -b
+      1 root      20   0  167612   9996   7056 S   0.0   0.0   0:01.96 /sbin/init
+      2 root      20   0       0      0      0 S   0.0   0.0   0:00.01 [kthreadd]
+      3 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [rcu_gp]
+      4 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [rcu_par_gp]
+      6 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [kworker/0:0H-kblockd]
+      7 root      20   0       0      0      0 I   0.0   0.0   0:04.80 [kworker/u22:0-host_low_prio_wq]
+      8 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [mm_percpu_wq]
+      9 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [rcu_tasks_kthre]
+     10 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [rcu_tasks_rude_]
+     11 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [rcu_tasks_trace]
+     13 root      -2   0       0      0      0 I   0.0   0.0   0:03.05 [rcu_preempt]
+     14 root      -2   0       0      0      0 S   0.0   0.0   0:00.00 [rcub/0]
+     15 root      -2   0       0      0      0 S   0.0   0.0   0:00.50 [rcuc/0]
+     16 root      rt   0       0      0      0 S   0.0   0.0   0:00.17 [migration/0]
+     17 root      -2   0       0      0      0 S   0.0   0.0   0:00.00 [irq_work/0]
+     19 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [cpuhp/0]
+     20 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [cpuhp/1]
+     21 root      -2   0       0      0      0 S   0.0   0.0   0:00.00 [irq_work/1]
+     22 root      rt   0       0      0      0 S   0.0   0.0   0:00.00 [migration/1]
+     23 root      -2   0       0      0      0 S   0.0   0.0   0:00.63 [rcuc/1]
+     24 root      20   0       0      0      0 S   0.0   0.0   0:06.85 [ksoftirqd/1]
+     26 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [kworker/1:0H-kblockd]
+     27 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [cpuhp/2]
+     28 root      -2   0       0      0      0 S   0.0   0.0   0:00.00 [irq_work/2]
+     29 root      rt   0       0      0      0 S   0.0   0.0   0:00.00 [migration/2]
+     30 root      -2   0       0      0      0 S   0.0   0.0   0:00.22 [rcuc/2]
+     31 root      20   0       0      0      0 S   0.0   0.0   0:42.18 [ksoftirqd/2]
+     33 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [kworker/2:0H-kblockd]
+     34 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [cpuhp/3]
+     35 root      -2   0       0      0      0 S   0.0   0.0   0:00.00 [irq_work/3]
+     36 root      rt   0       0      0      0 S   0.0   0.0   0:00.00 [migration/3]
+     37 root      -2   0       0      0      0 S   0.0   0.0   0:00.40 [rcuc/3]
+     38 root      20   0       0      0      0 S   0.0   0.0   0:31.87 [ksoftirqd/3]
+     41 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [cpuhp/4]
+     42 root      -2   0       0      0      0 S   0.0   0.0   0:00.00 [irq_work/4]
+     43 root      rt   0       0      0      0 S   0.0   0.0   0:00.00 [migration/4]
+     44 root      -2   0       0      0      0 S   0.0   0.0   0:00.07 [rcuc/4]
+     45 root      20   0       0      0      0 S   0.0   0.0   0:09.62 [ksoftirqd/4]
+     47 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [kworker/4:0H-kblockd]
+     48 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [cpuhp/5]
+     49 root      -2   0       0      0      0 S   0.0   0.0   0:00.00 [irq_work/5]
+     50 root      rt   0       0      0      0 S   0.0   0.0   0:00.00 [migration/5]
+     51 root      -2   0       0      0      0 S   0.0   0.0   0:00.28 [rcuc/5]
+     52 root      20   0       0      0      0 S   0.0   0.0   0:22.54 [ksoftirqd/5]
+     54 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [kworker/5:0H-events_highpri]
+     55 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [cpuhp/6]
+     56 root      -2   0       0      0      0 S   0.0   0.0   0:00.00 [irq_work/6]
+     57 root      rt   0       0      0      0 S   0.0   0.0   0:00.00 [migration/6]
+     58 root      -2   0       0      0      0 S   0.0   0.0   0:00.08 [rcuc/6]
+     59 root      20   0       0      0      0 S   0.0   0.0   0:10.01 [ksoftirqd/6]
+     61 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [kworker/6:0H-kblockd]
+     62 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [cpuhp/7]
+     63 root      -2   0       0      0      0 S   0.0   0.0   0:00.00 [irq_work/7]
+     64 root      rt   0       0      0      0 S   0.0   0.0   0:00.00 [migration/7]
+     65 root      -2   0       0      0      0 S   0.0   0.0   0:00.08 [rcuc/7]
+     66 root      20   0       0      0      0 S   0.0   0.0   0:06.50 [ksoftirqd/7]
+     68 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [kworker/7:0H-kblockd]
+     69 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [cpuhp/8]
+     70 root      -2   0       0      0      0 S   0.0   0.0   0:00.00 [irq_work/8]
+     71 root      rt   0       0      0      0 S   0.0   0.0   0:00.00 [migration/8]
+     72 root      -2   0       0      0      0 S   0.0   0.0   0:00.11 [rcuc/8]
+     73 root      20   0       0      0      0 S   0.0   0.0   0:02.60 [ksoftirqd/8]
+     75 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [kworker/8:0H-kblockd]
+     76 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [cpuhp/9]
+     77 root      -2   0       0      0      0 S   0.0   0.0   0:00.00 [irq_work/9]
+     78 root      rt   0       0      0      0 S   0.0   0.0   0:00.00 [migration/9]
+     79 root      -2   0       0      0      0 S   0.0   0.0   0:00.08 [rcuc/9]
+     80 root      20   0       0      0      0 S   0.0   0.0   0:01.04 [ksoftirqd/9]
+     82 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [kworker/9:0H-events_highpri]
+     83 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [cpuhp/10]
+     84 root      -2   0       0      0      0 S   0.0   0.0   0:00.00 [irq_work/10]
+     85 root      rt   0       0      0      0 S   0.0   0.0   0:00.00 [migration/10]
+     86 root      -2   0       0      0      0 S   0.0   0.0   0:00.10 [rcuc/10]
+     87 root      20   0       0      0      0 S   0.0   0.0   0:01.47 [ksoftirqd/10]
+     89 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [kworker/10:0H-events_highpri]
+     90 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [kdevtmpfs]
+     91 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [netns]
+     94 root      20   0       0      0      0 I   0.0   0.0   0:00.02 [kworker/7:1-mm_percpu_wq]
+     95 root      20   0       0      0      0 I   0.0   0.0   0:00.00 [kworker/5:1-events]
+     99 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [kauditd]
+    100 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/50-mc_statu]
+    101 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/50-s-mc_sta]
+    102 root     -51   0       0      0      0 S   0.0   0.0   0:06.57 [irq/163-1600000]
+    104 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [khungtaskd]
+    105 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [oom_reaper]
+    106 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [writeback]
+    107 root      20   0       0      0      0 S   0.0   0.0   0:00.03 [kcompactd0]
+    108 root      25   5       0      0      0 S   0.0   0.0   0:00.00 [ksmd]
+    137 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [kintegrityd]
+    138 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [kblockd]
+    139 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [blkcg_punt_bio]
+    140 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [devfreq_wq]
+    141 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [watchdogd]
+    145 root      39  19       0      0      0 S   0.0   0.0   0:00.32 [nvmap-bz]
+    146 root      20   0       0      0      0 I   0.0   0.0   0:05.80 [kworker/u22:2-host_low_prio_wq]
+    147 root       0 -20       0      0      0 I   0.0   0.0   0:00.50 [kworker/3:1H-tegra_poll_gmsl_trainin]
+    148 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [rpciod]
+    149 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [kworker/u23:0]
+    150 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [xprtiod]
+    151 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [kswapd0]
+    152 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [nfsiod]
+    155 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [kthrotld]
+    180 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [kpcitest]
+    183 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/52-arm-smmu]
+    184 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/53-arm-smmu]
+    185 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/54-arm-smmu]
+    186 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/55-arm-smmu]
+    187 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/52-arm-smmu]
+    188 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [vblk_req_wq0]
+    189 root     -51   0       0      0      0 S   0.0   0.0   0:00.09 [irq/20-vblk]
+    191 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [vblk_req_wq1]
+    192 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/27-vblk]
+    193 root       0 -20       0      0      0 I   0.0   0.0   0:00.02 [kworker/0:1H-kblockd]
+    195 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [vblk_req_wq50]
+    196 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/31-vblk]
+    197 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [vblk_req_wq53]
+    198 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/32-vblk]
+    199 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [vblk_req_wq51]
+    200 root     -51   0       0      0      0 S   0.0   0.0   0:00.05 [irq/29-vblk]
+    201 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [vblk_req_wq52]
+    202 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/30-vblk]
+    203 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [vblk_req_wq54]
+    204 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/34-vblk]
+    205 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [vblk_req_wq55]
+    206 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/33-vblk]
+    207 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [vblk_req_wq56]
+    208 root     -51   0       0      0      0 S   0.0   0.0   0:00.08 [irq/23-vblk]
+    209 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [vblk_req_wq20]
+    210 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/35-vblk]
+    211 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [vblk_req_wq21]
+    212 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/36-vblk]
+    213 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [vblk_req_wq22]
+    214 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/21-vblk]
+    215 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [vblk_req_wq23]
+    216 root     -51   0       0      0      0 S   0.0   0.0   0:00.17 [irq/28-vblk]
+    217 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [nvme-wq]
+    218 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [nvme-reset-wq]
+    219 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [nvme-delete-wq]
+    220 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/53-arm-smmu]
+    221 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/54-arm-smmu]
+    222 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [uas]
+    223 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [dm_bufio_cache]
+    224 root     -51   0       0      0      0 S   0.0   0.0   0:02.96 [irq/38-bpmp_irq]
+    225 root     -51   0       0      0      0 S   0.0   0.0   0:00.02 [irq/39-bpmp_irq]
+    226 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/40-bpmp_irq]
+    230 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/55-arm-smmu]
+    231 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [tegra_vse_kthre]
+    232 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/42-vse]
+    250 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/224-c1e0000]
+    251 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/52-arm-smmu]
+    252 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/236-tegra_d]
+    253 root     -51   0       0      0      0 S   0.0   0.0   0:07.49 [irq/237-tegra_d]
+    254 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [dce-async-ipc-w]
+    255 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [dce_worker_thre]
+    256 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/52-arm-smmu]
+    257 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/132-bc00000]
+    259 root      20   0       0      0      0 I   0.0   0.0   0:00.12 [kworker/6:3-events]
+    260 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/54-arm-smmu]
+    262 root      20   0       0      0      0 I   0.0   0.0   0:00.00 [kworker/7:2-events]
+    263 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/37-tegra_hv]
+    264 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [kworker/5:1H-kblockd]
+    265 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [ipv6_addrconf]
+    266 root      10 -10       0      0      0 S   0.0   0.0   0:00.00 [krfcommd]
+    267 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [kstrp]
+    268 root      20   0       0      0      0 S   0.0   0.0   0:00.01 [pr/ttyS2]
+    274 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/100-gpcdma.]
+    276 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/101-gpcdma.]
+    277 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/102-gpcdma.]
+    278 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/103-gpcdma.]
+    279 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/104-gpcdma.]
+    280 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/105-gpcdma.]
+    281 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/106-gpcdma.]
+    282 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/107-gpcdma.]
+    283 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/108-gpcdma.]
+    284 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/109-gpcdma.]
+    285 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/110-gpcdma.]
+    286 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/111-gpcdma.]
+    287 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/112-gpcdma.]
+    288 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/113-gpcdma.]
+    289 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/114-gpcdma.]
+    290 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/115-gpcdma.]
+    291 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/116-gpcdma.]
+    292 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/117-gpcdma.]
+    293 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/118-gpcdma.]
+    294 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/119-gpcdma.]
+    295 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/120-gpcdma.]
+    296 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/121-gpcdma.]
+    297 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/122-gpcdma.]
+    298 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/123-gpcdma.]
+    299 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/124-gpcdma.]
+    300 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/125-gpcdma.]
+    301 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/126-gpcdma.]
+    302 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/127-gpcdma.]
+    303 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/128-gpcdma.]
+    304 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/129-gpcdma.]
+    305 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/130-gpcdma.]
+    306 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/54-arm-smmu]
+    307 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/18-gr-virt]
+    308 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/18-s-gr-vir]
+    309 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [host_low_prio_w]
+    311 root     -51   0       0      0      0 S   0.0   0.0   0:00.35 [irq/143-host_sy]
+    312 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/144-host_sy]
+    313 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/145-host_sy]
+    314 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/146-host_sy]
+    315 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/147-host_sy]
+    316 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/148-host_sy]
+    317 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/149-host_sy]
+    318 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/52-arm-smmu]
+    320 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/52-arm-smmu]
+    322 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/52-arm-smmu]
+    323 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/52-arm-smmu]
+    324 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/54-arm-smmu]
+    325 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/54-arm-smmu]
+    326 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/54-arm-smmu]
+    327 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/54-arm-smmu]
+    328 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/56-tegra-p2]
+    329 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/57-tegra-p2]
+    330 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/58-tegra-p2]
+    331 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/59-tegra-p2]
+    332 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/60-tegra-p2]
+    333 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/61-tegra-p2]
+    334 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/62-tegra-p2]
+    335 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/63-tegra-p2]
+    336 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/64-tegra-p2]
+    337 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/65-tegra-p2]
+    338 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/66-tegra-p2]
+    339 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/67-tegra-p2]
+    340 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/68-tegra-p2]
+    341 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/69-tegra-p2]
+    342 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/70-tegra-p2]
+    343 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/71-tegra-p2]
+    344 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/72-tegra-p2]
+    345 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/73-tegra-p2]
+    346 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/74-tegra-p2]
+    347 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/75-tegra-p2]
+    348 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/76-tegra-p2]
+    349 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/77-tegra-p2]
+    350 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/78-tegra-p2]
+    351 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/79-tegra-p2]
+    352 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/54-arm-smmu]
+    353 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/52-arm-smmu]
+    354 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/52-arm-smmu]
+    355 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/54-arm-smmu]
+    356 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/54-arm-smmu]
+    357 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [pva_task_status]
+    358 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/152-pva-isr]
+    359 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/153-pva-isr]
+    360 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/154-pva-isr]
+    361 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/155-pva-isr]
+    362 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/156-pva-isr]
+    363 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/157-pva-isr]
+    364 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/158-pva-isr]
+    365 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/159-pva-isr]
+    366 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/160-pva-isr]
+    367 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/54-arm-smmu]
+    368 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/161-nvdla0]
+    369 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/52-arm-smmu]
+    370 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/162-nvdla1]
+    371 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/89-3210000.]
+    372 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [spi0]
+    374 root     -51   0       0      0      0 S   0.0   0.0   0:00.06 [irq/90-3230000.]
+    375 root      20   0       0      0      0 S   0.0   0.0   0:00.17 [spi2]
+    376 root     -51   0       0      0      0 S   0.0   0.0   0:00.33 [irq/91-3160000.]
+    377 root     -51   0       0      0      0 S   0.0   0.0   0:00.45 [irq/92-c240000.]
+    378 root     -51   0       0      0      0 S   0.0   0.0   0:00.43 [irq/93-3180000.]
+    380 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/94-3190000.]
+    381 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/95-31b0000.]
+    382 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/96-31c0000.]
+    383 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/97-c250000.]
+    384 root     -51   0       0      0      0 S   0.0   0.0   0:00.15 [irq/98-31e0000.]
+    385 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/246-SER]
+    386 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/227-xhci-hc]
+    387 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/228-3610000]
+    388 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/226-3610000]
+    389 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/52-arm-smmu]
+    391 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/247-sw-wake]
+    392 root      20   0       0      0      0 I   0.0   0.0   0:00.71 [kworker/1:3-pm]
+    393 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/248-power-k]
+    555 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [ext4-rsv-conver]
+    557 root       0 -20       0      0      0 I   0.0   0.0   0:00.05 [kworker/1:1H-kblockd]
+    571 root      20   0       0      0      0 S   0.0   0.0   0:00.07 [jbd2/vblkdev56-]
+    572 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [ext4-rsv-conver]
+    573 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [kworker/7:1H-kblockd]
+    581 root       0 -20       0      0      0 I   0.0   0.0   0:00.01 [kworker/4:1H-kblockd]
+    582 root       0 -20       0      0      0 I   0.0   0.0   0:00.02 [kworker/8:1H-kblockd]
+    586 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [kworker/6:1H-kblockd]
+    601 root       0 -20       0      0      0 I   0.0   0.0   0:00.11 [kworker/2:1H-kblockd]
+    605 root       0 -20       0      0      0 I   0.0   0.0   0:00.02 [kworker/10:1H-kblockd]
+    611 root       0 -20       0      0      0 I   0.0   0.0   0:00.02 [kworker/9:1H-kblockd]
+    638 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [atlantic]
+    641 root      20   0   19484   5452   3428 S   0.0   0.0   0:00.64 /lib/systemd/systemd-udevd
+    647 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/229-gk20a_s]
+    648 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/229-s-gk20a]
+    649 root     -51   0       0      0      0 S   0.0   0.0   0:00.01 [irq/230-gk20a_s]
+    650 root     -51   0       0      0      0 S   0.0   0.0   0:00.03 [irq/230-s-gk20a]
+    651 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/231-gk20a_s]
+    652 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/231-s-gk20a]
+    653 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/232-gk20a_n]
+    654 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/232-s-gk20a]
+    655 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [jbd2/vblkdev51-]
+    656 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [ext4-rsv-conver]
+    723 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [jbd2/vblkdev1-8]
+    724 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [ext4-rsv-conver]
+    742 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [tmp451]
+    743 root     -51   0       0      0      0 S   0.0   0.0   0:01.00 [irq/249-tmp451]
+    744 root      20   0       0      0      0 I   0.0   0.0   0:00.06 [kworker/5:3-mm_percpu_wq]
+    748 root      20   0       0      0      0 I   0.0   0.0   0:00.05 [kworker/2:2-mm_percpu_wq]
+    749 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/52-arm-smmu]
+    750 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/250-sipl_de]
+    751 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/251-sipl_de]
+    752 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/252-sipl_de]
+    753 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/253-sipl_de]
+    754 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/254-sipl_de]
+    755 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/255-sipl_de]
+    757 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/256-sipl_de]
+    758 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/257-sipl_de]
+    759 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/258-sipl_de]
+    760 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/259-sipl_de]
+    761 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/260-sipl_de]
+    762 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/261-sipl_de]
+    763 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/262-sipl_de]
+    764 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/263-sipl_de]
+    765 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/264-sipl_de]
+    766 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/265-sipl_de]
+    767 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/266-sipl_de]
+    768 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/267-sipl_de]
+    779 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [cryptd]
+    816 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [jbd2/vblkdev50-]
+    817 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [ext4-rsv-conver]
+    818 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [jbd2/vblkdev55-]
+    820 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [ext4-rsv-conver]
+    823 root      20   0       0      0      0 S   0.0   0.0   0:00.13 [jbd2/vblkdev23-]
+    824 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [ext4-rsv-conver]
+    828 root      20   0       0      0      0 S   0.0   0.0   0:00.04 [jbd2/vblkdev54-]
+    829 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [ext4-rsv-conver]
+    837 message+  20   0    5672   3296   2808 S   0.0   0.0   0:00.56 /usr/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+    871 root      20   0    5364   2716   2484 S   0.0   0.0   0:00.00 /bin/bash /etc/systemd/scripts/nv_virtual_shutdown.sh
+    879 syslog    20   0  219948   3248   2572 S   0.0   0.0   0:00.25 /usr/sbin/rsyslogd -n -iNONE
+    888 root      20   0   16292   6624   5736 S   0.0   0.0   0:00.44 /lib/systemd/systemd-logind
+    889 root      20   0    1796    448    384 S   0.0   0.0   0:00.00 /usr/bin/nv_linux_shutdown
+    909 root      20   0    2060    472    404 S   0.0   0.0   0:00.00 /bin/sh /etc/systemd/scripts/nv_fsicom_daemon.sh
+    910 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [nv_queue]
+    911 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [nv_queue]
+    922 root      20   0   11696   1848   1600 S   0.0   0.0   0:45.62 /usr/local/bin/NvFsiCom
+    924 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/52-arm-smmu]
+    948 root      20   0    2060    488    424 S   0.0   0.0   0:00.00 /bin/sh /etc/systemd/scripts/nv_tzvault_daemon.sh crypto-asym-service
+    967 root      20   0    2060    476    408 S   0.0   0.0   0:00.00 /bin/sh -c umask 0002; /usr/local/sbin/nvtzvault -ta crypto-asym-service
+    968 root      20   0    3160    656    544 S   0.0   0.0   0:00.00 /usr/local/sbin/nvtzvault -ta crypto-asym-service
+    970 root      20   0    2060    504    440 S   0.0   0.0   0:00.00 /bin/sh /etc/systemd/scripts/nv_tzvault_daemon.sh crypto-sym-service
+    974 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/43-ivc522]
+    975 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/43-s-ivc522]
+    988 root      20   0    2060    496    432 S   0.0   0.0   0:00.00 /bin/sh -c umask 0002; /usr/local/sbin/nvtzvault -ta crypto-sym-service
+    989 root      20   0    3144    704    592 S   0.0   0.0   0:00.00 /usr/local/sbin/nvtzvault -ta crypto-sym-service
+    990 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/45-ivc523]
+    991 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/45-s-ivc523]
+    996 root      20   0    2060    576    508 S   0.0   0.0   0:00.00 /bin/sh /etc/systemd/scripts/nv_tzvault_daemon.sh gp-se
+   1005 root      20   0    2060    484    420 S   0.0   0.0   0:00.00 /bin/sh -c umask 0002; /usr/local/sbin/nvtzvault -ta gp-se
+   1006 root      20   0    3144    668    560 S   0.0   0.0   0:00.00 /usr/local/sbin/nvtzvault -ta gp-se
+   1007 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/47-ivc521]
+   1008 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/47-s-ivc521]
+   1009 root      20   0    2060    492    424 S   0.0   0.0   0:00.00 /bin/sh /etc/systemd/scripts/nv_tzvault_daemon.sh pkcs11-keystore
+   1011 root      20   0    1924    396    332 S   0.0   0.0   0:00.00 bpfilter_umh
+   1016 root      20   0    2060    492    428 S   0.0   0.0   0:00.00 /bin/sh -c umask 0002; /usr/local/sbin/nvtzvault -ta pkcs11-keystore
+   1017 root      20   0    3144    716    604 S   0.0   0.0   0:00.00 /usr/local/sbin/nvtzvault -ta pkcs11-keystore
+   1018 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/49-ivc506]
+   1019 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/49-s-ivc506]
+   1031 root      20   0       0      0      0 S   0.0   0.0   0:02.33 [nvidia-modeset/]
+   1032 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [nvidia-modeset/]
+   1096 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [sw-quiesce]
+   1097 root      20   0       0      0      0 S   0.0   0.0   0:01.76 [nvgpu_channel_p]
+   1098 root      20   0       0      0      0 S   0.0   0.0   0:00.22 [nvgpu_nvs_ga10b]
+   1101 root      20   0    6840   3140   2672 S   0.0   0.0   0:00.11 sshd: /usr/sbin/sshd [listener] 0 of 10-100 startups
+   1152 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [nvgpu_clk_arb_p]
+   1155 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [nvidia]
+   1156 root      20   0       0      0      0 S   0.0   0.0   0:00.00 [nv_queue]
+   1234 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/80-eth.comm]
+   1235 root     -51   0       0      0      0 S   0.0   0.0   0:13.01 [irq/81-eth.vm0]
+   1246 root      20   0  312584   7000   5756 S   0.0   0.0   0:37.61 /app/bin/routingmanagerd
+   1248 root      20   0  312192   6520   5596 S   0.0   0.0   0:05.35 /app/bin/routingmanagerd_42
+   1264 root      19  -1   50928  15664  14584 S   0.0   0.1   0:00.64 /lib/systemd/systemd-journald
+   1277 root      20   0   21736   2436   1560 S   0.0   0.0   0:00.10 dulink_router
+   1278 root      20   0   14848   1752   1416 S   0.0   0.0   0:00.05 dubhc_plugin
+   1279 root      20   0   17728   3416   3048 S   0.0   0.0   0:00.04 bootmgr
+   1280 root      20   0   17868   1804   1484 S   0.0   0.0   0:00.04 du_decomp
+   1281 systemd+  20   0   18848   7264   5692 S   0.0   0.0   0:00.06 /lib/systemd/systemd-networkd
+   1283 root      20   0   13152   1788   1584 S   0.0   0.0   0:00.38 /usr/bin/nvccp_daemon
+   1335 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/16-ivc407]
+   1336 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/16-s-ivc407]
+   1372 systemd+  20   0   20956   8028   6952 S   0.0   0.0   0:00.05 /lib/systemd/systemd-resolved
+   1420 root      20   0 1480496  46524  24436 S   0.0   0.2   0:03.45 /usr/bin/containerd
+   1423 root      20   0    3872   1772   1660 S   0.0   0.0   0:00.00 /sbin/agetty -o -p -- \u --keep-baud 115200,38400,9600 ttyS2 vt220
+   1446 ntp       20   0   14416   3568   3092 S   0.0   0.0   0:00.16 /usr/sbin/ntpd -p /var/run/ntpd.pid -g -u 109:118
+   1540 root      20   0    5224   2672   2424 S   0.0   0.0   0:33.07 bash ./periodically_clear_cache.sh
+   1542 root      20   0    5356   2844   2528 S   0.0   0.0   0:00.00 bash ./boot.sh mfrmaster
+   1544 root      20   0    5356   2720   2384 S   0.0   0.0   0:00.00 bash ./boot.sh mff_soa
+   1545 root      20   0    5224   2748   2508 S   0.0   0.0   0:00.00 bash ./start_avm.sh
+   1547 root      20   0    5224   2756   2520 S   0.0   0.0   0:00.00 bash -c taskset -c 5,6     ./boot.sh all > /dev/null 2>&1
+   1549 root      20   0    5356   2740   2388 S   0.0   0.0   0:00.00 bash ./boot.sh all
+   1571 root      20   0 1626288  81340  47432 S   0.0   0.3   0:40.17 ./mfrlaunch --wait file -c /app/m/modules/MFF/resource/launch_mff_soa.yaml -m mfrrpc://127.0.0.1:2211
+   1598 root      20   0  670048 164640   6876 S   0.0   0.6   0:11.32 /app/m/common/bin/mfrmaster -p 2211
+   1650 root      20   0   10788   6384   5372 S   0.0   0.0   0:00.01 sshd: root@notty
+   1653 root      20   0   17960   8332   6848 S   0.0   0.0   0:00.06 /lib/systemd/systemd --user
+   1654 root      20   0   21700   3004      4 S   0.0   0.0   0:00.00 (sd-pam)
+   1668 root      20   0    5156   3524   3116 S   0.0   0.0   0:00.00 /usr/lib/openssh/sftp-server
+   1703 root      20   0    5012   3096   2888 S   0.0   0.0   0:00.00 /usr/bin/ist_client
+   1727 root     -51   0       0      0      0 S   0.0   0.0   0:00.00 [irq/88-ttyS2]
+   1810 root      20   0    5476   3616   3408 S   0.0   0.0   0:02.62 /app/m/modules/sensor_service/coord_offset/hdmap_plugin /opt/m/sensor_service/biased_mmap 5000
+   1816 root     -51   0       0      0      0 S   0.0   0.0   0:00.65 [irq/270-Time_mo]
+   1819 root      20   0   27668   5844   1460 S   0.0   0.0   0:00.00 /bin/bash /app/startup.sh
+   1820 root      20   0   27668   5840   1460 S   0.0   0.0   0:00.03 /bin/bash /app/startup.sh
+   1829 root      20   0   24740   6596   2572 S   0.0   0.0   0:00.03 /app/bin/exec-daemon /app/bin
+   1837 root      20   0   24764   5340   1284 S   0.0   0.0   0:07.22 LogFlushDaemon
+   1840 root      20   0  223572    676    572 S   0.0   0.0   0:04.21 /app/bin/TimeProvider -q /tbengine -i eth -t 512 -v -s 0 1
+   1841 root      20   0   24736   4060      0 S   0.0   0.0   0:04.49 TBEDaemon
+   1842 root      20   0       0      0      0 Z   0.0   0.0   0:00.00 [exec-daemon] <defunct>
+   1843 root      20   0   25196   7256   3036 S   0.0   0.0   0:00.00 ./Scheduler 0
+   1846 root      rt   0   25196   5860   1584 S   0.0   0.0   0:03.50 ./Scheduler 0
+   1847 root      rt   0   25196   5636   1392 S   0.0   0.0   0:00.59 ./Scheduler 0
+   1848 root      rt   0   25196   5636   1392 S   0.0   0.0   0:00.58 ./Scheduler 0
+   1849 root      rt   0   25196   5636   1392 S   0.0   0.0   0:00.64 ./Scheduler 0
+   1850 root      rt   0   25196   5636   1392 S   0.0   0.0   0:00.61 ./Scheduler 0
+   1851 root      rt   0   25196   5636   1392 S   0.0   0.0   0:00.62 ./Scheduler 0
+   1853 root      20   0   24864   6712   2704 S   0.0   0.0   0:00.00 ./CpApCamSVC_FreeRunning 2
+   1854 root      20   0   24860   6732   2724 S   0.0   0.0   0:00.00 ./CpApEncodeSVC_FreeRunning 3
+   1855 root      20   0   24860   6668   2660 S   0.0   0.0   0:00.00 ./CpApDataUpload_FreeRunning 4
+   1856 root      20   0 2878480  71640  40216 S   0.0   0.3   0:41.10 ./CpApUSSService_FreeRunning 5
+   1857 root      20   0   24860   6676   2668 S   0.0   0.0   0:00.00 ./CpApEgoMotion_FreeRunning 6
+   1858 root      20   0   24860   6836   2828 S   0.0   0.0   0:00.00 ./CpApSOA_FreeRunning 7
+   1859 root      20   0   61.7g  72172   3052 S   0.0   0.3   0:00.52 ./CpApWorldModel_FreeRunning 8
+   1860 root      20   0   24860   6704   2696 S   0.0   0.0   0:00.00 ./CpApPrediction_FreeRunning 9
+   1862 root      20   0   24860   6820   2812 S   0.0   0.0   0:00.00 ./CpApDataFilter_FreeRunning 11
+   1863 root      20   0   24860   6836   2828 S   0.0   0.0   0:00.00 ./CpApACE_FreeRunning 12
+   1864 root      20   0   24860   6860   2852 S   0.0   0.0   0:00.00 ./CpApAEBFusion_FreeRunning 13
+   1865 root      20   0   24860   6728   2720 S   0.0   0.0   0:00.00 ./CpApAnalyser_FreeRunning 14
+   1866 root      20   0   24848   6752   2744 S   0.0   0.0   0:00.00 ./CpApControl_FreeRunning 15
+   1867 root      20   0   24856   6688   2680 S   0.0   0.0   0:00.00 ./CpApDecision_FreeRunning 16
+   1868 root      20   0   24856   6864   2856 S   0.0   0.0   0:00.00 ./CpApDevFunc_FreeRunning 17
+   1869 root      20   0   24860   6700   2692 S   0.0   0.0   0:00.00 ./CpApDLModel_FreeRunning 18
+   1870 root      20   0   24856   6784   2776 S   0.0   0.0   0:00.00 ./CpApDriveLearning_FreeRunning 19
+   1871 root      20   0   24864   6808   2800 S   0.0   0.0   0:00.00 ./CpApFuncTM_FreeRunning 20
+   1872 root      20   0   24864   6624   2616 S   0.0   0.0   0:00.00 ./CpApFusion_FreeRunning 21
+   1874 root      20   0   24856   6664   2656 S   0.0   0.0   0:00.00 ./CpApLocalization_FreeRunning 23
+   1875 root      20   0   24860   6752   2744 S   0.0   0.0   0:00.00 ./CpApMAFSysManager_FreeRunning 24
+   1876 root      20   0   24864   6624   2616 S   0.0   0.0   0:00.00 ./CpApMapAdmin_FreeRunning 25
+   1877 root      20   0   24860   6732   2724 S   0.0   0.0   0:00.00 ./CpApMapBuild_FreeRunning 26
+   1878 root      20   0   24864   6736   2728 S   0.0   0.0   0:00.00 ./CpApMapFusion_FreeRunning 27
+   1880 root      20   0   24864   6692   2684 S   0.0   0.0   0:00.00 ./CpApNoControl_FreeRunning 29
+   1881 root      20   0   24856   6700   2692 S   0.0   0.0   0:00.00 ./CpApPlanning_FreeRunning 30
+   1882 root      20   0   24864   6680   2672 S   0.0   0.0   0:00.00 ./CpApVideoTrans_FreeRunning 31
+   1883 root      20   0  178988  10956   5980 S   0.0   0.0   0:11.32 ./CpApFOTA 32
+   1884 root      20   0   69780   9424   4540 S   0.0   0.0   0:02.28 ./CpApSOMEIPGW 33
+   1886 root      20   0   25488   6716   2692 S   0.0   0.0   0:03.61 ./CpCdTimeMonitorSlave_PH00 35
+   1888 root      20   0   25684   6932   2920 S   0.0   0.0   0:00.96 ./CpCdLCSS_PH00 37
+   1889 root      20   0   25736   6912   2900 S   0.0   0.0   0:07.86 ./CpCdErrorHandlerProxy_PH00 38
+   1890 root      20   0   25396   5816   1968 S   0.0   0.0   0:00.52 ./CpCdDebug_PH00 39
+   1891 root      20   0   25984   7116   3080 S   0.0   0.0   0:09.21 ./CpApTaskMonitoring_PH00 40
+   1892 root      20   0   41964   6664   2640 S   0.0   0.0   0:03.54 ./CpApPer_PH00 41
+   1893 root      20   0   56360   7488   3208 S   0.0   0.0   0:16.48 ./CpApMiddlewareASIL_PH00 42
+   1894 root      20   0   25480   6840   2820 S   0.0   0.0   0:06.09 ./CpApHostSupervisionSlave_PH00 43
+   1895 root      20   0   26000   6660   2632 S   0.0   0.0   0:04.96 ./CpApEthernetCom02_PH00 44
+   1896 root      20   0   25980   6680   2652 S   0.0   0.0   0:09.89 ./CpApEthernetCom01_PH00 45
+   1897 root      20   0   25932   6824   2776 S   0.0   0.0   0:03.19 ./CpApDSC_PH00 46
+   1898 root      20   0   25452   6732   2712 S   0.0   0.0   0:00.70 ./CpApBISTQM_PH00 47
+   1899 root      20   0   26452   6684   2656 S   0.0   0.0   0:08.74 ./CpApBISTASIL_PH00 48
+   2329 root      20   0       0      0      0 I   0.0   0.0   0:04.57 [kworker/u22:9-vblk_req_wq23]
+   2480 root      20   0    5356   2868   2532 S   0.0   0.0   0:00.00 bash ./boot.sh lidar_perception
+   2491 root      20   0   27.5g   2.1g   1.0g S   0.0   8.7   1:09.15 ./mfrlaunch --wait file -c /app/m/modules/lidar_perception/launch/lidar_perception_mfr_node_orin_tmas.yaml -m mfrrpc://127.0.0.1:2211
+   2524 root      20   0    5356   2720   2388 S   0.0   0.0   0:00.00 bash ./boot.sh parking_fusion
+   2535 root      20   0 2530312  86344  48588 S   0.0   0.3   0:55.01 ./mfrlaunch --wait file -c /app/m/modules/parking_fusion/launch/parking_fusion_mfr_node_apa.yaml -m mfrrpc://127.0.0.1:2211
+   2698 root      20   0    5356   2872   2536 S   0.0   0.0   0:00.00 bash ./boot.sh np_planning
+   2848 root      20   0    5356   2760   2428 S   0.0   0.0   0:00.00 bash ./boot.sh dd_parking_fusion
+   2862 root      20   0   29.6g   1.1g 450444 S   0.0   4.5   0:41.09 ./mfrlaunch --wait file -c /app/m/modules/dd_parking_fusion/launch/dd_parking_fusion_mfr_node.yaml -m mfrrpc://127.0.0.1:2211
+   3001 root      20   0    5356   2812   2456 S   0.0   0.0   0:00.00 bash ./boot.sh perception_planning
+   3125 root      20   0    5356   2720   2392 S   0.0   0.0   0:00.00 bash ./boot.sh planning_switch
+   3138 root      20   0 1742372  82364  42132 S   0.0   0.3   0:46.12 ./mfrlaunch --wait file -c /app/m/modules/npp_cpp_switch/launch/npp_cpp_switch_mfr_node.yaml -m mfrrpc://127.0.0.1:2211
+   3264 root      20   0    5356   2768   2424 S   0.0   0.0   0:00.00 bash ./boot.sh map_provider
+   3357 root      20   0    5356   2760   2428 S   0.0   0.0   0:00.00 bash ./boot.sh control
+   3486 root      20   0    5356   2856   2528 S   0.0   0.0   0:00.00 bash ./boot.sh mff_main
+   3488 root      20   0    5356   2756   2424 S   0.0   0.0   0:00.00 bash ./boot.sh mff_ce
+   3588 root      20   0    5356   2764   2432 S   0.0   0.0   0:00.00 bash ./boot.sh bem
+   3610 root      20   0    5224   2792   2512 S   0.0   0.0   0:00.00 bash /app/m/modules/basic_env_monitor/script/start_bem_lbcar.sh
+   3634 root      20   0 1091748  55776  38112 S   0.0   0.2   0:23.91 ./basic_env_monitor_exec -plat_c Lbcar -mlog_c /app/m/modules/basic_env_monitor/resource/config/mlog_config.json -mtbflog_c /app/m/modules/basic_env_mo+
+   3655 root      20   0 3711384 118208  46316 S   0.0   0.5   0:37.46 /app/m/common/bin/mfrlaunch file -c /app/m/modules/fcl/launch/fcl_mfr_node.yaml -m mfrrpc://172.31.254.38:2211
+   3656 root      20   0 1366656  70676  39468 S   0.0   0.3   0:12.66 /app/m/common/bin/mfrlaunch file -c /app/m/modules/fdi_statistics/launch/fdi_statistics.yaml -m mfrrpc://172.31.254.38:2211
+   4407 root      20   0    5356   2840   2512 S   0.0   0.0   0:00.00 bash ./boot.sh pe_monitor
+   4582 root      20   0   10788   6220   5156 S   0.0   0.0   0:00.19 sshd: root@notty
+   6710 root      20   0    2060   1292   1180 S   0.0   0.0   0:00.00 /bin/sh /etc/systemd/scripts/nv_security_setup_run_once.sh
+   6743 root      20   0 2039580 575868  36068 S   0.0   2.3   0:22.89 /app/im/common/bin/mfrlaunch file -c /app/im/modules/dmz_fcl/launch/fcl_mfr_node.yaml -m mfrrpc://127.0.0.1:2211
+   6744 root      20   0 1009948  76408  49180 S   0.0   0.3   1:14.82 /app/im/common/bin/mfrlaunch file -c /app/im/modules/dmz_cycle_collect/launch/perf_diag_mfr_node.yaml -m mfrrpc://127.0.0.1:2211
+   6751 root      20   0    7504   3156   2884 S   0.0   0.0   0:00.02 systemctl start nv_tos_daemon.service
+   7882 root      20   0       0      0      0 I   0.0   0.0   0:00.04 [kworker/3:0-events]
+   7905 root      20   0       0      0      0 I   0.0   0.0   0:05.28 [kworker/0:2-events]
+   8095 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 [kworker/3:0H]
+   8135 root      20   0       0      0      0 I   0.0   0.0   0:00.00 [kworker/9:0-cgroup_destroy]
+   8591 root      20   0       0      0      0 I   0.0   0.0   0:00.02 [kworker/4:0-cgroup_destroy]
+   8768 root      20   0       0      0      0 I   0.0   0.0   0:00.01 [kworker/8:0-events]
+   8849 root      20   0       0      0      0 I   0.0   0.0   0:00.01 [kworker/10:2-cgroup_destroy]
+   9066 root      20   0       0      0      0 I   0.0   0.0   0:02.59 [kworker/u22:1-vblk_req_wq23]
+   9230 root      20   0       0      0      0 D   0.0   0.0   0:02.04 [kworker/u22:4+tmp451]
+   9769 root      20   0       0      0      0 I   0.0   0.0   0:00.00 [kworker/9:1-mm_percpu_wq]
+   9823 root      20   0       0      0      0 I   0.0   0.0   0:00.02 [kworker/10:0-cgroup_destroy]
+   9951 root      20   0       0      0      0 I   0.0   0.0   0:00.00 [kworker/8:1-cgroup_destroy]
+  10011 root      20   0       0      0      0 I   0.0   0.0   0:00.00 [kworker/2:1]
+  10065 root      20   0       0      0      0 I   0.0   0.0   0:00.95 [kworker/0:1-events]
+  10066 root      20   0       0      0      0 I   0.0   0.0   0:00.07 [kworker/6:0-events]
+  10188 root      20   0       0      0      0 I   0.0   0.0   0:00.01 [kworker/4:1-events]
+  10307 root      20   0       0      0      0 I   0.0   0.0   0:00.00 [kworker/1:1-pm]
+  10425 root      20   0       0      0      0 I   0.0   0.0   0:00.02 [kworker/3:1-pm]
+  10854 root      20   0   10788   6308   5280 S   0.0   0.0   0:00.12 sshd: root@pts/0
+  10867 root      20   0    5628   3344   2836 S   0.0   0.0   0:00.02 -bash
+  11071 root      20   0       0      0      0 I   0.0   0.0   0:00.00 [kworker/0:0-events]
+  11125 root      20   0       0      0      0 I   0.0   0.0   0:00.00 [kworker/10:1-mm_percpu_wq]
+  11207 root      20   0       0      0      0 I   0.0   0.0   0:00.00 [kworker/8:2-mm_percpu_wq]
+  11416 root      20   0       0      0      0 I   0.0   0.0   0:00.00 [kworker/1:0-mm_percpu_wq]
+  11694 root      20   0       0      0      0 I   0.0   0.0   0:00.00 [kworker/4:2-mm_percpu_wq]
+  11726 root      20   0   26236   6524   2484 S   0.0   0.0   0:00.00 sleep 60
+  11735 root      20   0    3700    428    364 S   0.0   0.0   0:00.00 sleep 3
+  11763 root      20   0       0      0      0 I   0.0   0.0   0:00.00 [kworker/6:1]
