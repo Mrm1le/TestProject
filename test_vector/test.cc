@@ -28,7 +28,7 @@ int main()
     svec.reserve(100000000); // 一次性分配可容纳十个元素的内存
     std::cout << "svec capacity " << svec.capacity() << std::endl;
 
-    std::vector<std::string> b(20, "nothng");                // 一种构造方式
+    std::vector<std::string> b(20, "nothing");                // 一种构造方式
     b.resize(10, "thing");                                   // 保留旧元素，添加新元素
     std::cout << "b size " << b.size() << std::endl;         // resize()改变元素数量
     std::cout << "b capacity " << b.capacity() << std::endl; // resize()不改变容器容量
