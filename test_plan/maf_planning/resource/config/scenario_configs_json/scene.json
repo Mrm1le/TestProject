@@ -1,0 +1,6 @@
+{
+    "scene_type" : "urban",
+    "sensor_configuration" : "vision",
+    "cpu_configuration" : "mdc",
+    "enable_interactive_lane_change" : false
+}

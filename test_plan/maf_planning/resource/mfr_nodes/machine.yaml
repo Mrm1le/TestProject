@@ -1,0 +1,4 @@
+log:
+  level: info
+  enable_stderr: true
+  export_frequence: 0

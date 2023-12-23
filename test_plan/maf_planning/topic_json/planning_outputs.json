@@ -1,0 +1,10 @@
+{
+  "ros2mfr_topic_list": [
+  ],
+  
+  "mfr2ros_topic_list": [
+    "/msd/planning/plan",
+    "/msd/sbp_request", 
+    "/msd/sbp_result"
+]
+}

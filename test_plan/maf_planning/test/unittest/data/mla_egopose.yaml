@@ -1,0 +1,169 @@
+header: 
+  seq: 129920
+  stamp: 
+    secs: 1635569746
+    nsecs: 543966784
+  frame_id: "egomotion"
+meta: 
+  timestamp_us: 1635569746542657
+  seq: 133022
+position: 
+  available: 2
+  position_global: 
+    latitude: 0.0
+    longitude: 0.0
+    altitude: 0.0
+  position_local: 
+    x: -603.449831806
+    y: -886.98086945
+    z: 1.4014049152
+velocity: 
+  available: 2
+  velocity_global: 
+    ve: 0.0
+    vn: 0.0
+    vu: 0.0
+  velocity_local: 
+    vx: 12.8801046033
+    vy: -10.542747473
+    vz: -0.0972495304847
+angular_velocity: 
+  available: 0
+  angvelocity_local: 
+    vx: 0.0
+    vy: 0.0
+    vz: 0.0
+orientation: 
+  available: 12
+  euler_global: 
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0
+  quaternion_global: 
+    w: 0.0
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  euler_local: 
+    roll: -0.00381507013502
+    pitch: 0.00700598266534
+    yaw: -0.686030452291
+  quaternion_local: 
+    w: 0.941735103729
+    x: -0.000618249017559
+    y: 0.00394046476416
+    z: -0.33633180776
+acceleration: 
+  available: 0
+  acceleration_global: 
+    ae: 0.0
+    an: 0.0
+    au: 0.0
+  acceleration_local: 
+    ax: 0.0
+    ay: 0.0
+    az: 0.0
+position_std: 
+  available: 0
+  pos_std_global: 
+    std_pe: 0.0
+    std_pn: 0.0
+    std_pu: 0.0
+  pos_std_local: 
+    std_px: 0.0
+    std_py: 0.0
+    std_pz: 0.0
+velocity_std: 
+  available: 0
+  vel_std_global: 
+    std_ve: 0.0
+    std_vn: 0.0
+    std_vu: 0.0
+  vel_std_local: 
+    std_vx: 0.0
+    std_vy: 0.0
+    std_vz: 0.0
+angular_velocity_std: 
+  available: 0
+  angvel_std_local: 
+    std_vx: 0.0
+    std_vy: 0.0
+    std_vz: 0.0
+orientation_std: 
+  available: 0
+  ori_std_xyz: 
+    std_faix: 0.0
+    std_faiy: 0.0
+    std_faiz: 0.0
+acceleration_std: 
+  available: 0
+  acc_std_global: 
+    std_ae: 0.0
+    std_an: 0.0
+    std_au: 0.0
+  acc_std_local: 
+    std_ax: 0.0
+    std_ay: 0.0
+    std_az: 0.0
+status: 
+  available: 1
+  status_info: 
+    quality: 0
+    common: 2
+    extended: 0
+    type: 1
+transform: 
+  available: 4
+  transform_llh_to_boot: 
+    transform_q: 
+      w: 0.0
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    transform_t: 
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    transform_center: 
+      latitude: 0.0
+      longitude: 0.0
+      altitude: 0.0
+  transform_avp_map_to_boot: 
+    transform_q: 
+      w: 0.0
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    transform_t: 
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    transform_center: 
+      latitude: 0.0
+      longitude: 0.0
+      altitude: 0.0
+  transform_ego_motion_to_boot: 
+    transform_q: 
+      w: 1.0
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    transform_t: 
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    transform_center: 
+      latitude: 0.0
+      longitude: 0.0
+      altitude: 0.0
+pose_detail: 
+  available: 0
+  pose_detail_info: 
+    available: 0
+    is_keyframe: False
+    has_scale: True
+    pose_type: 1
+reserved: 
+  available: 0
+  reserved_data: []
+---

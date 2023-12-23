@@ -1,0 +1,75 @@
+{
+  "CPPlanning": {
+    "machine": {},
+    "CPPlanTask": {
+      "running_thread_id": 110,
+      "running_thread_name": "cp_plan_task"
+    },
+    "CPParkingPlanTask": {
+      "running_thread_id": 112,
+      "running_thread_name": "cp_parking_plan_task"
+    },
+    "CPParkingWorldModelTask": {
+      "running_thread_id": 113,
+      "running_thread_name": "cp_parking_world_model_task"
+    },
+    "CPSbpPlanTask": {
+      "running_thread_id": 114,
+      "running_thread_name": "cp_sbp_task"
+    },
+    "CPDdmapGeneratorTask": {
+      "running_thread_id": 115,
+      "running_thread_name": "cp_ddmap_generator_task"
+    },
+    "CPFusionTask": {
+      "running_thread_id": 116,
+      "running_thread_name": "cp_fusion_task"
+    },
+    "CPWorldmodelPubTask": {
+      "running_thread_id": 117,
+      "running_thread_name": "cp_wm_pub_task"
+    }
+  },
+  "Planning": {
+    "machine": {},
+    "PlanTask": {
+      "running_thread_id": 100,
+      "running_thread_name": "plan_task"
+    },
+    "ParkingPlanTask": {
+      "running_thread_id": 101,
+      "running_thread_name": "parking_plan_task"
+    },
+    "ParkingWorldModelTask": {
+      "running_thread_id": 102,
+      "running_thread_name": "parking_world_model_task"
+    },
+    "SbpPlanTask": {
+      "running_thread_id": 103,
+      "running_thread_name": "sbp_task"
+    },
+    "DdmapGeneratorTask": {
+      "running_thread_id": 104,
+      "running_thread_name": "ddmap_generator_task"
+    },
+    "FusionTask": {
+      "running_thread_id": 105,
+      "running_thread_name": "fusion_task"
+    },
+    "WorldmodelPubTask": {
+      "running_thread_id": 106,
+      "running_thread_name": "wm_pub_task"
+    }
+  },
+  "LdpPlanning": {
+    "machine": {},
+    "LdpPlanTask": {
+      "running_thread_id": 0,
+      "running_thread_name": "ldp_plan_task"
+    },
+    "EssPlanTask": {
+      "running_thread_id": 1,
+      "running_thread_name": "ess_plan_task"
+    }
+  }
+}

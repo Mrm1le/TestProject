@@ -1,0 +1,26 @@
+{
+    "near_road_edge_thres": 3.5,
+    "near_object_lateral_thres": 3.5,
+    "near_forward_object_ttc": 5.0,
+    "near_forward_object_distance": 50.0,
+    "near_backward_object_ttc": 5.0,
+    "near_backward_object_distance": 50.0,
+
+    "driver_intention_torque": 2.0,
+    "driver_intention_delta_torque": 1.0,
+    "driver_override_torque": 5.0,
+    "driver_longitudinal_safety_thres": 2.5,
+    "driver_lateral_safety_thres": 1.0,
+
+    "planning_longitudinal_safety_thres": 0.5,
+    "planning_exit_exceed_distance": 10.0,
+    "planning_lateral_safety_thres": 1.0,
+    "planning_min_ttc_thres": 1.0,
+    "planning_actuator_delay_time": 0.15,
+    "planning_max_lateral_acc_thres": 8.0,
+    "planning_max_trigger_time_sec": 5.0,
+    "planning_cooling_time_sec": 15.0,
+
+    "fcw_count_thres": 50
+
+}

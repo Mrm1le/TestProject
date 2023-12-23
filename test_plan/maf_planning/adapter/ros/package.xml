@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>msquare_pnc_ros</name>
+  <version>0.0.0</version>
+  <description>The decision_planning package</description>
+
+  <maintainer email="chenkai@momenta.ai">Kai CHEN</maintainer>
+
+  <!-- One license tag required, multiple allowed, one license per tag -->
+  <!-- Commonly used license strings: -->
+  <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
+  <license>TODO</license>
+
+  <!-- Url tags are optional, but multiple are allowed, one per tag -->
+  <!-- <url type="website">http://wiki.ros.org/decision_planning</url> -->
+
+  <author email="chenkai@momenta.ai">Kai CHEN</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>roscpp</depend>
+  <depend>std_msgs</depend>
+  <depend>momenta_msgs</depend>
+  <depend>planning_msgs</depend>
+  <depend>worldmodel_msgs</depend>
+  <depend>mla_localization_msgs</depend>
+  <depend>framework_status_msgs</depend>
+  <depend>generate_ros_cpp_struct</depend>
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+
+  </export>
+</package>

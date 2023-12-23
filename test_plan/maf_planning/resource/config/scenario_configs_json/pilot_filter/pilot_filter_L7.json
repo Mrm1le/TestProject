@@ -1,0 +1,11 @@
+{
+    "pilot_planner_config" : {
+        "filter_alpha" : 0.3,
+        "enable_adc_off_refline" : false,
+        "adc_off_refline_max_ratio" : 4,
+        "adc_off_refline_max_num" : 8,
+        "far_decrease_flag" : true,
+        "far_decrease_coef" : -0.15,
+        "near_keep_flag" : false
+    }
+}

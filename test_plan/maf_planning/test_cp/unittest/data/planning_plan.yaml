@@ -1,0 +1,2991 @@
+header: 
+  seq: 23773
+  stamp: 
+    secs: 1635569746
+    nsecs: 594203780
+  frame_id: "enu"
+meta: 
+  timestamp_us: 1635569746562656
+  plan_timestamp_us: 1635569746577117
+  plan_strategy_name: ''
+trajectory: 
+  available: 14
+  polynomial_curve: 
+    polynomial: []
+  path: 
+    - 
+      position_enu: 
+        x: -602.053655438
+        y: -887.990448061
+      heading_yaw: -0.689597465438
+      curvature: -0.00150662236952
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -601.733020467
+        y: -888.255032648
+      heading_yaw: -0.690230284201
+      curvature: -0.00153974907593
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -601.412558778
+        y: -888.519818957
+      heading_yaw: -0.690876642727
+      curvature: -0.00157286377115
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -601.092273944
+        y: -888.784811329
+      heading_yaw: -0.691536540728
+      curvature: -0.00160583933335
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -600.772169534
+        y: -889.050014108
+      heading_yaw: -0.692209977838
+      curvature: -0.00163854867074
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -600.45224912
+        y: -889.315431634
+      heading_yaw: -0.692896953626
+      curvature: -0.00167086471893
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -600.132516269
+        y: -889.581068253
+      heading_yaw: -0.69359746761
+      curvature: -0.00170266043777
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -599.812974551
+        y: -889.846928309
+      heading_yaw: -0.694311519263
+      curvature: -0.00173380880767
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -599.494107712
+        y: -890.113580858
+      heading_yaw: -0.695613575064
+      curvature: -0.001764173686
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -599.175057622
+        y: -890.38012667
+      heading_yaw: -0.696339012412
+      curvature: -0.00172402995462
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -598.856201186
+        y: -890.646899144
+      heading_yaw: -0.697047680282
+      curvature: -0.00168343698207
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -598.537533821
+        y: -890.913893018
+      heading_yaw: -0.697739577151
+      curvature: -0.00164265466625
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -598.219050946
+        y: -891.18110303
+      heading_yaw: -0.698414701557
+      curvature: -0.00160194285265
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -597.90074798
+        y: -891.448523915
+      heading_yaw: -0.69907305209
+      curvature: -0.00156156134685
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -597.582620344
+        y: -891.716150411
+      heading_yaw: -0.699714627366
+      curvature: -0.00152176992565
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -597.264663457
+        y: -891.983977253
+      heading_yaw: -0.70033942603
+      curvature: -0.00148282834685
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -596.947319853
+        y: -892.252525907
+      heading_yaw: -0.70131397979
+      curvature: -0.00144490087647
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -596.629738783
+        y: -892.520895883
+      heading_yaw: -0.701901093508
+      curvature: -0.00137885233049
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -596.312312038
+        y: -892.789447654
+      heading_yaw: -0.702461031862
+      curvature: -0.00131354082864
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -595.995032248
+        y: -893.058172656
+      heading_yaw: -0.702993793765
+      curvature: -0.00124865890405
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -595.677892046
+        y: -893.327062319
+      heading_yaw: -0.703499378413
+      curvature: -0.00118389900398
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -595.360884069
+        y: -893.596108071
+      heading_yaw: -0.703977785262
+      curvature: -0.00111895348414
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -595.04400096
+        y: -893.865301335
+      heading_yaw: -0.704429013997
+      curvature: -0.00105351460473
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -594.727235366
+        y: -894.13463353
+      heading_yaw: -0.704853064506
+      curvature: -0.000987274528028
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -594.410959223
+        y: -894.404543464
+      heading_yaw: -0.705438912754
+      curvature: -0.000919931907728
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -594.094411528
+        y: -894.674226256
+      heading_yaw: -0.705806130416
+      curvature: -0.000849062878547
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -593.777958448
+        y: -894.944020864
+      heading_yaw: -0.706143365745
+      curvature: -0.000777375617758
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -593.461591886
+        y: -895.213917808
+      heading_yaw: -0.706450618775
+      curvature: -0.000705117098162
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -593.145303746
+        y: -895.483907604
+      heading_yaw: -0.706727889529
+      curvature: -0.000632534294363
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -592.829085937
+        y: -895.753980768
+      heading_yaw: -0.706975178019
+      curvature: -0.000559874186451
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -592.51293037
+        y: -896.024127812
+      heading_yaw: -0.707192484249
+      curvature: -0.000487383762436
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -592.196828958
+        y: -896.294339245
+      heading_yaw: -0.707379808222
+      curvature: -0.000415310019578
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -591.881062355
+        y: -896.564946792
+      heading_yaw: -0.707591941181
+      curvature: -0.000344014994275
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -591.565017972
+        y: -896.83531245
+      heading_yaw: -0.707723330281
+      curvature: -0.000285861028976
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -591.249005348
+        y: -897.105716386
+      heading_yaw: -0.707831087483
+      curvature: -0.000228297852725
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -590.933018119
+        y: -897.376151108
+      heading_yaw: -0.707915213011
+      curvature: -0.000171238652594
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -590.617049928
+        y: -897.646609122
+      heading_yaw: -0.7079757071
+      curvature: -0.000114596588697
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -590.301094417
+        y: -897.917082933
+      heading_yaw: -0.708012569989
+      curvature: -5.82847964442e-05
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -589.985145233
+        y: -898.187565041
+      heading_yaw: -0.708025801911
+      curvature: -2.21638894063e-06
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -589.669196026
+        y: -898.458047945
+      heading_yaw: -0.708015403091
+      curvature: 5.36955404926e-05
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -589.353432274
+        y: -898.728751151
+      heading_yaw: -0.707946155388
+      curvature: 0.000109235712008
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -589.037416285
+        y: -898.999235404
+      heading_yaw: -0.707892445865
+      curvature: 0.000146380121903
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -588.72138334
+        y: -899.269700412
+      heading_yaw: -0.707822846709
+      curvature: 0.000183691870097
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -588.405329178
+        y: -899.540141123
+      heading_yaw: -0.707737358048
+      curvature: 0.000221293544149
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -588.089249537
+        y: -899.810552484
+      heading_yaw: -0.707635979987
+      curvature: 0.000259307737465
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -587.773140157
+        y: -900.080929442
+      heading_yaw: -0.70751871261
+      curvature: 0.000297857047758
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -587.456996781
+        y: -900.35126694
+      heading_yaw: -0.707385555976
+      curvature: 0.000337064075559
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -587.140815154
+        y: -900.62155992
+      heading_yaw: -0.707236510119
+      curvature: 0.000377051422781
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -586.824693909
+        y: -900.891925214
+      heading_yaw: -0.706987609191
+      curvature: 0.000417468511863
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -586.508365282
+        y: -901.16211772
+      heading_yaw: -0.706809190719
+      curvature: 0.000440021025484
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -586.191987246
+        y: -901.432252277
+      heading_yaw: -0.706621496694
+      curvature: 0.000462939233509
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -585.875557318
+        y: -901.702325928
+      heading_yaw: -0.706424526954
+      curvature: 0.000485918424574
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -585.559073018
+        y: -901.97233572
+      heading_yaw: -0.706218281361
+      curvature: 0.000508653886626
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -585.242531866
+        y: -902.242278695
+      heading_yaw: -0.706002759804
+      curvature: 0.00053084090808
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -584.925931384
+        y: -902.512151896
+      heading_yaw: -0.705777962195
+      curvature: 0.000552174778982
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -584.609269093
+        y: -902.781952363
+      heading_yaw: -0.705543888469
+      curvature: 0.000572350792118
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -584.292574116
+        y: -903.051714733
+      heading_yaw: -0.705202839043
+      curvature: 0.000590672023792
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -583.975722502
+        y: -903.321358476
+      heading_yaw: -0.704956790038
+      curvature: 0.00059258720818
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -583.658804508
+        y: -903.590924152
+      heading_yaw: -0.704710245622
+      curvature: 0.000593730296788
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -583.341820024
+        y: -903.860411583
+      heading_yaw: -0.704463205922
+      curvature: 0.000594481032014
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -583.02476894
+        y: -904.129820594
+      heading_yaw: -0.704215671034
+      curvature: 0.000595219146998
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -582.707651145
+        y: -904.399151007
+      heading_yaw: -0.703967641031
+      curvature: 0.000596324365967
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -582.39046653
+        y: -904.668402647
+      heading_yaw: -0.703719115961
+      curvature: 0.000598176404763
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -582.073214984
+        y: -904.937575336
+      heading_yaw: -0.703470095851
+      curvature: 0.000601154971528
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -581.755878483
+        y: -905.206647531
+      heading_yaw: -0.703128931198
+      curvature: 0.000605116805153
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -581.438438105
+        y: -905.475657764
+      heading_yaw: -0.702878026322
+      curvature: 0.000599903563242
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -581.120930586
+        y: -905.744588529
+      heading_yaw: -0.702628875895
+      curvature: 0.0005955515104
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -580.803356408
+        y: -906.013440371
+      heading_yaw: -0.702381479852
+      curvature: 0.000591726800373
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -580.485716056
+        y: -906.282213839
+      heading_yaw: -0.702135838143
+      curvature: 0.000588095594822
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -580.168010012
+        y: -906.55090948
+      heading_yaw: -0.701891950736
+      curvature: 0.000584324062391
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -579.850238758
+        y: -906.819527842
+      heading_yaw: -0.701649817608
+      curvature: 0.000580078377939
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -579.532402778
+        y: -907.088069472
+      heading_yaw: -0.701409439937
+      curvature: 0.000575024726741
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -579.214456946
+        y: -907.356480657
+      heading_yaw: -0.701102162139
+      curvature: 0.000568670011829
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -578.896447317
+        y: -907.624872445
+      heading_yaw: -0.700868996676
+      curvature: 0.000556223077134
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -578.578375882
+        y: -907.893190962
+      heading_yaw: -0.700641460213
+      curvature: 0.000543039231286
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -578.260244165
+        y: -908.16143799
+      heading_yaw: -0.700419552779
+      curvature: 0.000529310987964
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -577.942053688
+        y: -908.429615308
+      heading_yaw: -0.700203274395
+      curvature: 0.000515230856853
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -577.623805972
+        y: -908.697724699
+      heading_yaw: -0.699992625077
+      curvature: 0.000500991344078
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -577.305502536
+        y: -908.965767943
+      heading_yaw: -0.699787604837
+      curvature: 0.00048678495262
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -576.987144902
+        y: -909.233746823
+      heading_yaw: -0.699588208797
+      curvature: 0.000472804156693
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -576.668679242
+        y: -909.501597094
+      heading_yaw: -0.69935011897
+      curvature: 0.000459170281253
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -576.350180392
+        y: -909.769459629
+      heading_yaw: -0.699160808315
+      curvature: 0.00044529531284
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -576.031631526
+        y: -910.037262675
+      heading_yaw: -0.69897661058
+      curvature: 0.000431963888505
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -575.713034023
+        y: -910.305007853
+      heading_yaw: -0.698797525762
+      curvature: 0.000419245354786
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -575.39438926
+        y: -910.572696787
+      heading_yaw: -0.698623553857
+      curvature: 0.000407209057845
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -575.075698612
+        y: -910.840331099
+      heading_yaw: -0.698454694861
+      curvature: 0.000395924343533
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -574.756963455
+        y: -911.107912412
+      heading_yaw: -0.698290948771
+      curvature: 0.000385460557446
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -574.438185165
+        y: -911.37544235
+      heading_yaw: -0.698132310757
+      curvature: 0.000375886400797
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -574.119313255
+        y: -911.642860585
+      heading_yaw: -0.697958992284
+      curvature: 0.000367257713644
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -573.800424064
+        y: -911.910305768
+      heading_yaw: -0.69780947788
+      curvature: 0.000361191462141
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -573.48149539
+        y: -912.177703874
+      heading_yaw: -0.697663735689
+      curvature: 0.000354752531298
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -573.162528247
+        y: -912.445056102
+      heading_yaw: -0.697521765703
+      curvature: 0.000347335075832
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -572.843523651
+        y: -912.712363649
+      heading_yaw: -0.697383567915
+      curvature: 0.00033833325302
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -572.524482614
+        y: -912.979627716
+      heading_yaw: -0.69724914232
+      curvature: 0.000327141222786
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -572.20540615
+        y: -913.246849499
+      heading_yaw: -0.697118488912
+      curvature: 0.000313153147974
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -571.886295273
+        y: -913.514030205
+      heading_yaw: -0.696991724225
+      curvature: 0.000295768818095
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -571.567110641
+        y: -913.781122839
+      heading_yaw: -0.696870935493
+      curvature: 0.000275402950273
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -571.247913733
+        y: -914.048244635
+      heading_yaw: -0.696757081164
+      curvature: 0.000257052761048
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -570.928687111
+        y: -914.315331055
+      heading_yaw: -0.696648946836
+      curvature: 0.000238334688822
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -570.609432309
+        y: -914.582383922
+      heading_yaw: -0.696546532524
+      curvature: 0.000220799277189
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -570.29015086
+        y: -914.849405056
+      heading_yaw: -0.69644983824
+      curvature: 0.000205997063426
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -569.970844296
+        y: -915.11639628
+      heading_yaw: -0.696358863995
+      curvature: 0.000195478580096
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -569.65151415
+        y: -915.383359415
+      heading_yaw: -0.696273609799
+      curvature: 0.000190794357474
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -569.332161945
+        y: -915.650296258
+      heading_yaw: -0.696193489152
+      curvature: 0.000193473080865
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -569.012761844
+        y: -915.917175602
+      heading_yaw: -0.696122451028
+      curvature: 0.000204017043964
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -568.693348667
+        y: -916.184079246
+      heading_yaw: -0.696032636837
+      curvature: 0.000223890465321
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -568.373910633
+        y: -916.450952922
+      heading_yaw: -0.695935374381
+      curvature: 0.000246674145557
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -568.054445754
+        y: -916.71779425
+      heading_yaw: -0.695830663637
+      curvature: 0.00026998757567
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -567.73495204
+        y: -916.984600853
+      heading_yaw: -0.695718504579
+      curvature: 0.000291450240183
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -567.415427504
+        y: -917.251370352
+      heading_yaw: -0.695598897185
+      curvature: 0.000308681618152
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -567.095870156
+        y: -917.518100369
+      heading_yaw: -0.695471841437
+      curvature: 0.000319301186164
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -566.776278033
+        y: -917.784788588
+      heading_yaw: -0.695338502542
+      curvature: 0.000320975260859
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -566.456638087
+        y: -918.051419652
+      heading_yaw: -0.695228208269
+      curvature: 0.000313578935933
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -566.136963957
+        y: -918.31804696
+      heading_yaw: -0.695106423316
+      curvature: 0.000301672598683
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -565.817258065
+        y: -918.584636434
+      heading_yaw: -0.694990874735
+      curvature: 0.000284623077021
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -565.497522084
+        y: -918.851190062
+      heading_yaw: -0.694881562547
+      curvature: 0.000264641147831
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -565.177757682
+        y: -919.11770983
+      heading_yaw: -0.69477848677
+      curvature: 0.000243937582435
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -564.857966533
+        y: -919.384197724
+      heading_yaw: -0.694681647425
+      curvature: 0.000224723145572
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -564.538150306
+        y: -919.650655733
+      heading_yaw: -0.694591044527
+      curvature: 0.000209208596056
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -564.218310644
+        y: -919.917085787
+      heading_yaw: -0.694505748304
+      curvature: 0.000199545745911
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -563.898446722
+        y: -920.183486723
+      heading_yaw: -0.69443858411
+      curvature: 0.000196408542367
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -563.57854933
+        y: -920.449881507
+      heading_yaw: -0.694349644942
+      curvature: 0.000199395119558
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -563.25862789
+        y: -920.7162474
+      heading_yaw: -0.694257989613
+      curvature: 0.000206347943571
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -562.938681681
+        y: -920.98258353
+      heading_yaw: -0.694163618109
+      curvature: 0.000216000589573
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -562.618709981
+        y: -921.248889027
+      heading_yaw: -0.694066530419
+      curvature: 0.000227086632353
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -562.298712068
+        y: -921.515163021
+      heading_yaw: -0.693966726529
+      curvature: 0.000238339645671
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -561.97868722
+        y: -921.781404642
+      heading_yaw: -0.693864206431
+      curvature: 0.000248493202127
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -561.658634728
+        y: -922.047613038
+      heading_yaw: -0.693759260317
+      curvature: 0.000256327853966
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -561.338560121
+        y: -922.313794893
+      heading_yaw: -0.693670025537
+      curvature: 0.000261472412449
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -561.018440221
+        y: -922.579953738
+      heading_yaw: -0.693563523686
+      curvature: 0.000264106826955
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -560.698291883
+        y: -922.846078417
+      heading_yaw: -0.69345647287
+      curvature: 0.000265125209371
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -560.378114965
+        y: -923.112168751
+      heading_yaw: -0.693348873096
+      curvature: 0.000265052327898
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -560.057909326
+        y: -923.37822456
+      heading_yaw: -0.693240724365
+      curvature: 0.000264412950602
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -559.737674824
+        y: -923.644245665
+      heading_yaw: -0.69313202668
+      curvature: 0.000263731845302
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -559.417411319
+        y: -923.910231885
+      heading_yaw: -0.693022780044
+      curvature: 0.000263533779533
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -559.097118663
+        y: -924.176183033
+      heading_yaw: -0.692912868638
+      curvature: 0.00026431347679
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -558.776806447
+        y: -924.442110655
+      heading_yaw: -0.692814050655
+      curvature: 0.000265989994172
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -558.456443712
+        y: -924.708006486
+      heading_yaw: -0.692702134203
+      curvature: 0.000267551122473
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -558.136051116
+        y: -924.973866354
+      heading_yaw: -0.692589495143
+      curvature: 0.00026965316755
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -557.815628471
+        y: -925.239690022
+      heading_yaw: -0.692476133473
+      curvature: 0.000272039798315
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -557.495175589
+        y: -925.505477256
+      heading_yaw: -0.692362049191
+      curvature: 0.000274454683772
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -557.174692284
+        y: -925.77122782
+      heading_yaw: -0.692247242295
+      curvature: 0.000276641493005
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -556.854178367
+        y: -926.03694148
+      heading_yaw: -0.692131712784
+      curvature: 0.000278343895175
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -556.53363366
+        y: -926.302618012
+      heading_yaw: -0.692015621529
+      curvature: 0.000279331139014
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -556.21306872
+        y: -926.568270166
+      heading_yaw: -0.691906771616
+      curvature: 0.000279471099238
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -555.892450999
+        y: -926.833885596
+      heading_yaw: -0.691790873366
+      curvature: 0.000278180112681
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -555.571802543
+        y: -927.099463946
+      heading_yaw: -0.691675413716
+      curvature: 0.000276650016052
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -555.251123472
+        y: -927.365005351
+      heading_yaw: -0.691560392667
+      curvature: 0.000275097343291
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -554.930413909
+        y: -927.630509948
+      heading_yaw: -0.691445810217
+      curvature: 0.000273738628218
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -554.609673974
+        y: -927.895977874
+      heading_yaw: -0.691331666367
+      curvature: 0.000272790404558
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -554.288903789
+        y: -928.161409266
+      heading_yaw: -0.691217961115
+      curvature: 0.000272469205966
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -553.968103459
+        y: -928.426804236
+      heading_yaw: -0.691104422798
+      curvature: 0.000272956951546
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -553.647282269
+        y: -928.692173998
+      heading_yaw: -0.690993366703
+      curvature: 0.000273994033192
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -553.3264099
+        y: -928.957506993
+      heading_yaw: -0.69087910437
+      curvature: 0.000274728677123
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -553.0055072
+        y: -929.222803302
+      heading_yaw: -0.690764718966
+      curvature: 0.000275657308258
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -552.684574139
+        y: -929.488062882
+      heading_yaw: -0.690650210488
+      curvature: 0.000276525956662
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -552.363610691
+        y: -929.753285691
+      heading_yaw: -0.690535578936
+      curvature: 0.00027708065244
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -552.042616827
+        y: -930.018471685
+      heading_yaw: -0.690420824309
+      curvature: 0.000277067425736
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -551.72159252
+        y: -930.28362082
+      heading_yaw: -0.690305946606
+      curvature: 0.000276232306731
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -551.400537772
+        y: -930.548733097
+      heading_yaw: -0.6901914094
+      curvature: 0.000274374626118
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -551.079459685
+        y: -930.813817123
+      heading_yaw: -0.690077742411
+      curvature: 0.000271553827601
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -550.758333209
+        y: -931.07886607
+      heading_yaw: -0.68996573344
+      curvature: 0.000267744060635
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -550.437177229
+        y: -931.343879278
+      heading_yaw: -0.689855137243
+      curvature: 0.000263649274631
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -550.115992122
+        y: -931.608857198
+      heading_yaw: -0.68974595382
+      curvature: 0.000259563068339
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -549.794778268
+        y: -931.873800279
+      heading_yaw: -0.68963818317
+      curvature: 0.00025577904041
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -549.473536046
+        y: -932.138708972
+      heading_yaw: -0.68953182529
+      curvature: 0.000252590789418
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -549.152265832
+        y: -932.403583728
+      heading_yaw: -0.68942688018
+      curvature: 0.000250291913892
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -548.83096796
+        y: -932.66842493
+      heading_yaw: -0.689322708109
+      curvature: 0.000249104541059
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -548.509646583
+        y: -932.9332376
+      heading_yaw: -0.68921609634
+      curvature: 0.000248843826877
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -548.188281992
+        y: -933.198019997
+      heading_yaw: -0.689111715199
+      curvature: 0.00024913458097
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -547.866889765
+        y: -933.46276883
+      heading_yaw: -0.689007273417
+      curvature: 0.000249836442457
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -547.545469889
+        y: -933.727484079
+      heading_yaw: -0.688902770992
+      curvature: 0.000250675181809
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -547.224022353
+        y: -933.99216572
+      heading_yaw: -0.688798207925
+      curvature: 0.000251376569473
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -546.902547144
+        y: -934.25681373
+      heading_yaw: -0.688693584214
+      curvature: 0.000251666375862
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -546.58104425
+        y: -934.521428087
+      heading_yaw: -0.68858889986
+      curvature: 0.000251270371366
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -546.259513705
+        y: -934.786008834
+      heading_yaw: -0.688484740515
+      curvature: 0.000249987987826
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -545.937957339
+        y: -935.050558196
+      heading_yaw: -0.688378574495
+      curvature: 0.000247933180642
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -545.616361106
+        y: -935.31508019
+      heading_yaw: -0.68827669174
+      curvature: 0.000245312125382
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -545.294738076
+        y: -935.579569597
+      heading_yaw: -0.688175940199
+      curvature: 0.00024228613288
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -544.973088552
+        y: -935.844026779
+      heading_yaw: -0.688076319869
+      curvature: 0.000239042460217
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -544.651412835
+        y: -936.108452098
+      heading_yaw: -0.687977830751
+      curvature: 0.00023576836445
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -544.329711229
+        y: -936.372845913
+      heading_yaw: -0.687880472843
+      curvature: 0.00023265110261
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -544.007984036
+        y: -936.637208586
+      heading_yaw: -0.687784245082
+      curvature: 0.000229877921521
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -543.686231531
+        y: -936.901540441
+      heading_yaw: -0.687688829781
+      curvature: 0.000227582539542
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -543.364453595
+        y: -937.165841321
+      heading_yaw: -0.687590875778
+      curvature: 0.000225768704241
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -543.042640197
+        y: -937.430119277
+      heading_yaw: -0.687496515123
+      curvature: 0.000224471590503
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -542.720801933
+        y: -937.694366935
+      heading_yaw: -0.687402626537
+      curvature: 0.000223443893328
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -542.398938931
+        y: -937.958584445
+      heading_yaw: -0.68730921002
+      curvature: 0.000222603762154
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -542.077051318
+        y: -938.222771956
+      heading_yaw: -0.687216265572
+      curvature: 0.000221869346421
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -541.755139222
+        y: -938.486929618
+      heading_yaw: -0.687123793192
+      curvature: 0.000221158795568
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -541.433202769
+        y: -938.751057581
+      heading_yaw: -0.687031793593
+      curvature: 0.000220390293719
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -541.111242092
+        y: -939.015156
+      heading_yaw: -0.686940314019
+      curvature: 0.000219501890587
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -540.789255927
+        y: -939.279223332
+      heading_yaw: -0.686846877238
+      curvature: 0.000218577215974
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -540.467236901
+        y: -939.543270286
+      heading_yaw: -0.686756373828
+      curvature: 0.00021781376875
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -540.145194038
+        y: -939.807288152
+      heading_yaw: -0.686666259639
+      curvature: 0.000216921355927
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -539.823127443
+        y: -940.071277053
+      heading_yaw: -0.686576534672
+      curvature: 0.000215899882555
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -539.501037221
+        y: -940.335237113
+      heading_yaw: -0.686487198925
+      curvature: 0.00021474925369
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -539.178923478
+        y: -940.599168454
+      heading_yaw: -0.686398252397
+      curvature: 0.000213469374388
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -538.856786319
+        y: -940.8630712
+      heading_yaw: -0.686309697893
+      curvature: 0.00021206026101
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -538.534625858
+        y: -941.126945487
+      heading_yaw: -0.686221618485
+      curvature: 0.000210542204713
+      path_follow_strength: 0.0
+    - 
+      position_enu: 
+        x: -538.212440422
+        y: -941.390789268
+      heading_yaw: -0.686132353948
+      curvature: 0.000209089004835
+      path_follow_strength: 0.0
+  velocity: 
+    available: 6
+    target_value: 0.0
+    vel_points: 
+      - 
+        target_velocity: 16.6250641232
+        relative_time: 0.0
+        distance: 0.0
+      - 
+        target_velocity: 16.6254353131
+        relative_time: 0.025
+        distance: 0.415664242835
+      - 
+        target_velocity: 16.625806503
+        relative_time: 0.05
+        distance: 0.831328485669
+      - 
+        target_velocity: 16.6261776929
+        relative_time: 0.075
+        distance: 1.2469927285
+      - 
+        target_velocity: 16.6265488828
+        relative_time: 0.1
+        distance: 1.66265697134
+      - 
+        target_velocity: 16.6269200726
+        relative_time: 0.125
+        distance: 2.07832121417
+      - 
+        target_velocity: 16.6272912625
+        relative_time: 0.15
+        distance: 2.49398545701
+      - 
+        target_velocity: 16.6276624524
+        relative_time: 0.175
+        distance: 2.90964969984
+      - 
+        target_velocity: 16.6280336423
+        relative_time: 0.2
+        distance: 3.32531394268
+      - 
+        target_velocity: 16.6283748378
+        relative_time: 0.225
+        distance: 3.74104938233
+      - 
+        target_velocity: 16.6287160333
+        relative_time: 0.25
+        distance: 4.15678482199
+      - 
+        target_velocity: 16.6290572288
+        relative_time: 0.275
+        distance: 4.57252026164
+      - 
+        target_velocity: 16.6293984244
+        relative_time: 0.3
+        distance: 4.9882557013
+      - 
+        target_velocity: 16.6297396199
+        relative_time: 0.325
+        distance: 5.40399114095
+      - 
+        target_velocity: 16.6300808154
+        relative_time: 0.35
+        distance: 5.81972658061
+      - 
+        target_velocity: 16.6304220109
+        relative_time: 0.375
+        distance: 6.23546202026
+      - 
+        target_velocity: 16.6307632064
+        relative_time: 0.4
+        distance: 6.65119745992
+      - 
+        target_velocity: 16.6310768074
+        relative_time: 0.425
+        distance: 7.06699834095
+      - 
+        target_velocity: 16.6313904083
+        relative_time: 0.45
+        distance: 7.48279922198
+      - 
+        target_velocity: 16.6317040093
+        relative_time: 0.475
+        distance: 7.89860010301
+      - 
+        target_velocity: 16.6320176103
+        relative_time: 0.5
+        distance: 8.31440098403
+      - 
+        target_velocity: 16.6323312112
+        relative_time: 0.525
+        distance: 8.73020186506
+      - 
+        target_velocity: 16.6326448122
+        relative_time: 0.55
+        distance: 9.14600274609
+      - 
+        target_velocity: 16.6329584132
+        relative_time: 0.575
+        distance: 9.56180362712
+      - 
+        target_velocity: 16.6332720141
+        relative_time: 0.6
+        distance: 9.97760450815
+      - 
+        target_velocity: 16.6335602232
+        relative_time: 0.625
+        distance: 10.393465535
+      - 
+        target_velocity: 16.6338484323
+        relative_time: 0.65
+        distance: 10.8093265619
+      - 
+        target_velocity: 16.6341366413
+        relative_time: 0.675
+        distance: 11.2251875888
+      - 
+        target_velocity: 16.6344248504
+        relative_time: 0.7
+        distance: 11.6410486157
+      - 
+        target_velocity: 16.6347130594
+        relative_time: 0.725
+        distance: 12.0569096426
+      - 
+        target_velocity: 16.6350012685
+        relative_time: 0.75
+        distance: 12.4727706695
+      - 
+        target_velocity: 16.6352894775
+        relative_time: 0.775
+        distance: 12.8886316963
+      - 
+        target_velocity: 16.6355776866
+        relative_time: 0.8
+        distance: 13.3044927232
+      - 
+        target_velocity: 16.6358425273
+        relative_time: 0.825
+        distance: 13.7204090228
+      - 
+        target_velocity: 16.636107368
+        relative_time: 0.85
+        distance: 14.1363253223
+      - 
+        target_velocity: 16.6363722087
+        relative_time: 0.875
+        distance: 14.5522416219
+      - 
+        target_velocity: 16.6366370493
+        relative_time: 0.9
+        distance: 14.9681579214
+      - 
+        target_velocity: 16.63690189
+        relative_time: 0.925
+        distance: 15.384074221
+      - 
+        target_velocity: 16.6371667307
+        relative_time: 0.95
+        distance: 15.7999905205
+      - 
+        target_velocity: 16.6374315714
+        relative_time: 0.975
+        distance: 16.2159068201
+      - 
+        target_velocity: 16.6376964121
+        relative_time: 1.0
+        distance: 16.6318231197
+      - 
+        target_velocity: 16.6379397456
+        relative_time: 1.025
+        distance: 17.0477902069
+      - 
+        target_velocity: 16.6381830791
+        relative_time: 1.05
+        distance: 17.4637572941
+      - 
+        target_velocity: 16.6384264126
+        relative_time: 1.075
+        distance: 17.8797243814
+      - 
+        target_velocity: 16.638669746
+        relative_time: 1.1
+        distance: 18.2956914686
+      - 
+        target_velocity: 16.6389130795
+        relative_time: 1.125
+        distance: 18.7116585558
+      - 
+        target_velocity: 16.639156413
+        relative_time: 1.15
+        distance: 19.1276256431
+      - 
+        target_velocity: 16.6393997465
+        relative_time: 1.175
+        distance: 19.5435927303
+      - 
+        target_velocity: 16.6396430799
+        relative_time: 1.2
+        distance: 19.9595598176
+      - 
+        target_velocity: 16.6398666202
+        relative_time: 1.225
+        distance: 20.3755735648
+      - 
+        target_velocity: 16.6400901605
+        relative_time: 1.25
+        distance: 20.791587312
+      - 
+        target_velocity: 16.6403137008
+        relative_time: 1.275
+        distance: 21.2076010592
+      - 
+        target_velocity: 16.640537241
+        relative_time: 1.3
+        distance: 21.6236148064
+      - 
+        target_velocity: 16.6407607813
+        relative_time: 1.325
+        distance: 22.0396285536
+      - 
+        target_velocity: 16.6409843216
+        relative_time: 1.35
+        distance: 22.4556423008
+      - 
+        target_velocity: 16.6412078619
+        relative_time: 1.375
+        distance: 22.871656048
+      - 
+        target_velocity: 16.6414314022
+        relative_time: 1.4
+        distance: 23.2876697953
+      - 
+        target_velocity: 16.6416367303
+        relative_time: 1.425
+        distance: 23.703726404
+      - 
+        target_velocity: 16.6418420584
+        relative_time: 1.45
+        distance: 24.1197830128
+      - 
+        target_velocity: 16.6420473865
+        relative_time: 1.475
+        distance: 24.5358396215
+      - 
+        target_velocity: 16.6422527147
+        relative_time: 1.5
+        distance: 24.9518962303
+      - 
+        target_velocity: 16.6424580428
+        relative_time: 1.525
+        distance: 25.367952839
+      - 
+        target_velocity: 16.6426633709
+        relative_time: 1.55
+        distance: 25.7840094478
+      - 
+        target_velocity: 16.642868699
+        relative_time: 1.575
+        distance: 26.2000660565
+      - 
+        target_velocity: 16.6430740272
+        relative_time: 1.6
+        distance: 26.6161226653
+      - 
+        target_velocity: 16.6432626043
+        relative_time: 1.625
+        distance: 27.0322186411
+      - 
+        target_velocity: 16.6434511814
+        relative_time: 1.65
+        distance: 27.448314617
+      - 
+        target_velocity: 16.6436397586
+        relative_time: 1.675
+        distance: 27.8644105929
+      - 
+        target_velocity: 16.6438283357
+        relative_time: 1.7
+        distance: 28.2805065688
+      - 
+        target_velocity: 16.6440169129
+        relative_time: 1.725
+        distance: 28.6966025446
+      - 
+        target_velocity: 16.64420549
+        relative_time: 1.75
+        distance: 29.1126985205
+      - 
+        target_velocity: 16.6443940672
+        relative_time: 1.775
+        distance: 29.5287944964
+      - 
+        target_velocity: 16.6445826443
+        relative_time: 1.8
+        distance: 29.9448904723
+      - 
+        target_velocity: 16.6447558239
+        relative_time: 1.825
+        distance: 30.3610226021
+      - 
+        target_velocity: 16.6449290035
+        relative_time: 1.85
+        distance: 30.7771547319
+      - 
+        target_velocity: 16.6451021831
+        relative_time: 1.875
+        distance: 31.1932868618
+      - 
+        target_velocity: 16.6452753627
+        relative_time: 1.9
+        distance: 31.6094189916
+      - 
+        target_velocity: 16.6454485423
+        relative_time: 1.925
+        distance: 32.0255511215
+      - 
+        target_velocity: 16.645621722
+        relative_time: 1.95
+        distance: 32.4416832513
+      - 
+        target_velocity: 16.6457949016
+        relative_time: 1.975
+        distance: 32.8578153811
+      - 
+        target_velocity: 16.6459680812
+        relative_time: 2.0
+        distance: 33.273947511
+      - 
+        target_velocity: 16.6461271203
+        relative_time: 2.025
+        distance: 33.6901128425
+      - 
+        target_velocity: 16.6462861595
+        relative_time: 2.05
+        distance: 34.106278174
+      - 
+        target_velocity: 16.6464451987
+        relative_time: 2.075
+        distance: 34.5224435055
+      - 
+        target_velocity: 16.6466042378
+        relative_time: 2.1
+        distance: 34.9386088371
+      - 
+        target_velocity: 16.646763277
+        relative_time: 2.125
+        distance: 35.3547741686
+      - 
+        target_velocity: 16.6469223161
+        relative_time: 2.15
+        distance: 35.7709395001
+      - 
+        target_velocity: 16.6470813553
+        relative_time: 2.175
+        distance: 36.1871048316
+      - 
+        target_velocity: 16.6472403945
+        relative_time: 2.2
+        distance: 36.6032701632
+      - 
+        target_velocity: 16.6473864646
+        relative_time: 2.225
+        distance: 37.0194659868
+      - 
+        target_velocity: 16.6475325347
+        relative_time: 2.25
+        distance: 37.4356618103
+      - 
+        target_velocity: 16.6476786047
+        relative_time: 2.275
+        distance: 37.8518576339
+      - 
+        target_velocity: 16.6478246748
+        relative_time: 2.3
+        distance: 38.2680534575
+      - 
+        target_velocity: 16.6479707449
+        relative_time: 2.325
+        distance: 38.6842492811
+      - 
+        target_velocity: 16.648116815
+        relative_time: 2.35
+        distance: 39.1004451047
+      - 
+        target_velocity: 16.6482628851
+        relative_time: 2.375
+        distance: 39.5166409283
+      - 
+        target_velocity: 16.6484089552
+        relative_time: 2.4
+        distance: 39.9328367519
+      - 
+        target_velocity: 16.6485431519
+        relative_time: 2.425
+        distance: 40.3490605845
+      - 
+        target_velocity: 16.6486773487
+        relative_time: 2.45
+        distance: 40.7652844171
+      - 
+        target_velocity: 16.6488115454
+        relative_time: 2.475
+        distance: 41.1815082497
+      - 
+        target_velocity: 16.6489457421
+        relative_time: 2.5
+        distance: 41.5977320824
+      - 
+        target_velocity: 16.6490799389
+        relative_time: 2.525
+        distance: 42.013955915
+      - 
+        target_velocity: 16.6492141356
+        relative_time: 2.55
+        distance: 42.4301797476
+      - 
+        target_velocity: 16.6493483323
+        relative_time: 2.575
+        distance: 42.8464035802
+      - 
+        target_velocity: 16.6494825291
+        relative_time: 2.6
+        distance: 43.2626274128
+      - 
+        target_velocity: 16.649605882
+        relative_time: 2.625
+        distance: 43.6788769837
+      - 
+        target_velocity: 16.649729235
+        relative_time: 2.65
+        distance: 44.0951265546
+      - 
+        target_velocity: 16.649852588
+        relative_time: 2.675
+        distance: 44.5113761256
+      - 
+        target_velocity: 16.6499759409
+        relative_time: 2.7
+        distance: 44.9276256965
+      - 
+        target_velocity: 16.6500992939
+        relative_time: 2.725
+        distance: 45.3438752674
+      - 
+        target_velocity: 16.6502226468
+        relative_time: 2.75
+        distance: 45.7601248384
+      - 
+        target_velocity: 16.6503459998
+        relative_time: 2.775
+        distance: 46.1763744093
+      - 
+        target_velocity: 16.6504693528
+        relative_time: 2.8
+        distance: 46.5926239802
+      - 
+        target_velocity: 16.6505828346
+        relative_time: 2.825
+        distance: 47.0088972188
+      - 
+        target_velocity: 16.6506963164
+        relative_time: 2.85
+        distance: 47.4251704575
+      - 
+        target_velocity: 16.6508097982
+        relative_time: 2.875
+        distance: 47.8414436961
+      - 
+        target_velocity: 16.65092328
+        relative_time: 2.9
+        distance: 48.2577169347
+      - 
+        target_velocity: 16.6510367618
+        relative_time: 2.925
+        distance: 48.6739901734
+      - 
+        target_velocity: 16.6511502436
+        relative_time: 2.95
+        distance: 49.090263412
+      - 
+        target_velocity: 16.6512637254
+        relative_time: 2.975
+        distance: 49.5065366506
+      - 
+        target_velocity: 16.6513772072
+        relative_time: 3.0
+        distance: 49.9228098893
+      - 
+        target_velocity: 16.6514817422
+        relative_time: 3.025
+        distance: 50.3391049145
+      - 
+        target_velocity: 16.6515862773
+        relative_time: 3.05
+        distance: 50.7553999398
+      - 
+        target_velocity: 16.6516908124
+        relative_time: 3.075
+        distance: 51.1716949651
+      - 
+        target_velocity: 16.6517953474
+        relative_time: 3.1
+        distance: 51.5879899904
+      - 
+        target_velocity: 16.6518998825
+        relative_time: 3.125
+        distance: 52.0042850157
+      - 
+        target_velocity: 16.6520044176
+        relative_time: 3.15
+        distance: 52.4205800409
+      - 
+        target_velocity: 16.6521089526
+        relative_time: 3.175
+        distance: 52.8368750662
+      - 
+        target_velocity: 16.6522134877
+        relative_time: 3.2
+        distance: 53.2531700915
+      - 
+        target_velocity: 16.6523099608
+        relative_time: 3.225
+        distance: 53.6694852031
+      - 
+        target_velocity: 16.652406434
+        relative_time: 3.25
+        distance: 54.0858003148
+      - 
+        target_velocity: 16.6525029071
+        relative_time: 3.275
+        distance: 54.5021154264
+      - 
+        target_velocity: 16.6525993802
+        relative_time: 3.3
+        distance: 54.9184305381
+      - 
+        target_velocity: 16.6526958534
+        relative_time: 3.325
+        distance: 55.3347456497
+      - 
+        target_velocity: 16.6527923265
+        relative_time: 3.35
+        distance: 55.7510607614
+      - 
+        target_velocity: 16.6528887997
+        relative_time: 3.375
+        distance: 56.167375873
+      - 
+        target_velocity: 16.6529852728
+        relative_time: 3.4
+        distance: 56.5836909846
+      - 
+        target_velocity: 16.6530745376
+        relative_time: 3.425
+        distance: 57.0000246561
+      - 
+        target_velocity: 16.6531638025
+        relative_time: 3.45
+        distance: 57.4163583275
+      - 
+        target_velocity: 16.6532530673
+        relative_time: 3.475
+        distance: 57.832691999
+      - 
+        target_velocity: 16.6533423322
+        relative_time: 3.5
+        distance: 58.2490256704
+      - 
+        target_velocity: 16.653431597
+        relative_time: 3.525
+        distance: 58.6653593419
+      - 
+        target_velocity: 16.6535208619
+        relative_time: 3.55
+        distance: 59.0816930133
+      - 
+        target_velocity: 16.6536101267
+        relative_time: 3.575
+        distance: 59.4980266847
+      - 
+        target_velocity: 16.6536993916
+        relative_time: 3.6
+        distance: 59.9143603562
+      - 
+        target_velocity: 16.6537822789
+        relative_time: 3.625
+        distance: 60.3307112292
+      - 
+        target_velocity: 16.6538651663
+        relative_time: 3.65
+        distance: 60.7470621021
+      - 
+        target_velocity: 16.6539480536
+        relative_time: 3.675
+        distance: 61.1634129751
+      - 
+        target_velocity: 16.654030941
+        relative_time: 3.7
+        distance: 61.5797638481
+      - 
+        target_velocity: 16.6541138283
+        relative_time: 3.725
+        distance: 61.996114721
+      - 
+        target_velocity: 16.6541967157
+        relative_time: 3.75
+        distance: 62.412465594
+      - 
+        target_velocity: 16.6542796031
+        relative_time: 3.775
+        distance: 62.828816467
+      - 
+        target_velocity: 16.6543624904
+        relative_time: 3.8
+        distance: 63.2451673399
+      - 
+        target_velocity: 16.6544398166
+        relative_time: 3.825
+        distance: 63.6615342208
+      - 
+        target_velocity: 16.6545171429
+        relative_time: 3.85
+        distance: 64.0779011016
+      - 
+        target_velocity: 16.6545944691
+        relative_time: 3.875
+        distance: 64.4942679824
+      - 
+        target_velocity: 16.6546717953
+        relative_time: 3.9
+        distance: 64.9106348632
+      - 
+        target_velocity: 16.6547491216
+        relative_time: 3.925
+        distance: 65.327001744
+      - 
+        target_velocity: 16.6548264478
+        relative_time: 3.95
+        distance: 65.7433686248
+      - 
+        target_velocity: 16.654903774
+        relative_time: 3.975
+        distance: 66.1597355056
+      - 
+        target_velocity: 16.6549811002
+        relative_time: 4.0
+        distance: 66.5761023864
+      - 
+        target_velocity: 16.6550536757
+        relative_time: 4.025
+        distance: 66.9924842439
+      - 
+        target_velocity: 16.6551262513
+        relative_time: 4.05
+        distance: 67.4088661014
+      - 
+        target_velocity: 16.6551988268
+        relative_time: 4.075
+        distance: 67.8252479589
+      - 
+        target_velocity: 16.6552714023
+        relative_time: 4.1
+        distance: 68.2416298164
+      - 
+        target_velocity: 16.6553439778
+        relative_time: 4.125
+        distance: 68.6580116739
+      - 
+        target_velocity: 16.6554165533
+        relative_time: 4.15
+        distance: 69.0743935313
+      - 
+        target_velocity: 16.6554891288
+        relative_time: 4.175
+        distance: 69.4907753888
+      - 
+        target_velocity: 16.6555617043
+        relative_time: 4.2
+        distance: 69.9071572463
+      - 
+        target_velocity: 16.6556303423
+        relative_time: 4.225
+        distance: 70.3235532115
+      - 
+        target_velocity: 16.6556989802
+        relative_time: 4.25
+        distance: 70.7399491768
+      - 
+        target_velocity: 16.6557676182
+        relative_time: 4.275
+        distance: 71.156345142
+      - 
+        target_velocity: 16.6558362561
+        relative_time: 4.3
+        distance: 71.5727411072
+      - 
+        target_velocity: 16.6559048941
+        relative_time: 4.325
+        distance: 71.9891370724
+      - 
+        target_velocity: 16.655973532
+        relative_time: 4.35
+        distance: 72.4055330377
+      - 
+        target_velocity: 16.6560421699
+        relative_time: 4.375
+        distance: 72.8219290029
+      - 
+        target_velocity: 16.6561108079
+        relative_time: 4.4
+        distance: 73.2383249681
+      - 
+        target_velocity: 16.6561763332
+        relative_time: 4.425
+        distance: 73.6547343358
+      - 
+        target_velocity: 16.6562418585
+        relative_time: 4.45
+        distance: 74.0711437034
+      - 
+        target_velocity: 16.6563073838
+        relative_time: 4.475
+        distance: 74.4875530711
+      - 
+        target_velocity: 16.656372909
+        relative_time: 4.5
+        distance: 74.9039624387
+      - 
+        target_velocity: 16.6564384343
+        relative_time: 4.525
+        distance: 75.3203718064
+      - 
+        target_velocity: 16.6565039596
+        relative_time: 4.55
+        distance: 75.7367811741
+      - 
+        target_velocity: 16.6565694849
+        relative_time: 4.575
+        distance: 76.1531905417
+      - 
+        target_velocity: 16.6566350102
+        relative_time: 4.6
+        distance: 76.5695999094
+      - 
+        target_velocity: 16.6566982688
+        relative_time: 4.625
+        distance: 76.9860221411
+      - 
+        target_velocity: 16.6567615275
+        relative_time: 4.65
+        distance: 77.4024443729
+      - 
+        target_velocity: 16.6568247861
+        relative_time: 4.675
+        distance: 77.8188666046
+      - 
+        target_velocity: 16.6568880448
+        relative_time: 4.7
+        distance: 78.2352888363
+      - 
+        target_velocity: 16.6569513034
+        relative_time: 4.725
+        distance: 78.6517110681
+      - 
+        target_velocity: 16.6570145621
+        relative_time: 4.75
+        distance: 79.0681332998
+      - 
+        target_velocity: 16.6570778207
+        relative_time: 4.775
+        distance: 79.4845555316
+      - 
+        target_velocity: 16.6571410794
+        relative_time: 4.8
+        distance: 79.9009777633
+      - 
+        target_velocity: 16.6572029485
+        relative_time: 4.825
+        distance: 80.3174124929
+      - 
+        target_velocity: 16.6572648175
+        relative_time: 4.85
+        distance: 80.7338472225
+      - 
+        target_velocity: 16.6573266866
+        relative_time: 4.875
+        distance: 81.1502819521
+      - 
+        target_velocity: 16.6573885557
+        relative_time: 4.9
+        distance: 81.5667166817
+      - 
+        target_velocity: 16.6574504247
+        relative_time: 4.925
+        distance: 81.9831514113
+      - 
+        target_velocity: 16.6575122938
+        relative_time: 4.95
+        distance: 82.3995861409
+      - 
+        target_velocity: 16.6575741628
+        relative_time: 4.975
+        distance: 82.8160208704
+      - 
+        target_velocity: 16.6576360319
+        relative_time: 5.0
+        distance: 83.2324556
+    cruise_velocity: 16.6666666667
+  acceleration: 
+    available: 2
+    range_limit: 
+      max: 0.0
+      min: 0.0
+    acc_points: 
+      - 
+        acc: 0.0154725142475
+        jerk: -0.00624918845295
+      - 
+        acc: 0.0153162845362
+        jerk: -0.00574855974018
+      - 
+        acc: 0.0151600548248
+        jerk: -0.00226863963389
+      - 
+        acc: 0.0150038251135
+        jerk: 0.0
+      - 
+        acc: 0.0148475954022
+        jerk: 0.0
+      - 
+        acc: 0.0146913656909
+        jerk: 0.0
+      - 
+        acc: 0.0145351359795
+        jerk: 0.0
+      - 
+        acc: 0.0143789062682
+        jerk: 0.0
+      - 
+        acc: 0.0142226765569
+        jerk: 0.0
+      - 
+        acc: 0.0140789625634
+        jerk: 0.0
+      - 
+        acc: 0.0139352485699
+        jerk: 0.0
+      - 
+        acc: 0.0137915345764
+        jerk: 0.0
+      - 
+        acc: 0.0136478205829
+        jerk: 0.0
+      - 
+        acc: 0.0135041065894
+        jerk: 0.0
+      - 
+        acc: 0.0133603925959
+        jerk: 0.0
+      - 
+        acc: 0.0132166786024
+        jerk: 0.0
+      - 
+        acc: 0.0130729646089
+        jerk: 0.0
+      - 
+        acc: 0.0129407331276
+        jerk: 0.0
+      - 
+        acc: 0.0128085016463
+        jerk: 0.0
+      - 
+        acc: 0.012676270165
+        jerk: 0.0
+      - 
+        acc: 0.0125440386837
+        jerk: 0.0
+      - 
+        acc: 0.0124118072024
+        jerk: 0.0
+      - 
+        acc: 0.0122795757212
+        jerk: 0.0
+      - 
+        acc: 0.0121473442399
+        jerk: 0.0
+      - 
+        acc: 0.0120151127586
+        jerk: 0.0
+      - 
+        acc: 0.0118934250849
+        jerk: 0.0
+      - 
+        acc: 0.0117717374112
+        jerk: 0.0
+      - 
+        acc: 0.0116500497375
+        jerk: 0.0
+      - 
+        acc: 0.0115283620638
+        jerk: 0.0
+      - 
+        acc: 0.0114066743901
+        jerk: 0.0
+      - 
+        acc: 0.0112849867163
+        jerk: 0.0
+      - 
+        acc: 0.0111632990426
+        jerk: 0.0
+      - 
+        acc: 0.0110416113689
+        jerk: 0.0
+      - 
+        acc: 0.0109296155011
+        jerk: 0.0
+      - 
+        acc: 0.0108176196332
+        jerk: 0.0
+      - 
+        acc: 0.0107056237654
+        jerk: 0.0
+      - 
+        acc: 0.0105936278975
+        jerk: 0.0
+      - 
+        acc: 0.0104816320296
+        jerk: 0.0
+      - 
+        acc: 0.0103696361618
+        jerk: 0.0
+      - 
+        acc: 0.0102576402939
+        jerk: 0.0
+      - 
+        acc: 0.0101456444261
+        jerk: 0.0
+      - 
+        acc: 0.0100425680766
+        jerk: 0.0
+      - 
+        acc: 0.00993949172706
+        jerk: 0.0
+      - 
+        acc: 0.00983641537756
+        jerk: 0.0
+      - 
+        acc: 0.00973333902805
+        jerk: 0.0
+      - 
+        acc: 0.00963026267854
+        jerk: 0.0
+      - 
+        acc: 0.00952718632903
+        jerk: 0.0
+      - 
+        acc: 0.00942410997952
+        jerk: 0.0
+      - 
+        acc: 0.00932103363002
+        jerk: 0.0
+      - 
+        acc: 0.00922617798105
+        jerk: 0.0
+      - 
+        acc: 0.00913132233208
+        jerk: 0.0
+      - 
+        acc: 0.00903646668312
+        jerk: 0.0
+      - 
+        acc: 0.00894161103415
+        jerk: 0.0
+      - 
+        acc: 0.00884675538518
+        jerk: 0.0
+      - 
+        acc: 0.00875189973621
+        jerk: 0.0
+      - 
+        acc: 0.00865704408725
+        jerk: 0.0
+      - 
+        acc: 0.00856218843828
+        jerk: 0.0
+      - 
+        acc: 0.00847492258381
+        jerk: 0.0
+      - 
+        acc: 0.00838765672933
+        jerk: 0.0
+      - 
+        acc: 0.00830039087486
+        jerk: 0.0
+      - 
+        acc: 0.00821312502038
+        jerk: 0.0
+      - 
+        acc: 0.00812585916591
+        jerk: 0.0
+      - 
+        acc: 0.00803859331144
+        jerk: 0.0
+      - 
+        acc: 0.00795132745696
+        jerk: 0.0
+      - 
+        acc: 0.00786406160249
+        jerk: 0.0
+      - 
+        acc: 0.00778381762622
+        jerk: 0.0
+      - 
+        acc: 0.00770357364994
+        jerk: 0.0
+      - 
+        acc: 0.00762332967367
+        jerk: 0.0
+      - 
+        acc: 0.0075430856974
+        jerk: 0.0
+      - 
+        acc: 0.00746284172113
+        jerk: 0.0
+      - 
+        acc: 0.00738259774486
+        jerk: 0.0
+      - 
+        acc: 0.00730235376858
+        jerk: 0.0
+      - 
+        acc: 0.00722210979231
+        jerk: 0.0
+      - 
+        acc: 0.00714837843741
+        jerk: 0.0
+      - 
+        acc: 0.00707464708252
+        jerk: 0.0
+      - 
+        acc: 0.00700091572762
+        jerk: 0.0
+      - 
+        acc: 0.00692718437272
+        jerk: 0.0
+      - 
+        acc: 0.00685345301783
+        jerk: 0.0
+      - 
+        acc: 0.00677972166293
+        jerk: 0.0
+      - 
+        acc: 0.00670599030803
+        jerk: 0.0
+      - 
+        acc: 0.00663225895314
+        jerk: 0.0
+      - 
+        acc: 0.00656458584546
+        jerk: 0.0
+      - 
+        acc: 0.00649691273778
+        jerk: 0.0
+      - 
+        acc: 0.0064292396301
+        jerk: 0.0
+      - 
+        acc: 0.00636156652242
+        jerk: 0.0
+      - 
+        acc: 0.00629389341474
+        jerk: 0.0
+      - 
+        acc: 0.00622622030706
+        jerk: 0.0
+      - 
+        acc: 0.00615854719938
+        jerk: 0.0
+      - 
+        acc: 0.0060908740917
+        jerk: 0.0
+      - 
+        acc: 0.00602885648386
+        jerk: 0.0
+      - 
+        acc: 0.00596683887602
+        jerk: 0.0
+      - 
+        acc: 0.00590482126819
+        jerk: 0.0
+      - 
+        acc: 0.00584280366035
+        jerk: 0.0
+      - 
+        acc: 0.00578078605251
+        jerk: 0.0
+      - 
+        acc: 0.00571876844467
+        jerk: 0.0
+      - 
+        acc: 0.00565675083683
+        jerk: 0.0
+      - 
+        acc: 0.00559473322899
+        jerk: 0.0
+      - 
+        acc: 0.00553801723815
+        jerk: 0.0
+      - 
+        acc: 0.0054813012473
+        jerk: 0.0
+      - 
+        acc: 0.00542458525645
+        jerk: 0.0
+      - 
+        acc: 0.00536786926561
+        jerk: 0.0
+      - 
+        acc: 0.00531115327476
+        jerk: 0.0
+      - 
+        acc: 0.00525443728391
+        jerk: 0.0
+      - 
+        acc: 0.00519772129306
+        jerk: 0.0
+      - 
+        acc: 0.00514100530222
+        jerk: 0.0
+      - 
+        acc: 0.00508928361919
+        jerk: 0.0
+      - 
+        acc: 0.00503756193617
+        jerk: 0.0
+      - 
+        acc: 0.00498584025314
+        jerk: 0.0
+      - 
+        acc: 0.00493411857012
+        jerk: 0.0
+      - 
+        acc: 0.0048823968871
+        jerk: 0.0
+      - 
+        acc: 0.00483067520407
+        jerk: 0.0
+      - 
+        acc: 0.00477895352105
+        jerk: 0.0
+      - 
+        acc: 0.00472723183802
+        jerk: 0.0
+      - 
+        acc: 0.00468024189054
+        jerk: 0.0
+      - 
+        acc: 0.00463325194306
+        jerk: 0.0
+      - 
+        acc: 0.00458626199558
+        jerk: 0.0
+      - 
+        acc: 0.00453927204809
+        jerk: 0.0
+      - 
+        acc: 0.00449228210061
+        jerk: 0.0
+      - 
+        acc: 0.00444529215313
+        jerk: 0.0
+      - 
+        acc: 0.00439830220565
+        jerk: 0.0
+      - 
+        acc: 0.00435131225816
+        jerk: 0.0
+      - 
+        acc: 0.00430883481541
+        jerk: 0.0
+      - 
+        acc: 0.00426635737265
+        jerk: 0.0
+      - 
+        acc: 0.00422387992989
+        jerk: 0.0
+      - 
+        acc: 0.00418140248714
+        jerk: 0.0
+      - 
+        acc: 0.00413892504438
+        jerk: 0.0
+      - 
+        acc: 0.00409644760163
+        jerk: 0.0
+      - 
+        acc: 0.00405397015887
+        jerk: 0.0
+      - 
+        acc: 0.00401149271611
+        jerk: 0.0
+      - 
+        acc: 0.00397335092662
+        jerk: 0.0
+      - 
+        acc: 0.00393520913713
+        jerk: 0.0
+      - 
+        acc: 0.00389706734764
+        jerk: 0.0
+      - 
+        acc: 0.00385892555814
+        jerk: 0.0
+      - 
+        acc: 0.00382078376865
+        jerk: 0.0
+      - 
+        acc: 0.00378264197916
+        jerk: 0.0
+      - 
+        acc: 0.00374450018966
+        jerk: 0.0
+      - 
+        acc: 0.00370635840017
+        jerk: 0.0
+      - 
+        acc: 0.00367241725949
+        jerk: 0.0
+      - 
+        acc: 0.00363847611882
+        jerk: 0.0
+      - 
+        acc: 0.00360453497814
+        jerk: 0.0
+      - 
+        acc: 0.00357059383746
+        jerk: 0.0
+      - 
+        acc: 0.00353665269678
+        jerk: 0.0
+      - 
+        acc: 0.0035027115561
+        jerk: 0.0
+      - 
+        acc: 0.00346877041542
+        jerk: 0.0
+      - 
+        acc: 0.00343482927475
+        jerk: 0.0
+      - 
+        acc: 0.0034049955239
+        jerk: 0.0
+      - 
+        acc: 0.00337516177305
+        jerk: 0.0
+      - 
+        acc: 0.0033453280222
+        jerk: 0.0
+      - 
+        acc: 0.00331549427136
+        jerk: 0.0
+      - 
+        acc: 0.00328566052051
+        jerk: 0.0
+      - 
+        acc: 0.00325582676966
+        jerk: 0.0
+      - 
+        acc: 0.00322599301881
+        jerk: 0.0
+      - 
+        acc: 0.00319615926797
+        jerk: 0.0
+      - 
+        acc: 0.00317038172826
+        jerk: 0.0
+      - 
+        acc: 0.00314460418856
+        jerk: 0.0
+      - 
+        acc: 0.00311882664885
+        jerk: 0.0
+      - 
+        acc: 0.00309304910915
+        jerk: 0.0
+      - 
+        acc: 0.00306727156945
+        jerk: 0.0
+      - 
+        acc: 0.00304149402974
+        jerk: 0.0
+      - 
+        acc: 0.00301571649004
+        jerk: 0.0
+      - 
+        acc: 0.00298993895033
+        jerk: 0.0
+      - 
+        acc: 0.00296820930486
+        jerk: 0.0
+      - 
+        acc: 0.00294647965939
+        jerk: 0.0
+      - 
+        acc: 0.00292475001393
+        jerk: 0.0
+      - 
+        acc: 0.00290302036846
+        jerk: 0.0
+      - 
+        acc: 0.00288129072299
+        jerk: 0.0
+      - 
+        acc: 0.00285956107752
+        jerk: 0.0
+      - 
+        acc: 0.00283783143205
+        jerk: 0.0
+      - 
+        acc: 0.00281610178658
+        jerk: 0.0
+      - 
+        acc: 0.00279845582344
+        jerk: 0.0
+      - 
+        acc: 0.00278080986031
+        jerk: 0.0
+      - 
+        acc: 0.00276316389717
+        jerk: 0.0
+      - 
+        acc: 0.00274551793404
+        jerk: 0.0
+      - 
+        acc: 0.0027278719709
+        jerk: 0.0
+      - 
+        acc: 0.00271022600777
+        jerk: 0.0
+      - 
+        acc: 0.00269258004464
+        jerk: 0.0
+      - 
+        acc: 0.0026749340815
+        jerk: 0.0
+      - 
+        acc: 0.00266145341889
+        jerk: 0.0
+      - 
+        acc: 0.00264797275628
+        jerk: 0.0
+      - 
+        acc: 0.00263449209367
+        jerk: 0.0
+      - 
+        acc: 0.00262101143107
+        jerk: 0.0
+      - 
+        acc: 0.00260753076846
+        jerk: 0.0
+      - 
+        acc: 0.00259405010585
+        jerk: 0.0
+      - 
+        acc: 0.00258056944324
+        jerk: 0.0
+      - 
+        acc: 0.00256708878063
+        jerk: 0.0
+      - 
+        acc: 0.00255790309915
+        jerk: 0.0
+      - 
+        acc: 0.00254871741768
+        jerk: 0.0
+      - 
+        acc: 0.0025395317362
+        jerk: 0.0
+      - 
+        acc: 0.00253034605472
+        jerk: 0.0
+      - 
+        acc: 0.00252116037325
+        jerk: 0.0
+      - 
+        acc: 0.00251197469177
+        jerk: 0.0
+      - 
+        acc: 0.00250278901029
+        jerk: 0.0
+      - 
+        acc: 0.00249360332882
+        jerk: 0.0
+      - 
+        acc: 0.00248889314202
+        jerk: 0.0
+      - 
+        acc: 0.00248418295522
+        jerk: 0.0
+      - 
+        acc: 0.00247947276842
+        jerk: 0.0
+      - 
+        acc: 0.00247476258162
+        jerk: 0.0
+      - 
+        acc: 0.00247005239482
+        jerk: 0.0
+      - 
+        acc: 0.00246534220802
+        jerk: 0.0
+      - 
+        acc: 0.00246063202122
+        jerk: 0.0
+      - 
+        acc: 0.00245592183443
+        jerk: 0.0
+  frenet_state: []
+emergency: 
+  available: 2
+  jerk_factor: 0.0
+  stationary_obstacle_car_info: 
+    close_to_obstacle: False
+    steering_wheel_rad_limit: 0.0
+turn_signal_command: 
+  available: 1
+  turn_signal_data: 
+    value: 0
+  turn_signal_source: 
+    value: 0
+gear_command: 
+  available: 1
+  gear_data: 
+    value: 4
+plan_status: 
+  available: 1
+  algorithm_status: 
+    scene: 1
+    action: 0
+    action_status: 0
+    function: 0
+    function_status: 0
+    Reason: 0
+    source: 0
+  warning_status: 
+    warning_status: 0
+  solver_status: 
+    lat_motion_status: []
+    lat_solver_status: []
+    lon_motion_status: []
+    lon_solver_status: []
+  steer_mode: 
+    value: 0
+  hdmap_valid: True
+comfort: 
+  available: 1
+  maneuver_gear: 
+    value: 1
+decision: 
+  available: 3
+  lon_decision: 
+    follow_obstacles: []
+    overtake_obstacles: []
+    lon_nudge_obstacles: [-1]
+    lead_obstacles: []
+    tlead_obstacles: []
+    lc_gap_info: [-10, -10]
+    id_yield_closest: -1
+    id_overtake_closest: -1
+    tag_yield: 3
+    N_hard: 19
+    dt_yield: 0.0
+    dt_set: 0.0
+    ds_set: 186.614196777
+    ds_yield: 186.614196777
+    ds_overtake: -15.0
+    v_set: 16.6666660309
+    v_yield_closest: 33.3333320618
+    v_overtake_closest: -10000.0
+    v_lim: 16.6666660309
+    v_lim_map: 16.6666660309
+    a_set: 0.0500000007451
+    dis_close: 10000.0
+    ds_lon: [10000.0, -10.0]
+    ttc_lon: [10000.0, 100.0]
+    dt_lon: [10000.0, 100.0]
+    s_max: [186.61419677734375, 186.61419677734375, 186.61419677734375, 186.61419677734375, 186.61419677734375, 186.61419677734375, 186.61419677734375, 186.61419677734375, 186.61419677734375, 186.61419677734375, 186.61419677734375, 186.61419677734375, 186.61419677734375, 186.61419677734375, 186.61419677734375, 186.61419677734375, 186.61419677734375, 186.61419677734375, 186.61419677734375, 186.61419677734375, 186.61419677734375, 186.61419677734375, 186.61419677734375, 186.61419677734375, 186.61419677734375, 186.61419677734375]
+    d_safe: [3.03125, 3.03125, 3.03125, 3.03125, 3.03125, 3.03125, -200.0, -200.0, -200.0, -200.0, -200.0, -200.0, -200.0, -200.0, -200.0, -200.0, -200.0, -200.0, -200.0, 3.03125, 3.03125, 3.03125, 3.03125, 3.03125, 3.03125, 3.03125]
+    ds_flag: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    v_ref: [16.625064849853516, 16.66666603088379, 16.66666603088379, 16.66666603088379, 16.66666603088379, 16.66666603088379, 16.66666603088379, 16.66666603088379, 16.66666603088379, 16.66666603088379, 16.66666603088379, 16.66666603088379, 16.66666603088379, 16.66666603088379, 16.66666603088379, 16.66666603088379, 16.66666603088379, 16.66666603088379, 16.66666603088379, 16.66666603088379, 16.66666603088379, 16.66666603088379, 16.66666603088379, 16.66666603088379, 16.66666603088379, 16.66666603088379]
+    weights: [100.0, 1187.504638671875, 3000.0, 9.999999747378752e-05]
+    enable_prebrake: False
+    enable_preacc: False
+    need_aeb: False
+    pnc_start: False
+    pnc_stop: False
+    blocked: False
+  lat_decision: 
+    nudge_obstacles: []
+    lat_motion_decider: []
+    desire_offset: []
+    avd_info: 
+      - 
+        id: -1000
+        property: "none"
+        ignore: True
+        avd_direction: "none"
+        avd_priority: 1
+        blocked_time_begin: 0.0
+        blocked_time_end: 8.0
+        polygon: []
+    accident_ahead: False
+    disable_left: False
+    disable_right: False
+    enable_left: False
+    enable_right: False
+    lane_borrow: False
+    lane_borrow_range: 0
+    lat_offset: 0.0
+    fix_refline_index: 2
+    origin_refline_index: -98
+    target_refline_index: -98
+    sb_Blane: False
+    sb_lane: False
+    avd_car_past_fisrt: []
+    avd_car_past_second: []
+    avd_sp_car_past_first: []
+    avd_sp_car_past_second: []
+    alc_car_id: []
+    lb_car_id: []
+    lc_back_id: 0
+    lc_invalid_id: 0
+    dl_lat: 0.0
+    ttc_lat: 0.0
+    dt_lat: 0.0
+    fvfdead: False
+    svfdead: False
+    premoving: False
+    premove_dist: 0.0
+    init_val: []
+    via_points: []
+  traffic_light_decision: 
+    traffic_light_state: 0
+    stop_reason: 0
+    stop_flag: False
+    is_passed_stop_line: False
+    faster_pass: False
+extra: 
+  available: 2
+  version: ''
+  json: "{\"a_target\" : 0.015465, \"act_request_source\" : \"none\", \"avd_in_lane\" : false,\
+  \ \"cutin_score\" : 0.000000, \"dis2cross\" : 1797693134862315708145274237317043567980705675258,\
+  \ \"dis2merge\" : 1797693134862315708145274237317043567980705675258, \"dis_close\"\
+  \ : 10000.000000, \"dist_to_stop\" : 500.000000, \"ds_lon_front\" : 10000.000000,\
+  \ \"ds_lon_rear\" : -10.000000, \"ds_set\" : 186.614190, \"dsl_overtake\" : -15.000000,\
+  \ \"dsl_yield\" : 186.614190, \"dt_lon_front\" : 10000.000000, \"dt_lon_rear\" :\
+  \ 100.000000, \"flag_closelead\" : 0, \"flag_fastcutin\" : 1, \"flag_softbrake\"\
+  \ : 3, \"flag_type0\" : 1, \"id_nudge\" : [-1], \"id_overtake\" : -1, \"id_yield\"\
+  \ : -1, \"is_ddmap\" : true, \"is_passed_stop_line\" : false, \"lat_error\" : 0.101956,\
+  \ \"lc_request_source\" : \"none\", \"lc_warning\" : false, \"lon_error\" : 0.043342,\
+  \ \"num_yield\" : 0, \"pnc_start\" : false, \"pnc_stop\" : false, \"steer_angle\"\
+  \ : -0.012217, \"steer_rate\" : -0.022689, \"stop_flag\" : false, \"t_set\" : 0.000000,\
+  \ \"tag_yield\" : 3, \"traffic_light_state\" : 0, \"ttc_lon_front\" : 10000.000000,\
+  \ \"ttc_lon_rear\" : 100.000000, \"type_merge\" : 0, \"type_overtake\" : -1, \"\
+  type_yield\" : 0, \"v_limit\" : 16.666667, \"v_limit_map\" : 16.666667, \"v_limit_map_current\"\
+  \ : 16.666667, \"v_set\" : 16.666667, \"v_set_obs\" : 16.666667, \"v_target\" :\
+  \ 16.625084, \"vl_yield\" : 33.333333}"
+---

@@ -1,0 +1,214 @@
+%YAML:1.0
+---
+version: v2.2
+type: A02
+which_car: A02-S00464
+architecture: BYUNS                                         # 硬件架构版本
+vehicle_xyz: front_left_up                                  # 前左上,后轴中心接地点
+
+vehicle_info:                                               # 车辆参数
+# vehicle size相关
+  vehicle_length: 4.861                                    # 车辆长度, 单位 m
+  vehicle_width: 1.878                                      # 不包含反光镜的车辆宽度, 单位 m
+  vehicle_width_with_rearview_mirror: 2.161                 # 包含反光镜的车辆宽度, 单位 m
+  front_reduction_ratio: 11.005                             #前电机减速比，-1代表没有
+  rear_reduction_ratio: 11.005                              #后电机减速比, -1代表没有
+  steering_angle_normalize_ratio: 0.8775763566451241
+  vehicle_height: 1.454                                     # 车辆高度, 单位 m
+  vehicle_weight_empty: 2.013                               # 空载质量, 单位 t
+  vehicle_drive_mode: front_wheel_drive                     # 驱动类型，前驱，后驱，四驱
+  distance_from_rear_axle_mid_to_vehicle_mid: 1.3715         # 后轴中点到车辆几何中心的纵向距离, 单位 m
+  distance_from_front_bumper_to_front_axle: 0.902           # 前保险杠到前轴距离, 单位 m
+  distance_from_rear_bumper_to_rear_axle: 1.059            # 后保险杠到后轴距离, 单位 m
+  distance_from_centroid_to_front_axle: 1.497               # 质心到前轴距离, 单位 m
+  distance_from_centroid_to_rear_axle: 1.403               # 质心到后轴距离, 单位 m
+  distance_from_rearview_mirror_to_front_bumper: 1.532      # 反光镜到前保险杠距离, 单位 m
+# wheel 相关
+  steering_angle_ratio: 14.0                                # 方向盘转向比
+  steering_angle_max: 465                                 # 最大方向盘转角  deg
+  wheel_radius_front_left: 0.338                            # 左前轮子半径, 单位 m
+  wheel_radius_front_right: 0.338                           # 右前轮子半径, 单位 m
+  wheel_radius_rear_left: 0.338                             # 左后轮子半径, 单位 m
+  wheel_radius_rear_right: 0.338                           # 右后轮子半径, 单位 m
+  wheel_base: 2.900                                         # 前后轴距, 单位 m
+  front_track: 1.620                                        # 前轮距, 单位 m
+  rear_track: 1.614                                         # 后轮距, 单位 m
+  wheel_sensor_pulse_encode_range: [-32768, 32767]          # 编码器范围 
+  wheel_sensor_pulse_number_per_circle: 96                  # 一圈脉冲数 
+  cornering_stiffness_front_wheel: -1                    # 前轮侧偏刚度
+  cornering_stiffness_rear_wheel: -1                     # 后轮侧偏刚度
+  wheel_speed_rate_hz: 100                                  # 轮速上报频率
+  wheel_position_rate_hz: 100                               # 轮脉冲上报频率
+
+chassis_control:                                            # 线控参数
+ type: MCONTROL                                             # 线控类型
+ version:  V3.4.2.22220                                     # 线控版本
+ steering_type: STEERING_ANGLE                              # 转向控制类型
+ throttle_type: TORQUE                                       # 油门控制类型
+ brake_type: DECELERATION                                          # 刹车控制类型
+
+fleet:                                                      # 数采参数
+ type: v2_lite                                              # 数采类型 
+ connect_type: internet                                     # 数采连接方式 
+ #address: 192.168.2.150                                     # 数采IP 
+ version: v3.10.5                                            # 数采版本
+sensor_radar:                                               # Radar参数
+ type: bosch5                                           # Radar类型
+ connect_type: can                                          # Radar连接方式
+ num: 5                                                     # Radar个数
+ rate_hz: 10                                                # Radar上报频率 hz 
+ 
+sensor_camera:                                              # 相机参数 
+ type: v3.0                                                 # 相机类型
+ connect_type: gmsl                                         # 相机连接方式
+ exposure_mode: rolling_shutter                             # 相机曝光方式
+ num: 11                                                    # 相机个数 
+ rate_hz: 10                                                # 相机频率 hz
+ line_exposure_delay:                                       # 相机行曝光延时 ms
+    left_front: 0.01667
+    right_front: 0.01667
+    rear_mid: 0.01667
+    front_mid: 0.01667
+    left_rear: 0.01667
+    front_far: 0.01667
+    front_wide: 0.01667
+    right_rear: 0.01667
+    front_fisheye: 0.02667
+    left_fisheye: 0.02667
+    right_fisheye: 0.02667
+    rear_fisheye: 0.02667
+
+sensor_imu:                                                 # IMU参数
+ type: asm330                                               # IMU型号
+ connect_type: uart                                         # IMU连接方式
+ rate_hz: 100                                               # IMU上报频率 hz
+ level_arm: [1557.212, 489.093, 465.201]                   # IMU杆臂值  单位：mm
+sensor_navi:                                                # 惯导参数
+ type: ins-d                                                # 惯导型号
+ connect_type: uart                                         # 惯导连接方式
+ rate_hz: 50                                                # 惯导上报频率 
+ antenna_num: 2                                             # 惯导天线个数
+ level_arm: [-315.316, -69.7, 781.947]                          # 惯导主天线杆臂值 单位：mm
+ slave_level_arm: [0, 0, 0]                    # 惯导从天线杆臂值 单位：mm
+
+sensor_gnss_rtk:                                            # RTK参数
+ type: ublox-f9p                                            # RTK型号
+ connect_type: uart                                         # RTK连接方式
+ rate_hz: 8                                                 # RTK上报频率
+ antenna_num: 1                                             # RTK天线个数
+ level_arm: [41.17, 315.525, 1466.995]                          # RTK主天线杆臂值 单位：mm
+ slave_level_arm: [0, 0, 0]                    # RTK从天线杆臂值 单位：mm
+
+ 
+sensor_gnss_spp:                                            # 单点GPS参数
+ type: ublox-m8n                                            # GPS型号
+ connect_type: uart                                         # GPS连接方式
+ rate_hz: 5                                                 # GPS上报频率
+ level_arm: [0, 0, 0]                          # GPS杆臂值 单位：mm
+
+ 
+sensor_lidar:                                               # Lidar参数
+ type: hesai128                                          # Lidar类型
+ connect_type: internet                                     # Lidar连接方式
+ rate_hz: 10                                                # Lidar上报频率
+ width: 1800                                                # Lidar 角分辨率, 一圈点的个数
+ height: 128                                                # Lidar线束
+ 
+sensor_uss:                                                 # USS参数
+ type: none                                            # USS型号
+ num: 0                                                    # USS个数
+ 
+sensorhub:
+ type: momenta                                              # sensorhub类型
+ version: v1.0                                              # sensorhub版本
+ 
+timeline:                                                   # 时间系统参数
+ type: double                                               # 时间系统类型
+ version: v1.0                                              # 时间系统版本
+
+hydrophobic:                                                # 疏水参数
+ type: none                                                 # 疏水设备类型
+ 
+router:                                                     # 路由器参数
+ type: CPE-IC1680                                                  # 路由器型号
+ #address: 192.168.1.1                                       # 路由器地址
+ 
+wireless_charger: 
+ type: none                                            # 无线充电设备类型 
+ board_center: [0,0]                                   # 充电板中心在车后轴坐标系下的坐标 单位m
+ board_length: 0                                       # 车端充电板长 单位m
+ board_width: 0                                        # 车端充电板宽度 单位m
+ board_height: 0                                       # 车端充电板高度 单位m
+ work_range_x: 0                                       # 位移检测工作范围x方向 单位m
+ work_range_y: 0                                       # 位移检测工作范围y方向 单位m
+ max_charging_error_x: 0                               # 最大允许充电范围误差x方向 单位m
+ max_charging_error_y: 0                               # 最大允许充电范围误差y方向 单位m
+####################################
+
+fleet_type: v2_lite
+param:
+  vehicle_length: 4.861
+  distance_from_rear_bumper_to_rear_axle: 1.059 
+  front_reduction_ratio: 11.005                             #前电机减速比，-1代表没有
+  rear_reduction_ratio: 11.005                              #后电机减速比, -1代表没有
+  steering_angle_normalize_ratio: 0.8775763566451241
+  front_wheel_distance: 1.620
+  steering_angle_max: 465
+  forward_dead_zone_equivalent_height: 3.744 
+  wheel_radius_rear_right: 0.338
+  vehicle_width: 1.878
+  distance_from_front_bumper_to_front_axle: 0.902
+  steering_angle_ratio: 14.0
+  distance_from_rearview_mirror_to_front_bumper: 1.532
+  distance_from_centroid_to_rear_axle: 1.403
+  wheel_radius_rear_left: 0.338
+  vehicle_height: 1.454 
+  vehicle_width_with_rearview_mirror: 2.161
+  distance_from_centroid_to_front_axle: 1.497
+  wheel_base_distance: 2.900
+  vehicle_weight_empty: 2.013
+  distance_from_rear_axle_mid_to_vehicle_mid: 1.3715
+  wheel_radius_front_left: 0.338
+  wheel_radius_front_right: 0.338
+  rear_wheel_distance: 1.614
+  wheel_sensor_pulse_encode_range: [-32768, 32767]
+  cornering_stiffness_front_wheel: -1
+  rtk_level_arm: [41.17, 315.525, 1466.995]
+  rtk_level_arm_main: [41.17, 315.525, 1466.995]
+  rtk_level_arm_mbox: [318.16, 0, 1674.938]
+  wheel_sensor_pulse_number_per_circle: 96
+  imu_level_arm: [1557.212, 489.093, 465.201]
+  imu_level_arm_main: [1557.212, 489.093, 465.201]
+  imu_level_arm_mbox: [-502.956, 98.976, 811.147]
+  navi_level_arm: [-315.316, -69.7, 781.947]
+  cornering_stiffness_rear_wheel: -1
+control:
+  throttle_type: TORQUE
+  steering_type: STEERING_ANGLE
+  brake_type: DECELERATION
+  wire_type: MCONTROL
+function:
+  aeb_report: false
+  wheel_direction_report: false
+  fcw_report: false
+  apb_report: false
+  dlp_report: false
+  awb_report: false
+  cta_report: false
+  hba_report: false
+  hdc_report: false
+  ldp_report: false
+  ldw_report: false
+  swc_report: false
+  vse_report: false
+sensor:
+  lidar_model: hesai128
+  gnss_model: m8n-f9p_uart
+  radar_model: bosch5
+  camera_model: none
+  imu_model: asm330_can
+  uss_model: bosch6.5
+  navi_model: ins-d
+  hydrophobic_model: none
+  sensorhub_model: v1.0
+  time_model: double

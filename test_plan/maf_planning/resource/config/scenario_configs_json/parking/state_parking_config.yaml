@@ -1,0 +1,13 @@
+apa_psd_drift_threshold:
+  x: 6.0 # disable
+  y: 0.15
+  theta: 0.06
+apa_min_adjust_threshold:
+  x: 0.50
+  y: 0.075 # half the apa_psd_drift_threshold
+  theta: 0.03 # half the apa_psd_drift_threshold
+apa_simple_mpc_entry_threshold: 0.4
+mpc_predict_threshold:
+  x: 0.2
+  y: 0.14
+  theta: 0.05

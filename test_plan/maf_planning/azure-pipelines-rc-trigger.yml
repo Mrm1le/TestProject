@@ -1,0 +1,75 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+# trigger:
+#   branches:
+#     include:
+#       - cpp/main_ddld_rc_test
+
+pool:
+  name: default
+
+resources:
+  containers:
+  - container: rc_tool
+    endpoint: artifactory
+    image: artifactory.momenta.works/docker-momenta/cp/rc_tool:rc2.6.4
+
+stages:
+- stage: rc_trigger
+  jobs:
+  - job: rc_trigger
+    workspace:
+      clean: all
+    container: rc_tool
+    # pool:
+    #   name: hw-agents
+    displayName: 'rc_build'
+    steps:
+      - checkout: self
+        clean: true
+        lfs: true
+        submodules: recursive
+        persistCredentials: true
+      
+      - bash:
+        env: 
+          BUILD_SOURCEBRANCH: ${Build.SourceBranch}
+          # BUILD_SOURCEDIRECTORY: $(Agent.BuildDirectory)
+
+      - bash: |
+          cd & ls
+          pwd
+          cp /root/hello_world.py .
+          python hello_world.py
+          echo BEGIN rc.py
+          cp /root/.git-credentials .
+          cp /root/.gitconfig .
+          cp /root/rc.py .
+          git reset --hard
+          echo -----  target branch is ------
+          echo ${BUILD_SOURCEBRANCH}
+          ls
+          echo -----------BEGIN rc_shell.sh-----------
+          cp /root/rc_shell.sh .
+          bash rc_shell.sh
+          git reset --hard
+          echo -----------BEGIN rc.py-----------
+          python rc.py pr_all.json ${BUILD_SOURCEBRANCH} CMakeLists.txt
+        displayName: 'execute_rc'
+        failOnStderr: true
+
+
+# steps:
+#   - script: |
+#       echo Hello, world!
+#       sh release_candidate_trigger.sh 
+
+#     displayName: 'Run a one-line script'
+
+#   - script: |
+#       echo Add other tasks to build, test, and deploy your project.
+#       echo See https://aka.ms/yaml
+#     displayName: 'Run a multi-line script'

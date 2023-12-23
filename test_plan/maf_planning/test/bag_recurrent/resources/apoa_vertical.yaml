@@ -1,0 +1,140 @@
+STRATEGY_PARAM:
+  default_v: 0.5
+  default_a: 0.3
+  default_dt: 1.0
+
+  bcheckendsegment: true
+  check_endsegment_max_tan_tolerance: 0.02
+  default_check_endsegent_len: 0
+  enable_endsegment_len_correction: false
+  low_speed_endsegment_len: 1.0
+  enable_revserse_search: true
+  enable_smooth: false
+
+CAR_PARAMS:
+  lon_inflation_min: 0.3
+  lon_inflation_max: 0.3
+  lat_inflation_min: 0.17
+  lat_inflation_max: 0.17
+  inflation_rearview_mirror: 0.1
+  shrink_ratio_for_lines: 0.8
+  shrink_ratio_for_lines_min: 0.1
+  max_acceleration: 2.0 # in meter per second square
+  min_acceleration: -3.0 # in meter per second square
+  max_steer_angle:  460.0 # in degree, referring to the maximum turning angle of steering wheel
+  max_steer_angle_rate: 400.0
+  max_steer_angle_rear:  44.4 # in degree, referring to the maximum turning angle of steering wheel
+  max_steer_angle_rate_rear: 38.48
+  enable_multiple_steer_modes: false
+
+HYBRID_ASTAR_PARAMS:
+  use_t_line: true
+  inflation_for_points: 0.0
+  max_zigzag_allowd: 30
+
+  enable_delta_cost: true
+  enable_analytic_expansion: false
+  max_analytic_expansion_length: -1.0 # negative means infinite
+  analytic_expansion_end_size_threshold: 0.1
+  force_analytic_expansion_end_direction: 0
+  # resolution
+  xy_grid_resolution: 0.20
+  phi_grid_resolution: 0.0133
+  grid_dijkstra_xy_resolution: 1.0
+  pixel_resolution: 0.03 # TODO: deprecate gui to drop this
+
+  #penalty
+  traj_forward_penalty: 1.0
+  traj_back_penalty: 1.0
+  traj_gear_switch_penalty: 10.0
+  traj_steer_penalty: 0.0002 # 0.001 or less
+  traj_steer_change_penalty: 0.05
+  traj_sides_diff_penalty: 0.5
+
+  # state update
+  step_size: 0.1 # m
+  next_node_num: 7
+  step_direction: 0 # -1-backward, 0-bidirectional; 1-forward
+
+  delta_t: 1 # make sure this delta_t equals the delta t below
+  # heuristic
+  holonomic_with_obs_heuristic: 0.2
+  non_holonomic_without_obs_heuristic: 0.8
+
+
+
+  # visualize
+
+  verbose: 0 # 0:no log, 1:verbose for debug ,2:batch reaults
+  display_points: 0  # 0:NOPrint 1:Bidirection 2:Forward 3:Backward 4:show update points 5:show path
+
+  # choose a planning core
+
+  # 0: HA*2 vertical
+  # 1: Rule-Based
+  # 2: Pattern
+  # 3: Parallel-Rule-Based
+  # 8: HA*2 oblique
+  # 9: HA*2 parallel
+  # 10: HA*2 vertical out
+  # 11: HA*2 oblique out
+  # 12: HA*2 parallel out
+  planning_core: 10
+  max_iter_base: 150000
+  max_iter_max: 500000
+
+  footprint_model: 4
+  footprint_model_precise: 6 # 0: box, otherwise see ego_model_manager.h
+
+OBCA_PARAMS:
+  OBCA_running: false
+  #select solver option, which one to use
+  param_enable_check_parallel_trajectory: true # set true to optimize sub-trajectories one by one
+  param_FLAGS_use_iterative_anchoring_smoother: false # set false, not used for now
+  param_FLAGS_use_dual_variable_warm_start: true # set true to make sure a proper warm start of the solver is made
+  param_FLAGS_enable_smoother_failsafe: true # set true to make sure a trajectory is always generated
+  param_is_near_destination_threshold: 0.1  # not used for now
+  param_delta_t: 1 # make sure this delta_t equals the delta t above
+
+  #cost function params
+  param_cost_end_state: 100
+  param_cost_xy: 1
+  param_cost_theta: 1 
+  param_cost_speed: 100
+  param_cost_steer: 10
+  param_cost_acc: 10
+  param_cost_steerrate: 10
+  param_cost_jerk: 10
+  param_cost_stitching_steer: 5
+  param_cost_first_order_time: 1
+  param_cost_second_order_time: 1
+  param_cost_stitching_a: 5
+  param_min_safe_dist: 0.00 # in meter
+  param_max_steer_angle: 0.51  # in rad
+  param_max_speed_forward: 1.0  # in m/s
+  param_max_speed_reverse: 0.75 # in m/s
+  param_max_acc_forward: 1.5 # in m/s2
+  param_max_acc_reverse: 1.5 # in m/s2
+  param_min_time_sample_scaling: 1 # min ratio multiplied to delta_t
+  param_max_time_sample_scaling: 1 # max ratio multiplied to delta_t
+  param_max_steer_rate: 0.3 # rad/s
+  param_warm_start_weight: 1 # keep it one, a parameter used in warm start
+  param_if_use_fix_time: false # set false to make time step changeable, otherwise true
+  param_constraint_check: true  # set true to check which constraint makes the solve fail, if any
+  param_jacobian_ad: true  # must be true, otherwise incorrect results will be generated, set true to use automatic deriviatives, 
+  
+  #solver option params
+  param_info_level: 0 # 0, not print anything, 5, basic info, 6, detailed info of each iteration
+  param_max_itr: 300 # maximum number of iterations can be endured
+  param_lin_torl: 1e-2
+  param_mumps_mem: 10000 
+  param_mu_init: 1
+  param_conv_tol: 1
+  param_constraints_tol: 0.05 # maximum constraint violation tolerance
+  param_accet_objchange_tol: 1 # acceptable level of obj func value change
+  param_acceptable_compl_inf_tol: 1e6 
+  param_dual_inf_tol: 1e8
+  param_acceptable_tol: 1e6
+  param_acceptable_iter: 15 # the number of continuous iterations giving acceptable results, before returning the results
+  param_warmstart_acceptable_iter: 15 # the number of continuous iterations giving acceptable results, before returning the results for warm start
+  param_linear_solver: ma57 # choice of the linear solver used in IPOPT, now ma57 preferred

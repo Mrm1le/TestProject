@@ -1,0 +1,71 @@
+
+core_type: 0 # 0 apf, 1 hybrid-a-star
+enable_follow_target_pt: false
+
+# APF param
+# vehicle model
+VEHICLE_MODEL:
+  shrink_ratio: 0.7   # ego box shrink for apf %
+  step_size: 0.3      # each step size 
+  min_turning_radius: 5.5  
+  vehicle_length: 4.93
+  vehicle_width: 2.11
+  center_to_geometry_center: 1.465
+
+# potential field
+LINE_OBSTACLE: 
+  repulsion_weight: 3.0  # hard repulsion weight 
+  repulsion_max_distance: 0.3 # hard repulsion distance  
+  repulsion_2_weight: 15.0  # soft repulsion weight % 
+  repulsion_2_attenuation: 0.3  # soft repulsion distance, function like: exp(l/l0).effect: 5 * repulision_2_attenuation %
+
+DIRECTION_FIELD:
+  intensity: 70.0  # gradient for directional potential field
+  
+STRATEGY:
+  back_extend_points_num: 30
+  cp_back_extend_points_num: 10
+  thin_out_angle_accuracy: 0.05
+  thin_out_max_length: 10.0
+  stop_gradient_value: 300.0 
+  max_length: 60.0  # max apf traj length %
+  min_length: 20.0  # min apf traj length, below it will not replace %
+  lane_select_score: 0.6 # lane whose score up it will be selected as obstacles %
+
+ROAD_REF_SELECT:
+  max_look_ahead_distance: 30.0
+  min_look_ahead_distance: 5.0
+  look_ahead_time: 1.5 
+
+LEADER_SELECT:
+  max_leader_distance: 30.0 # 80.0 -> 30.0
+  min_leader_distance: 3.0
+  max_yaw_diff: 0.1 # 0.05
+  max_angle_diff: 0.1 # 0.05
+  use_agnle_diff_ratio: 0.5
+  max_l_tolerance: 0.8
+
+MUTI_LEADER_HISTORICAL:
+  discard_time: 10.0 # 0.35 -> 3.0 -> 10.0
+  max_historical_info_length: 250
+  traj_select_s_tolerance: 2.0
+  traj_select_l_tolerance: 1.2
+  traj_select_yaw_tolerance: 0.23 # 0.3 -> 0.27 -> 0.23
+  refline_real_length: 30
+
+QUIT_CP:
+  quit_cp_lat_dis_in_inter: 2.5
+  quit_cp_lat_dis_refline: 1000.0
+  quit_cp_consider_refline_length: 10.0
+
+QUINTIC:
+  use_quintic: true
+  farthest_index: 6
+
+SELECT_TARGET_LANE:
+  lat_change_cost_weight: 10.0
+  yaw_diff_cost_weight: 1000.0
+  max_jerk_abs_cost_weight: 200.0
+  track_id_diff_cost_weight: 100.0
+  frame_consistency_cost_weight: 1200.0
+  traffic_avoidance_cost_weight: 1.0

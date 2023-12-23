@@ -1,0 +1,21 @@
+%YAML:1.0
+
+param_version: "v1.0"
+
+uss_num: 12
+
+multi_uss_config:
+   - front_left_side
+   - front_left_corner
+   - front_left_mid
+   - front_right_mid
+   - front_right_corner
+   - front_right_side
+   - rear_right_side
+   - rear_right_corner
+   - rear_right_mid
+   - rear_left_mid
+   - rear_left_corner
+   - rear_left_side
+   
+

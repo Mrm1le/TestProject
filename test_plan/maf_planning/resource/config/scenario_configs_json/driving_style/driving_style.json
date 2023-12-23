@@ -1,0 +1,28 @@
+{
+    "act_request_speed_deviation": [
+        [18 , 14,  8, 6],
+        [18 , 15,  11, 9],
+        [18 , 16,  14, 12]],
+    "act_request_counter": [
+        [120, 60, 35, 8],
+        [150, 80, 40, 10],
+        [180, 100, 45, 12]
+    ],
+    "lc_rear_car_accel_ratio": [1.2, 1.0, 0.8],
+    "lc_back_front_car_accel_ratio": [1.2, 1.0, 0.8],
+    "lc_back_front_car_safety_dist_ratio": [0.9, 1.0, 1.1],
+    "lc_back_rear_car_accel_ratio": [1.2, 1.0, 0.8],
+    "lc_back_rear_car_safety_dist_ratio": [0.9, 1.0, 1.1],
+    "speed_decider": {
+        "a_max_ratio": [1.2, 1.0, 0.8]
+    },
+    "lon_behavior": {
+        
+        "d_stop": [2, 4, 6],
+        "weight_acc_ratio": [0.10, 1, 1.5],
+        "weight_jerk_ratio": [0.3, 1, 1.5]
+    },
+    "lat_motion": {
+        "l_weight_ratio": [5.0, 1.0, 0.1]
+    }
+}

@@ -1,0 +1,137 @@
+[
+    {
+        "//关于本配置文件": [
+            "===== 关于 mph_module_list.json （confluence 文档）=====",
+            "https://confluence.momenta.works/pages/viewpage.action?pageId=135735752"
+        ],
+        "//何为一个包": [
+            "mph 是一套包管理框架（https://confluence.momenta.works/pages/viewpage.action?pageId=121793396），如何定义一个包呢？",
+            "类比 maven 会用 groupId, artifactId 和 version 来唯一定位一个包：https://maven.apache.org/guides/mini/guide-naming-conventions.html",
+            "mph 会用 package_name, module_name 和 version 来唯一定位一个包（当然，c++ 包管理还需要管理不同的编译环境和编译选项）",
+            "使用一个包的时候，需要提供这三个信息来加入依赖，e.g.（详细可参考本仓库 CMakeLists.txt）",
+            "       include(mmv REQUIRED)",
+            "       mmv_init()",
+            "       # mmv_search_lib(<package_name> <module_name> <version>)",
+            "       mmv_search_lib(mpilot.3rdpart eigen3 latest)",
+            "       # <package_name>.<module_name>_INCLUDE_DIRS",
+            "       # <package_name>.<module_name>_LIBRARIES",
+            "       include_directories(${mpilot.3rdpart.eigen3_INCLUDE_DIRS})"
+        ],
+        "package_name": "mpilot.highway",
+        "module_name": "maf_planning",
+        "version": "0.0.1",
+        "release_note": "base dev-mpilot-v0.0.3",
+ 
+        "//关于编译目录": [
+            "规则为：",
+            "       ${MPH_PROJECT_ROOT}/modules/<work_space>/<module_dir_name || mph_name>",
+            "这里，<module_dir_name || mph_name> 是说优先用 module_dir_name 字段，如果没有指定，则使用 mph_name",
+            "修改的时候，需要和 Makefile 中的变量保持一致"
+        ],
+        "work_space": "maf2.0",
+        "mph_name": "maf_planning",
+        "//module_dir_name": "这个可以不设置",
+ 
+        "//关于代码自动拉取": [
+            "1. 需要指定代码仓库和分支，如果指定了具体版本，就会用具体版本",
+            "2. 建议自己的模块参考本工程挂载进入磁盘，避免 docker 内 git clone 源码"
+        ],
+        "git_url": "https://devops.momenta.works/Momenta/maf/_git/maf_planning",
+        "git_branch": "dev-mpilot-v0.0.3-qnx-compile",
+        "//from_branch": "",
+        "//commit_id": "",
+        "update_submodule": 1,
+ 
+        "cmake_root_relative": "./",
+ 
+        "//安装-后处理": [
+            "deploy 的时候，会直接压缩上传 cmake install 目录；这个字段用来删除不必要上传的一些文件",
+            "比如",
+            "   mdk 内部静态编译，但会合并为一个 libmdk.so，那么没有必要再上传原始的 .a 文件，删除它们"
+        ],
+        "post_install_cmd": "",
+ 
+        "//关于部署": [
+            "有几种部署方式：",
+            "   -   mmv 是作为一个 c++ 包上传",
+            "   其他呢？TODO，文档链接"
+        ],
+        "deploy_type": "mmv",
+ 
+        "//关于 exclude": [
+            "mph_make 不指定具体模块的时候（-m/--module），会变异 mph_module_list.json 的所有版本，除非它 exclude_from_all 了"
+        ],
+        "exclude_from_all": 1
+    },
+    {
+        "work_space": "maf2.0",
+        "mph_name": "maf_planning_mfr",
+        "git_url": "https://devops.momenta.works/Momenta/maf/_git/maf_planning",
+        "git_branch": "dev-mpilot-v0.0.3-qnx-compile",
+        "from_branch": "",
+        "//commit_id": "",
+        "update_submodule": 1,
+        "cmake_root_relative": "adapter/mfr",
+        "post_install_cmd": "",
+        "package_name": "mpilot.highway",
+        "module_name": "maf_planning_mfr",
+        "release_note": "cross compile for qnx base dev-mpilot-v0.0.3",
+        "version": "0.0.1",
+        "deploy_type": "mmv"
+    },
+    {
+        "//下面这几个包是干嘛的？": {
+            "它们来自 ${MPH_PROJECT_ROOT}/resource/mph/group/mph_module_group.json": {
+                "group_name": "mph_base",
+                "modules": [
+                    "mfr_common",
+                    "common_lib",
+                    "mfr_lib"
+                ]
+            },
+            "使用的时候可以用 mph_make --group mph_base 编译这三个包": "你也参考这个创建自己的 package group"
+        },
+        "exclude_from_all": 1,
+        "mph_name": "mfr_common",
+        "work_space": "dependants",
+        "no_make_install": 1,
+        "post_install_cmd": "python ${MPH_PROJECT_ROOT}/scripts/mfr/mfr_deploy.py -r $(mfr_release_path) -s $(mfr_common_path) -d $(mfr_common_install_path) -c $(mph_setting_path)",
+        "package_name": "mpilot",
+        "module_name": "mfr_util",
+        "version": "1.0.0",
+        "deploy_type": "scp",
+        "deploy_path": "mfr_util"
+    },
+    {
+        "exclude_from_all": 1,
+        "mph_name": "common_lib",
+        "work_space": "dependants",
+        "post_install_cmd": "rm -rf include; rm -f lib/*.a lib/libmfruntime.so lib/libmfbag.so; python $(so_install_filter) -i lib -b all",
+        "package_name": "mparking",
+        "module_name": "common_lib",
+        "version": "1.0.0",
+        "deploy_type": "scp",
+        "deploy_path": "libs/common_libs"
+    },
+    {
+        "exclude_from_all": 1,
+        "mph_name": "mfr_lib",
+        "work_space": "dependants",
+        "package_name": "mparking",
+        "module_name": "mfr_lib",
+        "version": "1.0.0",
+        "deploy_type": "scp",
+        "deploy_path": "libs/mfr_libs"
+    },
+    {
+        "exclude_from_all": 1,
+        "mph_name": "maf_common",
+        "git_url": "https://devops.momenta.works/Momenta/maf/_git/maf_common",
+        "git_branch": "maf2.1_v0.0.2",
+        "commit_id": "ff089cfc6",
+        "module_dir_name": "maf_common",
+        "update_submodule": 1,
+        "work_space": "dependants",
+        "auxiliary": 1
+    }
+]

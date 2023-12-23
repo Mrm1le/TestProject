@@ -1,0 +1,114 @@
+
+enable_config: false
+enable_reparkin: true
+enable_control_test: false
+available_id: []
+current_task: 0
+parking_mode: designate_parkin
+# parking_mode: random_parkin
+poi_config:
+  # pick up_
+  park_out:
+    id: &parkout_id 16419
+    type: &parkout_type PARKING_LOT
+  pick_up:
+    id: &pickup_id 1514
+    type: &pickup_type HUMAN_ACCESS
+  # search
+  search:
+    id: &search_id 0
+    type: &search_type TRAVERSE
+  # park in
+  park_in:
+    id: &parkin_id 3750
+    type: &parkin_type PARKING_LOT
+  # exit
+  exit:
+    id: &exit_id 0
+    type: &exit_type EXIT
+  # wait
+  wait:
+    id: &wait_id 0
+    type: &wait_type PARKING_LOT
+    
+
+# Parking Task Type
+parking_task_type:
+  - &CRUISE 0
+  - &SEARCH 1
+  - &PARKIN 2
+  - &PARKOUT 3
+  - &WAIT 4
+
+# Park Out Direction Type
+park_out_direction_type:
+  - &AUTO_SELECT 0
+  - &PERPENDICULAR_FRONT 1
+  - &PERPENDICULAR_FRONT_LEFT 2
+  - &PERPENDICULAR_FRONT_RIGHT 4
+  - &PERPENDICULAR_REAR 8
+  - &PERPENDICULAR_REAR_LEFT 16
+  - &PERPENDICULAR_REAR_RIGHT 32
+  - &PARALLEL_LEFT 64
+  - &PARALLEL_LEFT_FRONT 128
+  - &PARALLEL_RIGHT 256
+  - &PARALLEL_RIGHT_FRONT 512
+
+# Parking Task List
+parking_task_list:
+  - task_name: WAIT
+    task_type: *WAIT
+    poi_id: *wait_id
+    poi_type: *wait_type
+    park_out_direction: *AUTO_SELECT
+  - task_name: APOA
+    task_type: *PARKOUT
+    poi_id: *parkout_id
+    poi_type: *parkout_type
+    park_out_direction: *AUTO_SELECT
+  - task_name: GO_TO_PICKUP
+    task_type: *CRUISE
+    poi_id: *pickup_id
+    poi_type: *pickup_type
+    park_out_direction: *AUTO_SELECT
+  - task_name: WAIT
+    task_type: *WAIT
+    poi_id: *wait_id
+    poi_type: *wait_type
+    park_out_direction: *AUTO_SELECT
+  - task_name: SEARCH
+    task_type: *SEARCH
+    poi_id: *search_id
+    poi_type: *search_type
+    park_out_direction: *AUTO_SELECT
+  - task_name: GO_TO_PS
+    task_type: *CRUISE
+    poi_id: *parkin_id
+    poi_type: *parkin_type
+    park_out_direction: *AUTO_SELECT
+  - task_name: APA
+    task_type: *PARKIN
+    poi_id: *parkin_id
+    poi_type: *parkin_type
+    park_out_direction: *AUTO_SELECT
+  - task_name: WAIT
+    task_type: *WAIT
+    poi_id: *parkin_id
+    poi_type: *parkin_type
+    park_out_direction: *AUTO_SELECT
+  - task_name: APOA
+    task_type: *PARKOUT
+    poi_id: *parkin_id
+    poi_type: *parkin_type
+    park_out_direction: *AUTO_SELECT
+  - task_name: GO_TO_DROPOFF
+    task_type: *CRUISE
+    poi_id: *exit_id
+    poi_type: *exit_type
+    park_out_direction: *AUTO_SELECT
+  - task_name: WAIT
+    task_type: *WAIT
+    poi_id: *wait_id
+    poi_type: *wait_type
+    park_out_direction: *AUTO_SELECT
+

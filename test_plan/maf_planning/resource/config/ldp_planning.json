@@ -1,0 +1,17 @@
+{
+  "logger": {
+    "level": "INFO",
+    "file": "",
+    "file_type": "",
+    "enable_stderr": false,
+    "enable_background_dump": true,
+    "rostopic_name": "/mlog/logs/ldp_planning",
+    "export_frequence": 10,
+    "mfrtopic_name": "/mlog/logs/ldp_planning",
+    "enable_callback": true
+  },
+  "timer": {
+    "timeline_type":"mfr"
+  },
+  "start_machine": false
+}

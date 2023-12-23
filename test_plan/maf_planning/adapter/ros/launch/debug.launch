@@ -1,0 +1,48 @@
+<launch>
+  <rosparam>
+    Lattice_param : [ 
+      4.0,   <!-- FLAGS_weight_lon_object :1.0-->
+      40.0,  <!-- FLAGS_weight_lon_jerk : 10.0-->
+      45.0,  <!-- FLAGS_weight_lon_collision : 40.0 //larger than lon_safedistance-->
+      160.0, <!-- FLAGS_weight_lon_safedistance : 120.0//200 times of lon_object //120-->      
+      1.5,   <!-- FLAGS_weight_centripetal_acceleration : 1.5-->
+      10.0,  <!-- FLAGS_weight_lat_offset : 10.0 -->
+      0.1    <!-- FLAGS_weight_lat_comfort : 0.1 -->
+    ]
+  </rosparam>
+
+  <arg name="scene_type" default="0"/>
+  <arg name="debug" default="false"/>
+  <arg name="msim_provider" default="false"/>
+  <arg name="msquare_pnc_provider_address" default="$(optenv MSQUARE_PNC_PROVIDER_ADDRESS 0.0.0.0:20001)" />
+  <env name="ROSCONSOLE_CONFIG_FILE" value="$(find msquare_pnc_ros)/launch/rosconsole.conf"/>
+  <arg name="MSD_RESOURCE" default="$(find msquare_pnc_ros)/../../resource" />
+  <env name="MSD_RESOURCE" value="$(arg MSD_RESOURCE)" />
+  <arg name="MSD_LIB_MIMALLOC_PATH" default="$(find msquare_pnc_ros)/../../thirdparty/mimalloc-release/libmimalloc.so" />
+
+  <!-- <arg if="$(arg debug)" name="launch_prefix" value="xterm -rv -e gdb -ex run -args"/> -->
+  <!-- <arg if="$(arg debug)" name="launch_prefix" value="gdb -ex run -args"/> -->
+  <arg if="$(arg debug)" name="launch_prefix" value="cgdb -args"/>
+  <arg unless="$(arg debug)" name="launch_prefix" value=""/>
+
+  <node if="$(arg msim_provider)" pkg="msquare_pnc_ros" type="msquare_pnc_ros_msim_provider" name="decision_node" output="screen" respawn="false" launch-prefix="$(arg launch_prefix)">
+    <param name="config_file" value="$(arg MSD_RESOURCE)/config/msquare_planning.json" />
+    <param name="mtaskflow_config_file" value="$(arg MSD_RESOURCE)/config/mtaskflow_config.json" />
+    <param name="scene_type" value="$(arg scene_type)" />
+    <param name="server_address" value="$(arg msquare_pnc_provider_address)" />
+    <param name="config_file_dir" value="$(arg MSD_RESOURCE)/config" />
+  </node>
+
+  <node unless="$(arg msim_provider)" pkg="msquare_pnc_ros" type="decision" name="decision_node" output="screen" respawn="false" launch-prefix="$(arg launch_prefix)">
+    <param name="config_file" value="$(arg MSD_RESOURCE)/config/msquare_planning.json" />
+    <param name="mtaskflow_config_file" value="$(arg MSD_RESOURCE)/config/mtaskflow_config.json" />
+    <param name="scene_type" value="$(arg scene_type)" />
+    <!-- <env name="LD_PRELOAD" value="$(find msquare_pnc_ros)/../../thirdparty/mimalloc-release/libmimalloc.so" /> -->
+    <param name="config_file_dir" value="$(arg MSD_RESOURCE)/config" />
+    <env name="LD_PRELOAD" value="$(arg MSD_LIB_MIMALLOC_PATH)" />
+  </node>
+
+  <node pkg="msquare_pnc_ros" type="search_based_planning_node" name="search_based_planning_node" output="screen" respawn="true">
+    <param name="vehicle_calib_file" value="$(arg MSD_RESOURCE)/config/scenario_configs_json/parking/vehicle_param.yaml" />
+  </node>
+</launch>

@@ -1,0 +1,76 @@
+%YAML:1.0
+---
+type: LC6
+which_car: LC6_SOV020
+architecture: ep1
+fleet_type: v2_lite
+vehicle_xyz: front_left_up
+param:
+  vehicle_length: 4.897 
+  distance_from_rear_bumper_to_rear_axle: 0.984
+  front_wheel_distance: 1.695
+  steering_angle_max: 503.68
+  forward_dead_zone_equivalent_height: 0.954
+  steering_angle_normalize_ratio: 0.79011
+  front_reduction_ratio: 10.53                             #前电机减速比，-1代表没有
+  rear_reduction_ratio: 10.21                              #后电机减速比, -1代表没有
+  wheel_radius_rear_right: 0.3715 
+  vehicle_width: 1.987
+  distance_from_front_bumper_to_front_axle: 0.963
+  steering_angle_ratio: 15.2
+  distance_from_rearview_mirror_to_front_bumper: 1.669
+  distance_from_centroid_to_rear_axle: 1.474
+  wheel_radius_rear_left: 0.3715 
+  vehicle_height: 1.671
+  vehicle_width_with_rearview_mirror: 2.169
+  distance_from_centroid_to_front_axle: 1.476
+  wheel_base_distance: 2.95 
+  vehicle_weight_empty: 2.467 #83RWD：2.467,83AWD:2.526,100RWD:2.391,100AWD:2.477
+  distance_from_rear_axle_mid_to_vehicle_mid: 1.475
+  wheel_radius_front_left: 0.3715 
+  wheel_radius_front_right: 0.3715 
+  rear_wheel_distance: 1.695
+  wheel_sensor_pulse_encode_range: [-32768, 32767]
+  cornering_stiffness_front_wheel: -1 #待测量
+  rtk_level_arm: [-826.7, 253.0, 1201.1] 
+  rtk_level_arm_main: [-826.7, 253.0, 1201.1] 
+  rtk_level_arm_mbox: [84.4, -496.1, 1679.0]
+  rtk_slave_arm: [-826.7, -253.0, 1201.1] 
+  rtk_slave_arm_main: [-826.7, -253.0, 1201.1] 
+  wheel_sensor_pulse_number_per_circle: 86
+  imu_level_arm: [1977.7, 0, 420.3]
+  imu_level_arm_main: [1977.7, 0, 420.3]
+  imu_level_arm_mbox: [-419.2, 99.0, 924.3]
+  navi_level_arm: [-231.5, -69.7, 895.1]
+  cornering_stiffness_rear_wheel: -1 #待测量
+  min_turn_radius: 5.9
+control:
+  throttle_type: PEDAL
+  steering_type: FRONT_WHEEL_ANGLE
+  brake_type: DECELERATION
+  wire_type: L7
+function:
+  aeb_report: false
+  wheel_direction_report: false
+  fcw_report: false
+  apb_report: false
+  dlp_report: false
+  awb_report: false
+  cta_report: false
+  hba_report: false
+  hdc_report: false
+  ldp_report: false
+  ldw_report: false
+  swc_report: false
+  vse_report: false
+sensor:
+  lidar_model: hesai128
+  gnss_model: f9p_uart
+  radar_model: bosch5
+  camera_model: ep2
+  imu_model: MSG7230D-MSA8230D
+  uss_model: bosch6.5
+  navi_model: ins-d
+  hydrophobic_model: none
+  sensorhub_model: v1.0
+  time_model: double

@@ -1,0 +1,138 @@
+{
+    "which_car": "MKZ_N0D1Z7",
+    "run_type": [
+        "perfect_dynamic"
+    ],
+    "task_type": "FPP",
+    "priority": 3,
+    "checker_image": {
+        "image": "artifactory.momenta.works/docker-mpilot-highway-dev/msim_bag_checker",
+        "tag": "maf3.0_cpp_dev_new_name"
+    },
+    "simulation_events": [
+        {
+            "scenario": [
+                "CP_BAD_EVENT_ILC_LC_BACK"
+            ],
+            "checker": [
+                "-alcf",
+                "-alcback_all"
+            ]
+        },
+        {
+            "scenario": [
+                "CP_GOOD_EVENT_ILC"
+            ],
+            "checker": [
+                "-gilc",
+                "-alcback_all"
+            ]
+        },
+        {
+            "scenario": [
+                "CP_BAD_EVENT_ILC_LC_IMPLEMENT"
+            ],
+            "checker": [
+                "-alcf"
+            ]
+        },
+        {
+            "scenario": [
+                "CP_BAD_EVENT_ILC_LC_DANGER"
+            ],
+            "checker": [
+                "-apld"
+            ]
+        },
+        {
+            "scenario": [
+                "CP_GOOD_EVENT_GS_MAIN_ROAD_WITH_MIDDLE_REAR_CAR"
+            ],
+            "checker": [
+                "-gilc",
+                "-alcback_all"
+            ]
+        },
+        {
+            "scenario": [
+                "CP_GOOD_EVENT_GS_MAIN_ROAD_WITH_FRONT_MIDDLE_CAR"
+            ],
+            "checker": [
+                "-gilc",
+                "-alcback_all"
+            ]
+        },
+        {
+            "scenario": [
+                "CP_GOOD_EVENT_GS_MAIN_ROAD_CIPV_WITH_FRONT_MIDDLE_CAR"
+            ],
+            "checker": [
+                "-gilc",
+                "-alcback_all"
+            ]
+        },
+        {
+            "scenario": [
+                "CP_GOOD_EVENT_GS_MAIN_ROAD_CIPV_WITH_MIDDLE_REAR_CAR"
+            ],
+            "checker": [
+                "-gilc",
+                "-alcback_all"
+            ]
+        },
+        {
+            "scenario": [
+                "CP_GOOD_EVENT_GS_MAIN_ROAD_WITH_FRONT_REAR_CAR"
+            ],
+            "checker": [
+                "-gilc",
+                "-alcback_all"
+            ]
+        },
+        {
+            "scenario": [
+                "CP_GOOD_EVENT_GS_MAIN_ROAD_CIPV_WITH_FRONT_REAR_CAR"
+            ],
+            "checker": [
+                "-gilc",
+                "-alcback_all"
+            ]
+        },
+        {
+            "scenario": [
+                "CP_GOOD_EVENT_GS_MAIN_ROAD_CIPV_WITH_FRONT_MIDDLE_REAR_CAR"
+            ],
+            "checker": [
+                "-gilc",
+                "-alcback_all"
+            ]
+        },
+        {
+            "scenario": [
+                "CP_BAD_EVENT_GS_MAIN_ROAD"
+            ],
+            "checker": [
+                "-gilc",
+                "-alcback_all"
+            ]
+        },
+        {
+            "scenario": [
+                "CP_GOOD_EVENT_GS_MAIN_ROAD_CIPV_WITH_CAR"
+            ],
+            "checker": [
+                "-gilc",
+                "-alcback_all"
+            ]
+        },
+        {
+            "scenario": [
+                "CP_GOOD_EVENT_GS_MAIN_ROAD_WITH_CAR"
+            ],
+            "checker": [
+                "-gilc",
+                "-alcback_all"
+            ]
+        }
+    ]
+}

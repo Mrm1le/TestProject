@@ -1,0 +1,92 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger: none
+#  branches:
+#    include:
+#      - whx/cpp/main_ddp_fpp
+
+variables:
+- group: artifactory_service_account
+- name: ci_type
+  value: $(Build.Reason)
+- name: product_scene
+  value: CPP
+- name: user_name
+  value: $(Build.RequestedForEmail)
+- name: ci_tag
+  value: $(ci_type)_$(product_scene)_$(Build.BuildId)_$(Build.BuildNumber)_$(System.PullRequest.PullRequestId)_$(Build.Repository.Name)
+- name: pr_id
+  value: $(System.PullRequest.PullRequestId)
+- name: build_id
+  value: $(Build.BuildId)
+- name: build_number
+  value: $(Build.BuildNumber)
+
+
+pool:
+  name: default
+
+resources:
+  containers:
+  - container: cmake_with_cuda_torch_ros3
+    endpoint: artifactory
+    image: artifactory.momenta.works/docker-momenta/build_env_devcar_momenta_cmake_with_cuda_torch_ros3:v0.0.2
+
+#schedules:
+#- cron: "00 16 * * *"
+#  displayName: timing triger
+#  branches:
+#    include:
+#    - cpp/main_ddp
+
+stages:
+- stage: simulation
+  jobs:
+  - job: check_simulation_function_fpp
+    workspace:
+      clean:
+        all
+    timeoutInMinutes: 180
+    pool:
+      name: 'default'
+    steps:
+    - checkout: self
+      fetchDepth: 1
+      clean: true
+      lfs: false
+      submodules: recursive
+      persistCredentials: true
+    - bash: |
+        bash -x .ci/$(Agent.JobName).sh
+      displayName: $(Agent.JobName)
+      env:
+        offboard_branch: dev
+        user_name: $(Build.RequestedFor)
+        ci_type: $(Build.Reason)
+        ci_tag: $(ci_type)_$(product_scene)_$(Build.BuildId)_$(Build.BuildNumber)_$(System.PullRequest.PullRequestId)_$(Build.Repository.Name)
+        onboard_branch: $(System.PullRequest.TargetBranch)
+        onboard_commit : $(Build.SourceVersion)
+        pr_id: $(System.PullRequest.PullRequestId)
+        build_directory: $(Build.Repository.LocalPath)
+        pr_email: $(Build.RequestedForEmail)
+        
+    - task: PostBuildCleanup@3
+      displayName: 'Clean Agent Directories'
+      condition: always()
+- stage: genereate_report
+  dependsOn: [simulation]
+  jobs:
+  - job: generate_report
+    steps:
+    - checkout: self
+      fetchDepth: 1
+    - script: |
+        export ci_tag=$(ci_tag)
+        # NPP的平台只支持CP，不支持CPP，暂MOCK一下
+        # export scene=$(product_scene)
+        export scene=CP
+        export pr_id=$(pr_id)
+        bash -x .ci/generate_report.sh

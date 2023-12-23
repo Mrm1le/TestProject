@@ -1,0 +1,5 @@
+set history save on
+set pagination off
+set breakpoint pending on
+![ -e /tmp/gef/ ] || mkdir /tmp/gef/
+source tools/config/gdbinit-gef.py

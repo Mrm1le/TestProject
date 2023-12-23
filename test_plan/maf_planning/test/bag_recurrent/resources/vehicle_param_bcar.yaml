@@ -1,0 +1,91 @@
+%YAML:1.0
+---
+type: LS7
+which_car: SVV448
+architecture: L2.1
+fleet_type: v2_lite
+vehicle_xyz: front_left_up
+param:
+  vehicle_length: 5.045
+  distance_from_rear_bumper_to_rear_axle: 0.989
+  front_wheel_distance: 1.695
+  steering_angle_max: 507
+  steering_angle_normalize_ratio: 0.87157798
+  wheel_radius_rear_right: 0.381
+  vehicle_width: 2.002
+  distance_from_front_bumper_to_front_axle: 0.996
+  steering_angle_ratio: 14.5
+  distance_from_rearview_mirror_to_front_bumper: 1.851
+  distance_from_centroid_to_rear_axle: 1.364
+  wheel_radius_rear_left: 0.381
+  vehicle_height: 1.731
+  vehicle_width_with_rearview_mirror: 2.269
+  distance_from_centroid_to_front_axle: 1.695
+  wheel_base_distance: 3.06
+  vehicle_weight_empty: 2.462
+  distance_from_rear_axle_mid_to_vehicle_mid: 1.533
+  wheel_radius_front_left: 0.383
+  wheel_radius_front_right: 0.383
+  rear_wheel_distance: 1.695
+  wheel_sensor_pulse_encode_range: [-32768, 32767]
+  cornering_stiffness_front_wheel: -1
+  rtk_level_arm: [-369.072, -250, 1603.538]
+  rtk_level_arm_main: [-369.072, -250, 1603.538]
+  rtk_level_arm_mbox: [8.528, 529.3, 1749.338]
+  rtk_slave_arm: [-369.072, 250, 1603.538]
+  rtk_slave_arm_main: [-369.072, 250, 1603.538]
+  wheel_sensor_pulse_number_per_circle: 86
+  imu_level_arm: [1993.328, 0, 442.938]
+  imu_level_arm_main: [1993.328, 0, 442.938]
+  imu_level_arm_mbox: [-468.172, 120, 772.738]
+  navi_level_arm: [-231.972, -72.1, 738.438]
+  cornering_stiffness_rear_wheel: -1
+control:
+  throttle_type: TORQUE
+  steering_type: FRONT_WHEEL_ANGLE
+  brake_type: DECELERATION
+  wire_type: L7
+function:
+  aeb_report: false
+  wheel_direction_report: false
+  fcw_report: false
+  apb_report: false
+  dlp_report: false
+  awb_report: false
+  cta_report: false
+  hba_report: false
+  hdc_report: false
+  ldp_report: false
+  ldw_report: false
+  swc_report: false
+  vse_report: false
+sensor:
+  lidar_model: hesai128
+  gnss_model: m8n_uart
+  radar_model: bosch5
+  camera_model: ep2
+  imu_model: MSG7230D-MSA8230D
+  uss_model: none
+  navi_model: ins-d
+  hydrophobic_model: none
+  sensorhub_model: v1.0
+  time_model: double
+suspension:
+  # 悬架与车身连接点 [x，y，z]，单位mm，标定坐标系，前左上
+  front_left: [3028.351, 510.384, 922.314]
+  front_right: [3028.351, -510.384, 922.314]
+  rear_left: [-98.679, 587.918, 794.518]
+  rear_right: [-98.679, -587.918, 794.518]
+  suspension_number: 5
+  suspension_name:
+   - high_level
+   - normal_level
+   - low_level_1
+   - low_level_2
+   - low_level_3
+  # [前轴高度，后轴高度]，单位mm
+  high_level: [20, 20]
+  normal_level: [0, 0]
+  low_level_1: [-15, -15]
+  low_level_2: [-30, -30]
+  low_level_3: [0, -50]

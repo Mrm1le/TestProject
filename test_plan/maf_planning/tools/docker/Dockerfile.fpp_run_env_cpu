@@ -1,0 +1,6 @@
+ARG FPP_IMAGE=artifactory.momenta.works/docker-momenta/np_planning/fpp:maf3.2.1-4
+
+FROM ${FPP_IMAGE}
+
+RUN mkdir -p /home/ros && ln -s /opt/ros/catkin_ws /home/ros/catkin_ws
+LABEL cuda="none" maf_version="maf3.2"

@@ -1,0 +1,115 @@
+variable:
+  planning_resource_path: ${APA_PLANNING_RESOURCE_PATH}
+  planning_scene_type: ${APA_PLANNING_SCENE_TYPE}
+
+libraries:
+  - ${APA_PLANNING_MFR_LIBRARY}
+
+machine:
+  # url: mfrrpc://127.0.0.1:11300
+  name: apa_planning_machine
+  param: $(planning_resource_path)/mfr_nodes/machine_l7.yaml
+  
+
+nodes:
+  -
+    node_type: apa_planning_mfr_node_type
+    node_name: apa_planning_mfr_node
+    node_param:
+      node_config:
+        memory:
+          total_virtual_memory_size_MB: 0
+          total_shared_memory_size_MB: 0
+
+      config_file: $(planning_resource_path)/config/msquare_planning.l7.json
+      wm_config_file: $(planning_resource_path)/config/worldmodel_mfr.v1.l7.json
+      wm_pec_config_file: $(planning_resource_path)/config/worldmodel_pec_l7.json
+      mtaskflow_config_file: $(planning_resource_path)/config/mtaskflow_config.l7.json
+      config_file_dir: $(planning_resource_path)/config/
+      scene_type: $(planning_scene_type)
+      sub_imu_topic: /sensor/imu
+      sub_mb_imu_topic: /mb/sensor/imu
+      sub_prediction_topic: /msd/prediction/prediction_result
+      sub_worldmodel_map_topic: /worldmodel/processed_map
+      sub_worldmodel_parking_slots_topic: /worldmodel/parking_slot_info
+      sub_worldmodel_scene_object_topic: /worldmodel/scene_object
+      sub_worldmodel_objects_topic: /worldmodel/objects
+      sub_traffic_light_topic: /worldmodel/traffic_light
+      sub_fusion_objects_topic: /perception/fusion/object_parking_environment
+      sub_fusion_groundlines_topic: /perception/fusion/ground_line
+      sub_fusion_uss_groundlines_topic: /perception/fusion/ground_line_uss
+      sub_fusion_uss_topic: /perception/fusion/distance_uss
+      sub_ego_pose_topic: /mla/egopose
+      sub_chassis_report_topic: /vehicle/chassis_report
+      sub_wireless_charger_report_topic: /vehicle/wireless_charger_report
+      sub_wheel_report_topic: /vehicle/wheel_report
+      sub_body_report_topic: /vehicle/body_report
+      sub_mpc_trajecrory_topic: /msd/control/mpc_traj
+      sub_perception_vision_lane: /perception/vision/lane
+      sub_perception_vision_landmark: /perception/vision/landmark 
+      sub_perception_radar: /perception/radar/result_front
+      sub_mff_info: /system_manager/info/parking
+      sub_perception_lidar_road_edge_topic: /perception/lidar/road_edge
+
+      module_status_topic: /msd/function_module_status
+      pub_nodes_status_topic: /node_status/apa_planning
+
+      pub_planning_topic: /msd/planning/apa
+      pub_local_lat_motion_info_topic: /msd/path_planner_input
+
+      pub_sbp_request_topic: /msd/sbp_request
+      sub_sbp_result_topic: /msd/sbp_result
+
+      sub_planning_control_cmd_request_topic: /system_manager/apa_planning/control_cmd_request
+      pub_planning_control_cmd_response_topic: /system_manager/apa_planning/control_cmd_response
+
+      sub_planning_request_topic: /system_manager/apa_planning/request
+      pub_planning_response_topic: /system_manager/apa_planning/response
+
+      sub_planning_reset_request_topic: /system_manager/apa_planning/reset_request
+      pub_planning_reset_response_topic: /system_manager/apa_planning/reset_response
+
+      pub_planning_info_topic: /apa_planning/info
+
+      pub_mdebug_topic: /cp_mdebug
+
+      tasknap_slice_topic: /tasknap_slice/cp_planning
+
+      sub_perception_fusion_topic: /perception/fusion/object
+      sub_mode_switch_cmd_topic: /system_manager/worldmodel/request/highway
+      sub_system_control_topic: /system_manager/worldmodel/control_cmd_request/highway
+      sub_system_reset_topic: /system_manager/worldmodel/reset_request
+
+      sub_planning_frequency_control_topic: /msd/planning_frequency_control
+
+      pub_map_topic: /worldmodel/processed_map
+      pub_object_topic: /worldmodel/objects
+      pub_wm_node_status_topic: /node_status/worldmodel/highway
+      pub_mode_switch_cmd_topic: /system_manager/worldmodel/response/highway
+      pub_system_control_response_topic: /system_manager/worldmodel/control_cmd_response/highway
+      pub_system_reset_response_topic: /system_manager/worldmodel/reset_response
+      pub_planning_extra_data_topic: /cp_planning/extra_data
+      pub_planning_proto_debug_topic: /cp_planning/proto_debug
+      sub_planning_reload_request_topic: /system_manager/planning/reload_request
+      pub_simulation_sync_topic: /simulation/sync/apa_planning
+      sub_simulation_query_topic: /simulation/query/planning
+      pub_simulation_answer_topic: /simulation/answer/apa_planning
+
+      # parking worldmodel
+      sub_fusion_parking_slot_topic: /perception/fusion/parking_slot
+      pub_worldmodel_parking_slot_topic: /worldmodel/parking_slot_info
+
+      sub_parking_wm_control_cmd_request_topic: /system_manager/worldmodel/control_cmd_request/parking
+      sub_parking_wm_request_topic: /system_manager/worldmodel/request/parking
+
+      pub_parking_wm_control_cmd_response_topic: /system_manager/worldmodel/control_cmd_response/parking
+      pub_parking_wm_response_topic: /system_manager/worldmodel/response/parking
+      pub_parking_wm_node_status_topic: /node_status/worldmodel/parking
+      
+      pub_node_status_apa_planning_topic: /node_status/apa_evaluate_related
+
+      log_config:
+        level: info
+        endpoint: stderr
+        file: ${LOGS_DIR}/mfr_apa_planning_t.log
+        file_endpoint_type: write

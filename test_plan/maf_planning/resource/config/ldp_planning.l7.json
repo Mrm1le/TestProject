@@ -1,0 +1,20 @@
+{
+  "logger": {
+    "level": "error",
+    "file": "${LOG_CONFIG_DIR}/ldp_planning.log",
+    "file_type": "write",
+    "max_file_size": 5242880,
+    "max_file_num": 2,
+    "max_buffer_size_KB": 2,
+    "enable_stderr": false,
+    "enable_background_dump": true,
+    "rostopic_name": "/mlog/logs/ldp_planning",
+    "export_frequence": 10,
+    "mfrtopic_name": "/mlog/logs/ldp_planning",
+    "enable_callback": true
+  },
+  "timer": {
+    "timeline_type":"system"
+  },
+  "start_machine": false
+}

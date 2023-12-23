@@ -1,0 +1,20 @@
+# for planning
+enable_get_heading_with_front_corners: false
+
+lot_entrance_extra_gap: 1.0
+lot_side_entrance_clip_ratio: 0.5
+
+narrow_road_width_threshold: 5.7
+narrow_road:
+  lot_entrance_extra_gap: 2.0
+  lot_side_entrance_clip_ratio: 0.5
+
+# for ending position decision
+distance_back_to_wheelstop: 0 # ignore wheelstop
+distance_wheel_to_wheelstop: 0.2 # related to height of wheelstop and wheel redius
+back_distance_buffer: 0.2 # for safety
+
+side_safety_lot_side_entrance_clip_ratio: 0.0
+side_safety_lot_entrance_extra_gap: 0.0
+
+default_depth: 6.0

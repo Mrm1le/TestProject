@@ -1,0 +1,14 @@
+type: L7
+architecture: L1.0
+param:
+  front_edge_to_rear_real: 4.015
+  vehicle_length:  5.098
+  vehicle_width_with_rearview_mirror: 2.118
+  vehicle_width: 1.960
+  vehicle_height: 1.468
+  steering_angle_max:  507
+  steering_angle_normalize_ratio: 0.907297
+  steering_angle_ratio: 14.5 # ratio from the turning angle of steering wheel to that of the front wheel of the vehicle
+  wheel_base_distance: 3.100
+  wheel_radius_front_left: 0.335
+  distance_from_rear_bumper_to_rear_axle: 1.083

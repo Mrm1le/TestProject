@@ -1,0 +1,28 @@
+%YAML:1.0
+---
+
+# 说明：
+# name: 以安装位置说明
+# type: 分为 APA和UPA两种
+# xyz：USS安装位置，车后轴坐标系：前x，左y，上z，单位：m
+# pitch： USS平面法线与xy平面的夹角，上偏为正，单位：度
+# yaw： USS平面法线与xz平面的夹角（偏航角），左偏为正，单位：度，范围： （-180,180）
+# max_range： 最远探测距离，单位：m，超过最远探测距离为无效值
+# min_range： 最近探测距离，单位：m
+# fov：USS 扇形探测区域，由4个点表示，前两个点为靠近自车的点，车后轴坐标系，逆时针顺序
+
+sensor_name: "rear_left_side"
+sensor_type: "USS"
+detect_type: "APA"
+x: -0.581
+y: 0.965
+z: 0.58
+pitch: 2
+yaw: 98
+max_range: 5.0
+min_range: 0.15
+
+#fov:[a.x, a.y, b.x, b.y, c.x, c.y, d.x, d.y]
+fov: [-0.673, 1.083, -0.525, 1.104, 1.292, 5.601, -3.659, 4.905]
+
+

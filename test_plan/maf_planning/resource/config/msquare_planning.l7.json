@@ -1,0 +1,28 @@
+{
+  "logger": {
+    "level": "error",
+    "file": "",
+    "file_type": "",
+    "max_file_size": 5242880,
+    "max_file_num": 2,
+    "max_buffer_size_KB": 2,
+    "enable_stderr": false,
+    "enable_background_dump": true,
+    "rostopic_name": "/mlog/logs/apa_planning",
+    "export_frequence": 10,
+    "mfrtopic_name": "/mlog/logs/apa_planning",
+    "enable_callback": true
+  },
+  "timer": {
+    "timeline_type":"system"
+  },
+  "interactive_lc_limit_velocity": 0,
+  "interactive_lc_limit_time": 10,
+  "default_cruise_velocity": 30,
+  "is_acc_mode": false,
+  "is_ddmap": true,
+  "driving_style": 1,
+  "start_machine": false,
+  "init_wm": true,
+  "internal_feed": true
+}

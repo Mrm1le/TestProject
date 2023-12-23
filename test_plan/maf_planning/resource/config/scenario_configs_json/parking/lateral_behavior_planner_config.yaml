@@ -1,0 +1,81 @@
+using_teb_g2o: false
+using_virtual_box_complex: true
+
+kPathN_default: 30
+FRENET_CHECK_S_START: -1.5
+FRENET_CHECK_S_END: 40.0
+
+OBS_SIDEPASS_PARAM:
+  Duration_hold_time_delault: 0.5
+  sidepass_buffer: 0.3
+  road_middle_width_delault: 2.0
+  sidepass_buffer_upper_bound_default: 4.0
+  opposite_car_pass_buffer_factor: 3.0
+  ped_road_middle_width: 2.0
+  ped_sidepass_buffer_upper_bound: 4.0
+  car_hysteresis_offset: 0.4
+  ped_hysteresis_offset: 0.5
+  sidepass_buffer_default: 2.4
+
+STRATEGY1_PARAM:
+  PASS_BUFFER: 0.3
+  DIST_SQUARE_THRE: 2.5
+
+BRANCH_AND_BOUND_PARAM:
+  alpha: 0.6
+  alpha_f2: 1.5
+  virtual_car_block_cost: 15000.0
+  opposite_car_block_cost: 10000.0
+  freespace_block_cost: 2000.0
+  couple_block_cost: 1000.0
+  ped_block_cost: 100.0
+  influence_obs_end_s_addition_factor: 1.5
+  influence_obs_end_s_addition_offset: 4.98
+  f1_molecular: 5.0
+  f1_denominator_plus1: 1.0
+  f1_denominator_exp_factor: 2.0
+  f2_delta_l_harmony_offset: 0.4
+  f2_molecular: 5.0
+  f2_denominator_plus1: 1.0
+  f2_denominator_exp_factor: 2.0
+  f2_denominator_exp_offset: 2.7
+  
+  LATERAL_PASSABLE_INTERP_S:
+    - -0.200876250304245
+    - 0.109033080800962
+    - 0.424873276277784
+    - 0.740062617073609
+    - 1.05075496334459
+    - 1.36763955554229
+    - 1.68856625489188
+    - 2.01698829150941
+    - 2.35054152487160
+    - 2.67691308966276
+    - 2.99351123158695
+    - 3.30857802135829
+    - 3.63885516992573
+    - 4.03539716143324
+    - 4.32709724681831
+    - 4.63821986326598
+    - 4.94191889335859
+  LATERAL_PASSABLE_INTERP_L:
+    - 2.62766202811524
+    - 2.61737475797048
+    - 2.61723027662295
+    - 2.61970494108900
+    - 2.61441962637260
+    - 2.61547601536325
+    - 2.60579019333457
+    - 2.57100737818500
+    - 2.49764764305294
+    - 2.35789026712130
+    - 2.14944851371235
+    - 1.90434837215625
+    - 1.59720347956699
+    - 1.15983714053520
+    - 0.764845500116296
+    - 0.301826898763200
+    - -0.242139393361878
+
+
+  

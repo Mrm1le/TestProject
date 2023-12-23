@@ -1,0 +1,84 @@
+# apf settings
+use_apf_refline: true
+move_apf_traj: false
+move_apf_traj_ds: 0
+use_teb: false
+
+# for result store
+is_store: false
+store_path: apf_logs/
+clear_files: true 
+store_old_traj: true
+store_freq_div: 0
+
+# for apf trajectory settings 
+gradient_descent_distance: 0.2
+max_trajectory_points_num: 100
+min_trajectory_points_num: 60
+back_points_num: 23
+min_straight_trajectory_points_num: 30 # no use 
+min_turning_trajectory_points_num: 60
+relieve_fixed_gradient_dtheta: 0.1 # ration = 1 if dtheta = PI/2
+apf_replan_threshold: 3.0
+line_segment_min_size: 0.5
+
+# for calc road direction 
+road_direction_circle_radius_wall: 8.0
+road_direction_circle_radius_lot: 6.5
+road_direction_wall_considered_length: 0.5
+
+# for ego vehicle bbox
+vehicle_length_added: 1.42
+vehicle_length: 5
+vehicle_width: 2
+min_turning_radius: 4.3      # Min turning radius of the carlike robot (compute value using a model or adjust with rqt_reconfigure manually)
+wheelbase: 3.0
+
+# for attached gradient
+forward_gradient_intensity: 70.0
+turning_gradient_intensity: 70.0
+turning_gradient_dtheta_ratio: 0.9  # ratio = 1 if dtheta = PI/2
+stop_gradient_value: 500.0
+
+# for pillar repulision gradient
+use_map_potential_field: false
+pillar_repulsion_weight: 3.0
+pillar_repulsion_max_distance: 0.4
+pillar_repulsion_2_weight: 20.0
+pillar_repulsion_2_attenuation: 0.3
+
+# for wall repulision gradient
+wall_repulsion_weight: 3.0
+wall_repulsion_max_distance: 0.4
+wall_repulsion_2_weight: 20.0
+wall_repulsion_2_attenuation: 0.3
+
+# parking lot 
+is_parking_lot_from_file: false
+parking_lot_file: /home/ros/catkin_ws/src/maf_planning/src/planning/include/common/config/scenario_configs_json/parking/chuangxingang_parking_lot.json
+parking_lot_z_offset: 0.0 # wenlv 5.0 zongbu 0.0
+praking_lot_z_deviation: 2.0
+parking_lot_circle_offset: 0.0 
+parking_lot_circle_radius: 20.0
+parking_lot_repulsion_weight: 3.0
+parking_lot_repulsion_max_distance: 0.4
+parking_lot_repulsion_2_weight: 20.0
+parking_lot_repulsion_2_attenuation: 0.3
+
+# ground point gradient
+use_ground_point_potential_field: true
+ground_point_repulsion_weight: 0.3
+ground_point_repulsion_max_distance: 0.3
+ground_point_repulsion_2_weight: 2.0
+ground_point_repulsion_2_attenuation: 0.3
+
+# teb settings
+teb_replan_start_dis_threshold: 3.0
+teb_replan_start_theta_threshold: 0.2  #1 represent MI/2
+teb_replan_end_dis_threshold: 3.0
+teb_replan_end_theta_threshold: 0.2   #1 represent MI/2
+teb_use_parking_lot: true
+
+
+# for check reasonable_
+min_reasonable_s: 10.0

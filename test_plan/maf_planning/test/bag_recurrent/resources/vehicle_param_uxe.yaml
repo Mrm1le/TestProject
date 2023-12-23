@@ -1,0 +1,91 @@
+%YAML:1.0
+---
+type: UXE
+which_car: UXE_9030
+architecture: uxe
+fleet_type: v2_lite
+vehicle_xyz: front_left_up
+param:
+  vehicle_length: 4.8406
+  distance_from_rear_bumper_to_rear_axle: 0.9952
+  front_wheel_distance: 1.656
+  steering_angle_normalize_ratio: 0.8023
+  steering_angle_max: 430
+  wheel_radius_rear_right: 0.354 
+  vehicle_width: 1.935
+  distance_from_front_bumper_to_front_axle: 0.9254
+  steering_angle_ratio: 12.62
+  distance_from_rearview_mirror_to_front_bumper: 1.799
+  distance_from_centroid_to_rear_axle: 1.385
+  rear_axle_to_head: 4.576
+  wheel_radius_rear_left: 0.354
+  vehicle_height: 1.620
+  vehicle_width_with_rearview_mirror: 2.200
+  distance_from_centroid_to_front_axle: 1.535
+  wheel_base_distance: 2.920
+  vehicle_weight_empty: 2.022 
+  distance_from_rear_axle_mid_to_vehicle_mid: 1.425
+  wheel_radius_front_left: 0.354
+  wheel_radius_front_right: 0.354
+  rear_wheel_distance: 1.661
+  wheel_sensor_pulse_encode_range: [-32768, 32767] 
+  cornering_stiffness_front_wheel: 114600 
+  rtk_level_arm: [-290, 262, 1493]
+  rtk_level_arm_main: [-290, 262, 1493]
+  rtk_level_arm_mbox: [173, -486, 1667]  
+  wheel_sensor_pulse_number_per_circle: 48
+  imu_level_arm: [-564, 565, 624]
+  imu_level_arm_main: [-564, 565, 624]
+  imu_level_arm_mbox: [-289, 186, 717] 
+  navi_level_arm: [-86, -5, 688]
+  cornering_stiffness_rear_wheel: 126060 
+control:
+  throttle_type: PEDAL
+  steering_type: STEERING_ANGLE
+  brake_type: PRESSURE
+  wire_type: MCONTROL
+
+function:
+  aeb_report: false
+  wheel_direction_report: false
+  fcw_report: false
+  apb_report: false
+  dlp_report: false
+  awb_report: false
+  cta_report: false
+  hba_report: false
+  hdc_report: false
+  ldp_report: false
+  ldw_report: false
+  swc_report: false
+  vse_report: false
+sensor:
+  lidar_model: hesai128
+  gnss_model: m8n-f9p_uart
+  radar_model: none
+  camera_model: none
+  imu_model: asm330_can
+  uss_model: none
+  navi_model: ins-d
+  hydrophobic_model: none
+  sensorhub_model: v1.0
+  time_model: double
+suspension:
+  # 悬架与车身连接点 [x，y，z]，单位mm，标定坐标系，前左上
+  front_left: [2875, 503.8, 844.7]
+  front_right: [2875, -503.8, 844.7]
+  rear_left: [-147.79, 463.95, 489.38]
+  rear_right: [-147.79, -463.95, 489.38]
+  suspension_number: 5
+  suspension_name:
+   - high_level_2
+   - high_level_1
+   - normal_level
+   - low_level_1
+   - low_level_2
+  # [前轴高度，后轴高度]，单位mm
+  high_level_1: [50, 50]
+  normal_level: [0, 0]
+  high_level_2: [0, 0] # 无此档位，高度值置0
+  low_level_1: [-15, -15]
+  low_level_2: [-30, -30]

@@ -1,0 +1,53 @@
+# Build number format
+name: $(Date:yyyyMMdd)$(Rev:.r) # dev-20201139.1.1
+  
+trigger: none
+  # branches:
+  #   include: # branch names which will trigger a build
+  #     - master
+  #   exclude: [] # branch names which will not a build
+  # paths:
+  #   include: [] # file paths which must match to trigger a build
+  #   exclude:  # file paths which will not trigger a build
+  #     - azure-pipelines-fleet-devops.yml
+
+variables: # variables defined at pipeline level, to use Variables, please always use $(variableName)
+- group: artifactory_service_account # attach existing variable group
+- name: repository
+  value: docker-mpilot-highway-dev
+
+parameters:
+- name: common_tag
+  displayName: maf-common镜像tag
+  type: string
+  default: v1.3.7-20210820.48
+
+stages:
+- stage: build_planning_dev_image
+  displayName: build dev image
+  jobs:
+  - job: build
+    steps:
+    - bash: |
+        # declare run fail notification function
+        function publicExitError(){
+        if [[ $1 == 0 ]];then
+          echo "$2 success!"
+        else
+          echo "$2 failed!"
+          exit 1
+        fi
+        }
+
+        echo 'docker build -t "artifactory.momenta.works/$(repository)/maf_planning_dev:${{ parameters.common_tag }}" \
+        --build-arg IMAGE_MOMENTA_COMMON="artifactory.momenta.works/$(repository)/maf-common:${{ parameters.common_tag }}" -f Dockerfile.dev .'
+
+        docker build -t "artifactory.momenta.works/$(repository)/maf_planning_dev:${{ parameters.common_tag }}" \
+        --build-arg IMAGE_MOMENTA_COMMON="artifactory.momenta.works/$(repository)/maf-common:${{ parameters.common_tag }}" -f Dockerfile.dev .
+
+        docker login --username=$(artifactory.username) --password=$(artifactory.password) artifactory.momenta.works
+        publicExitError "$?" "docker login"
+        docker push "artifactory.momenta.works/$(repository)/maf_planning_dev:${{ parameters.common_tag }}"
+        publicExitError "$?" "docker push artifactory.momenta.works/$(repository)/maf_planning_dev"
+
+      displayName: 'docker build & push image'

@@ -1,0 +1,24 @@
+variable:
+  sbp_planning_resource_path: ${SBP_PLANNING_RESOURCE_PATH}
+  enable_dump_file: false
+
+libraries:
+  - ${SBP_PLANNING_MFR_LIBRARY}
+
+machine:
+  # url: mfrrpc://127.0.0.1:11300
+  name: sbp_machine
+  param: $(sbp_planning_resource_path)/mfr_nodes/machine.yaml
+  
+
+nodes:
+  -
+    node_type: sbp_mfr_node_type
+    node_name: sbp_mfr_node
+    node_param:
+      mtaskflow_config_file: $(sbp_planning_resource_path)/config/mtaskflow_config.json
+      vehicle_calib_file: $(sbp_planning_resource_path)/config/scenario_configs_json/parking/vehicle_param.yaml
+      sub_sbp_request_topic: /msd/sbp_request
+      pub_sbp_result_topic: /msd/sbp_result
+      enable_dump_file: $(enable_dump_file)
+      config_file_dir: $(sbp_planning_resource_path)/config/

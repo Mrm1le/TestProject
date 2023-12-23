@@ -1,0 +1,65 @@
+{
+    "name": "ddp",
+    "engine": "acl",
+    "input_blob_names": [
+      "feature_obj", "mask_obj", "feature_static", "mask_static", "traffic_light_status", "traffic_light_extra_input", "speed_limit", "rotate_matrix"
+    ],
+    "output_blob_names": [
+      "plan_traj", "lane_logits", "pred_traj"
+    ],
+    "model_files": {
+      "om": "model.bin"
+    },
+    "device_id": 0,
+    "group_id": 0,
+    "input_blob_shapes": [
+      [
+        1,
+        100,
+        16,
+        31
+      ],
+      [
+        1,
+        100,
+        16,
+        1
+      ],
+      [
+        1,
+        80,
+        16,
+        26
+      ],
+      [
+        1,
+        80,
+        16,
+        1
+      ],
+      [
+        1,
+        1,
+        16,
+        10
+      ],
+      [
+        1,
+        1,
+        16,
+        2
+      ],
+      [
+        1,
+        1,
+        1,
+        20
+      ],
+      [
+        1,
+        1,
+        2,
+        2
+      ]
+    ]
+}

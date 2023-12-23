@@ -1,0 +1,56 @@
+variable:
+  ldp_planning_resource_path: ${LDP_PLANNING_RESOURCE_PATH}
+  ldp_planning_scene_type: 0
+
+libraries:
+  - ${LDP_PLANNING_MFR_LIBRARY}
+
+machine:
+  # url: mfrrpc://127.0.0.1:11300
+  name: ldp_machine
+  param: $(ldp_planning_resource_path)/mfr_nodes/machine.yaml
+  
+
+nodes:
+  -
+    node_type: ldp_mfr_node_type
+    node_name: ldp_mfr_node
+    node_param:
+      node_config:
+        memory:
+          total_virtual_memory_size_MB: 0
+          total_shared_memory_size_MB: 32
+
+      config_file: $(ldp_planning_resource_path)/config/ldp_planning.json
+      mtaskflow_config_file: $(ldp_planning_resource_path)/config/mtaskflow_config.json
+      config_file_dir: $(ldp_planning_resource_path)/config/
+      sub_ego_pose_topic: /mla/egopose
+      sub_chassis_report_topic: /vehicle/chassis_report
+      sub_wheel_report_topic: /vehicle/wheel_report
+      sub_body_report_topic: /vehicle/body_report
+      sub_perception_vision_lane: /perception/vision/lane
+      sub_perception_fusion_topic: /perception/fusion/object
+      sub_perception_fusion_aeb_topic: /perception/fusion/aeb_object
+
+      module_status_topic: /msd/function_module_status
+      pub_nodes_status_topic: /node_status/ldp_planning
+
+      pub_planning_topic: /msd/planning/ldp_plan
+      pub_planning_ldp_topic: /planning/ldp_status
+
+      pub_ess_planning_topic: /msd/planning/ess_plan
+      pub_planning_ess_topic: /planning/ess_status
+
+      sub_mff_planning_request_topic: /mff/ldp_planning/request
+      pub_mff_planning_response_topic: /mff/ldp_planning/response
+
+      sub_mff_planning_ess_request_topic: /mff/ldp_planning/ess_request
+      pub_mff_planning_ess_response_topic: /mff/ldp_planning/ess_response
+
+      sub_mpc_trajecrory_topic: /msd/control/mpc_traj
+      
+      log_config:
+        level: info
+        endpoint: stderr
+        file: ${LDP_PLANNING_OUTPUT_LOG}/mfr_ldp_planning_t.log
+        file_endpoint_type: write

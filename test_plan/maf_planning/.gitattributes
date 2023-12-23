@@ -1,0 +1,2 @@
+test/bag_recurrent/resources/heuristic_offline/boundary_cost.bin filter=lfs diff=lfs merge=lfs -text
+test/bag_recurrent/resources/heuristic_offline/rs_cost.bin filter=lfs diff=lfs merge=lfs -text

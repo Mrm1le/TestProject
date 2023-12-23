@@ -1,0 +1,69 @@
+{
+    "which_car": "MKZ_N0D1Z7",
+    "run_type": [
+        "perfect_dynamic"
+    ],
+    "task_type": "PILOT",
+    "priority": 3,
+    "sim_options": "{\"navi-time-distance\":0,\"delete_car\":\"rear_collision\",\"lane_update\":\"position\"}",
+    "checker_image": {
+        "image": "artifactory.momenta.works/docker-msd/checker_ci_build",
+        "tag": "cp-dev_0103_0b5da72"
+    },
+    "simulation_events": [
+        {
+            "scenario": [
+                "横纵向顺序交换-路测问题"
+            ],
+            "checker": [
+                "-acldcpd",
+                "-awbcpi"
+            ]
+        },
+        {
+            "scenario": [
+                "横纵向顺序交换-小车侵入0.5m"
+            ],
+            "checker": [
+                "-acldcpd",
+                "-awbcpi"
+            ]
+        },
+        {
+            "scenario": [
+                "横纵向顺序交换-小车侵入0.1m"
+            ],
+            "checker": [
+                "-acldcpd",
+                "-awbcpi"
+            ]
+        },
+        {
+            "scenario": [
+                "横纵向顺序交换-两轮车侵入0.5m"
+            ],
+            "checker": [
+                "-acldcpd",
+                "-awbcpi"
+            ]
+        },
+        {
+            "scenario": [
+                "横纵向顺序交换-两轮车侵入0.1m"
+            ],
+            "checker": [
+                "-acldcpd",
+                "-awbcpi"
+            ]
+        },
+        {
+            "scenario": [
+                "LAT_LON_SEQUNECE_MIN_DDLANE"
+            ],
+            "checker": [
+                "-acldcpd",
+                "-awbcpi"
+            ]
+        }
+    ]
+}

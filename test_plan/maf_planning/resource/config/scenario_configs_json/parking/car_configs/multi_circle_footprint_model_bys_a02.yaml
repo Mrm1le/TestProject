@@ -1,0 +1,141 @@
+param_version: multi_circle_footprint_model_v1.1
+type: A02
+circle_num: 21
+#body (circle0 && circle 6 are also for rear && front bumper)
+circle0:
+  x: -0.13
+  y: 0
+  r: 0.93
+circle1:
+  x: 0.37
+  y: 0
+  r: 0.91
+circle2:
+  x: 0.87
+  y: 0
+  r: 0.91
+circle3:
+  x: 1.37
+  y: 0
+  r: 0.92
+circle4:
+  x: 1.87
+  y: 0
+  r: 0.93
+circle5:
+  x: 2.37
+  y: 0
+  r: 0.94
+circle6:
+  x: 2.87
+  y: 0
+  r: 0.94
+
+#rear bumper
+circle7:
+  x: -0.5
+  y: 0.35
+  r: 0.55
+circle8:
+  x: -0.5
+  y: -0.35
+  r: 0.55
+
+#front bumper
+circle9:
+  x: 3.10
+  y: 0.24
+  r: 0.7
+circle10:
+  x: 3.10
+  y: -0.24
+  r: 0.7
+
+#mirror
+circle11:
+  x: 2.1
+  y: 0.95
+  r: 0.13
+
+circle12:
+  x: 2.1
+  y: -0.95
+  r: 0.13
+
+#wheels
+circle13:
+  x: -0.15
+  y: 0.81
+  r: 0.15
+
+circle14:
+  x: 0.15
+  y: 0.81
+  r: 0.15
+
+circle15:
+  x: -0.15
+  y: -0.81
+  r: 0.15
+
+circle16:
+  x: 0.15
+  y: -0.81
+  r: 0.15
+
+circle17:
+  x: 2.75
+  y: 0.82
+  r: 0.15
+
+circle18:
+  x: 3.05
+  y: 0.82
+  r: 0.15
+
+circle19:
+  x: 2.75
+  y: -0.82
+  r: 0.15
+
+circle20:
+  x: 3.05
+  y: -0.82
+  r: 0.15
+
+
+# footprint model  definition
+# each footprint is defined as a combination of multiple circles
+#    if include model(s) is(are) defined, include circles will be added to it
+#    include model can only be models above
+#    include and parent model must be the same height
+#    only one include model supported in this version(for performance)
+
+# model_num is fixed in 3, can't change in this version
+# each layer description is also fixed, don't change
+
+
+#height descriptions see :SbpObstacleHeightType:
+
+
+model_num: 3
+#### 0. the low height footprint model. height 0 ~ bumper_height
+model0: 
+  height: "LOW"
+  include_model: []
+  index: [13, 14, 15, 16, 17, 18, 19, 20]
+  description: "low_wheels"
+
+#### 1. the not_allow_close footprint model. left&&right edge
+model1:
+  height: "HIGH"
+  include_model: []
+  index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  description: "not_allow_close"
+
+#### 2. the full-size footprint model. as in top-view footprint model
+model2:
+  height: "HIGH"
+  include_model: [1]
+  index: []
+  description: "full_body"

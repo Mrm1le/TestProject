@@ -1,0 +1,92 @@
+{
+    "which_car": "MKZ_N0D1Z7",
+    "run_type": ["perfect_dynamic"],
+    "task_type": "PILOT",
+    "priority": 3,
+    "checker_image":{
+        "image": "artifactory.momenta.works/docker-mpilot-highway-dev/msim_bag_checker",
+        "tag": "maf3.0_cpp_dev_new_name"
+    },
+    "simulation_events":[
+        {
+            "scenario": ["CP_GOOD_EVENT_RELEASE_MIN_LIBRARY"],
+            "checker": ["-awbcpi","-acldcpd","-anogocpi","-astp2cpi","-abuscpi","-afoldistcpi","-acrserrcpi","-astpdistcpi"]
+        },
+        {
+            "scenario": ["CP_GOOD_EVENT_LON_PLANNER_MIN_LIBRARY"],
+            "checker": ["-awbcpi","-acldcpd ","-anogocpi","-astp2cpi","-abuscpi","-afoldistcpi","-acrserrcpi","-astpdistcpi"]
+        },
+        {
+            "scenario": ["CP_GOOD_EVENT_STEADY_FOLLOW"],
+            "checker": ["-afoldistcpi","-awbcpi"]
+        },
+        {
+            "scenario": ["CP_GOOD_EVENT_STEADY_FOLLOW_NO_JIRA"],
+            "checker": ["-afoldistcpi","-awbcpi"]
+        },
+        {
+            "scenario": ["CP_GOOD_EVENT_APPROACH_SLOW_CIPV"],
+            "checker": ["-acldcpd","-abuscpi"]
+        },
+        {
+            "scenario": ["CP_GOOD_EVENT_FOLLOW_START_OFF"],
+            "checker": ["-anogocpi"]
+        },
+        {
+            "scenario": ["CP_GOOD_EVENT_CUT_IN_NO_JIRA"],
+            "checker": ["-awbcpi","-acldcpd","-abuscpi"]
+        },
+        {
+            "scenario": ["CP_GOOD_EVENT_FOLLOW_STATIONARY_CIPV"],
+            "checker": ["-astp2cpi","-astpdistcpi","-abuscpi","-acldcpd"]
+        },
+        {
+            "scenario": ["CP_GOOD_EVENT_CRAWLING"],
+            "checker": ["-astp2cpi","-astpdistcpi","-acldcpd","-awbcpi","-anogocpi"]
+        },
+        {
+            "scenario": ["CP_GOOD_EVENT_EQUAL_SPEED_CUT_IN"],
+            "checker": ["-acldcpd","-abuscpi"]
+        },
+        {
+            "scenario": ["CP_GOOD_EVENT_SMALL_OVERLAP_NO_JIRA"],
+            "checker": ["-awbcpi","-acldcpd","-abuscpi"]
+        },
+        {
+            "scenario": ["CP_GOOD_EVENT_CRUISE"],
+            "checker": ["-acrserrcpi"]
+        },
+        {
+            "scenario": ["CP_GOOD_EVENT_ONCOMING_CIPV"],
+            "checker": ["-acldcpd"]
+        },
+        {
+            "scenario": ["CP_BAD_EVENT_CUT_IN"],
+            "checker": ["-acldcpd","-abuscpi"]
+        },
+        {
+            "scenario": ["CP_BAD_EVENT_CIPV_CPI"],
+            "checker": ["-awbcpi"]
+        },
+        {
+            "scenario": ["CP_BAD_EVENT_PLANAX_CPD"],
+            "checker": ["-acldcpd","-abuscpi"]
+        },
+        {
+            "scenario": ["CP_BAD_EVENT_2ND_STOP"],
+            "checker": ["-astp2cpi"]
+        },
+        {
+            "scenario": ["CP_BAD_EVENT_BRAKE_TO_STOP"],
+            "checker": ["-acldcpd","-astp2cpi","-astpdistcpi"]
+        },
+        {
+            "scenario": ["CP_BAD_EVENT_SMALL_OVERLAP"],
+            "checker": ["-awbcpi","-acldcpd"]
+        },
+        {
+            "scenario": ["CP_BAD_EVENT_CUT_OUT"],
+            "checker": ["-acldcpd"]
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+type: MKZ
+architecture: v3.0
+param:
+  front_edge_to_rear_real: 3.89
+  vehicle_length:  4.933
+  vehicle_width_with_rearview_mirror: 2.11
+  vehicle_width: 1.89
+  vehicle_height: 1.468
+  steering_angle_max:  507
+  steering_angle_normalize_ratio: 0.907297
+  steering_angle_ratio: 14.8 # ratio from the turning angle of steering wheel to that of the front wheel of the vehicle
+  wheel_base_distance: 2.8448
+  wheel_radius_front_left: 0.335
+  distance_from_rear_bumper_to_rear_axle: 1.043
