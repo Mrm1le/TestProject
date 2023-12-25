@@ -1,267 +1,417 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
-#include <cstdlib>
-#include <ctime>
-#include <iomanip>
+#include </usr/include/eigen3/Eigen/Dense>
 #include <fstream>
-#include <algorithm>
-#include <numeric>
-#include <string>
+#include <unistd.h>
+using namespace Eigen;
 
-// 定义点结构体
-struct Point {
-  double x;
-  double y;
-  double angle;
+enum Direction
+{
+    Forward = 0,
+    Backward,
+    ForwardLeft,
+    ForwardRight,
+    BackwardLeft,
+    BackwardRight,
+    Unknown
 };
 
+// 定义轨迹点结构体
+struct Point
+{
+    double x; // x 坐标
+    double y; // y 坐标
+    double heading;
+};
+
+struct Vector
+{
+    double startX;
+    double startY;
+    double endX;
+    double endY;
+};
 // 定义圆弧结构体
-struct Arc {
-  double cx;
-  double cy;
-  double radius;
-  double angle;
+struct Circle
+{
+    double centerX; // 圆心 x 坐标
+    double centerY; // 圆心 y 坐标
+    double radius;  // 半径
+    Point start_point;
+    Point end_point;
 };
+
+double dotProduct(const Vector &v1, const Vector &v2)
+{
+    double deltaX1 = v1.endX - v1.startX;
+    double deltaY1 = v1.endY - v1.startY;
+    double deltaX2 = v2.endX - v2.startX;
+    double deltaY2 = v2.endY - v2.startY;
+    return deltaX1 * deltaX2 + deltaY1 * deltaY2;
+}
+
+double vectorLength(const Vector &v)
+{
+    double deltaX = v.endX - v.startX;
+    double deltaY = v.endY - v.startY;
+    return std::sqrt(deltaX * deltaX + deltaY * deltaY);
+}
+
+bool isAngleGreater90(const Vector &v1, const Vector &v2)
+{
+    double dot = dotProduct(v1, v2);
+    double len1 = vectorLength(v1);
+    double len2 = vectorLength(v2);
+    double cosTheta = dot / (len1 * len2);
+    return cosTheta < 0;
+}
+
+// 判断向量和给定角度之间的夹角是否大于90度
+bool isAngleGreater90(const Vector &v, double angleRad)
+{
+    double vLength = vectorLength(v);
+    double dotProduct = (v.endX - v.startX) * std::cos(angleRad) + (v.endY - v.startY) * std::sin(angleRad);
+    return dotProduct < 0;
+}
+
+// 判断圆弧的绘制方向
+bool IsCircleClockWise(const Circle &circle)
+{
+    // 计算起点相对于圆心的极角
+    double startAngle = std::atan2(circle.start_point.y - circle.centerY, circle.start_point.x - circle.centerX);
+    // std::cout << "circle.start_point.y: " << circle.start_point.y << " circle.centerY: " << circle.centerY << std::endl;
+    // std::cout << "circle.start_point.x: " << circle.start_point.x << " circle.centerX: " << circle.centerX << std::endl;
+    // std::cout << "startAngle: " << startAngle << std::endl;
+    // 计算终点相对于圆心的极角
+    double endAngle = std::atan2(circle.end_point.y - circle.centerY, circle.end_point.x - circle.centerX);
+
+    // std::cout << "circle.end_point.y: " << circle.end_point.y << " circle.centerY: " << circle.centerY << std::endl;
+    // std::cout << "circle.end_point.x: " << circle.end_point.x << " circle.centerX: " << circle.centerX << std::endl;
+    // std::cout << "endAngle: " << endAngle << std::endl;
+    // 计算极角差值
+    double angleDiff = endAngle - startAngle;
+    // 将极角差值限制在 [-π, π] 范围内
+    if (angleDiff > M_PI)
+        angleDiff -= 2 * M_PI;
+    else if (angleDiff < -M_PI)
+        angleDiff += 2 * M_PI;
+
+    //  std::cout << "angleDiff: " << angleDiff << std::endl;
+    // 判断绘制方向
+    if (angleDiff > 0) // 极角差值大于零，判定为逆时针
+        return false;
+    else
+        return true;
+}
+
+// 使用最小二乘法进行圆弧拟合
+Circle fitCircleToPoints(const std::vector<Point> &points)
+{
+    int n = points.size();
+    printf("n = %d\n", n);
+    MatrixXd A(n, 3);
+    VectorXd b(n);
+
+    for (int i = 0; i < n; i++)
+    {
+        A(i, 0) = points[i].x;
+        A(i, 1) = points[i].y;
+        A(i, 2) = 1;
+        b(i) = -1 * points[i].x * points[i].x - points[i].y * points[i].y;
+        printf("LINE %x %lf %lf %lf %lf\n", __LINE__, A(i, 0), A(i, 1), A(i, 2), b(i));
+    }
+
+    VectorXd x = A.jacobiSvd(ComputeThinU | ComputeThinV).solve(b);
+    printf(" %lf %lf %lf\n", x(0), x(1), x(2));
+    double centerX = -x(0) / 2;
+    double centerY = -x(1) / 2;
+    double radius = std::sqrt(centerX * centerX + centerY * centerY - x(2));
+
+
+    Circle circle;
+    circle.centerX = centerX;
+    circle.centerY = centerY;
+    circle.radius = radius;
+    circle.start_point = points.front();
+    circle.end_point = points.back();
+    return circle;
+}
 
 std::vector<Point> read_trajectory(const std::string &filename)
 {
     std::vector<Point> points;
     std::ifstream file(filename);
-    double x, y, angle;
-    while (file >> x >> y >> angle)
+    double x, y, heading;
+    while (file >> x >> y >> heading)
     {
-        points.emplace_back(Point{x, y, angle});
+        points.emplace_back(Point{x, y, heading});
     }
     return points;
 }
 
-/*
-// 样条插值方法拟合多段圆弧
-std::vector<Arc> fitArcs(const std::vector<Point>& points) {
-  std::vector<Arc> arcs;  // 存储拟合出的圆弧
-  int n = points.size();
-  if (n < 2) return arcs;
+std::vector<std::tuple<int, int>> DetectYawConsistency(std::vector<Point> trajectory, int n) {
+    std::vector<std::tuple<int, int>> results = {};
+    int count = 1;
+    double heading = trajectory[0].heading;
+    int startId = 0;
 
-  std::vector<double> t(n);  // 定义参数t数组
-  for (int i = 0; i < n; ++i) {
-    if (i == 0) {
-      t[i] = 0.0;
-    } else {
-      double dx = points[i].x - points[i-1].x;
-      double dy = points[i].y - points[i-1].y;
-      t[i] = t[i-1] + std::sqrt(dx*dx + dy*dy);
+    for (int i = 1; i < trajectory.size(); ++i) {
+        if (trajectory[i].heading == heading) {
+            count++;
+        } else {
+            if (count >= n) {
+                int tmp = i - 1;
+                auto result = std::make_tuple(startId, tmp);
+                results.emplace_back(result);
+                std::cout << "Yaw consistency detected from id " << startId << " to id " << i - 1 << std::endl;
+            }
+            count = 1;
+            heading = trajectory[i].heading;
+            startId = i;
+        }
     }
-  }
 
-  std::vector<double> k(n);  // 定义二次导数k数组
-  k[0] = k[n-1] = 0.0;
-  for (int i = 1; i < n-1; ++i) {
-    double dx1 = points[i].x - points[i-1].x;
-    double dy1 = points[i].y - points[i-1].y;
-    double dx2 = points[i+1].x - points[i].x;
-    double dy2 = points[i+1].y - points[i].y;
-    double len1 = std::sqrt(dx1*dx1 + dy1*dy1);
-    double len2 = std::sqrt(dx2*dx2 + dy2*dy2);
-    double a = len1 / (len1 + len2);
-    double b = 1.0 - a;
-    double d = 2.0 * (a/len1 + b/len2);
-    k[i] = 6.0 * (dx2/dy2 - dx1/dy1) / (len1*len2*(dx1/dy1 + dx2/dy2));
-  }
-
-  // 求解圆弧参数
-  for (int i = 0; i < n-1; ++i) {
-    double x1 = points[i].x;
-    double y1 = points[i].y;
-    double x2 = points[i+1].x;
-    double y2 = points[i+1].y;
-    double dx = x2 - x1;
-    double dy = y2 - y1;
-    double len = std::sqrt(dx*dx + dy*dy);
-    double angle1 = points[i].angle;
-    double angle2 = points[i+1].angle;
-    double dangle = angle2 - angle1;
-    if (dangle > M_PI) {
-      dangle -= 2.0 * M_PI;
-    } else if (dangle < -M_PI) {
-      dangle += 2.0 * M_PI;
+    if (count >= n) {
+        std::cout << "Yaw consistency detected from id " << startId << " to id " << trajectory.size() - 1 << std::endl;
     }
-    double a = std::sin(dangle - 2.0*k[i]*len) / (2.0*len);
-double b = k[i] / a;
-double r = std::abs(a);
-double cx = x1 + a*dy;
-double cy = y1 - a*dx;
-double start_angle = std::atan2(y1-cy, x1-cx);
-double end_angle = std::atan2(y2-cy, x2-cx);
-if (dangle < 0.0) {
-  std::swap(start_angle, end_angle);
-}
-if (start_angle > end_angle) {
-  end_angle += 2.0 * M_PI;
-}
-Arc arc = {cx, cy, r, start_angle, end_angle};
-arcs.push_back(arc);
-
+    return results;
 }
 
-return arcs;
-}
-
-
-// // RANSAC算法拟合圆弧曲线
-// Arc fitArcRANSAC(const std::vector<Point>& points, double max_error, int max_iterations) {
-//   std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
-//   std::uniform_int_distribution<int> dist(0, points.size()-1);
-//   double best_cost = std::numeric_limits<double>::max();
-//   Arc best_arc;
-//   for (int iter = 0; iter < max_iterations; ++iter) {
-//     // 随机选择3个点作为圆弧拟合的基础
-//     std::vector<int> indices(3);
-//     std::unordered_set<int> index_set;
-//     while (indices.size() < 3) {
-//       int index = dist(rng);
-//       if (index_set.count(index) == 0) {
-//         indices.push_back(index);
-//         index_set.insert(index);
-//       }
-//     }
-//     // 根据选定的3个点拟合圆弧
-//     Arc arc = fitArc3(points[indices[0]], points[indices[1]], points[indices[2]]);
-//     // 计算拟合误差
-//     double cost = 0.0;
-//     for (const Point& p : points) {
-//       double d = std::abs(distanceToArc(arc, p));
-//       cost += (d <= max_error) ? d : max_error;
-//     }
-//     // 更新最优圆弧
-//     if (cost < best_cost) {
-//       best_cost = cost;
-//       best_arc = arc;
-//     }
-//   }
-//   return best_arc;
-// }
-
-*/
-
-double angleDifference(double a1, double a2) {
-    double diff = fmod(a2 - a1 + M_PI, 2 * M_PI);
-    if (diff < 0) {
-        diff += 2 * M_PI;
-    }
-    return diff - M_PI;
-}
-
-
-// 最小二乘法拟合圆弧曲线
-Arc fitArcLeastSquares(const std::vector<Point>& points) {
-  double x_sum = 0.0;
-  double y_sum = 0.0;
-  double xy_sum = 0.0;
-  double x2_sum = 0.0;
-  double y2_sum = 0.0;
-  for (const Point& p : points) {
-    x_sum += p.x;
-    y_sum += p.y;
-    xy_sum += p.x * p.y;
-    x2_sum += p.x * p.x;
-    y2_sum += p.y * p.y;
-  }
-  double n = static_cast<double>(points.size());
-  double x_mean = x_sum / n;
-  double y_mean = y_sum / n;
-  double u1 = x2_sum + y2_sum - n * (x_mean * x_mean + y_mean * y_mean);
-  double u2 = x_sum - n * x_mean;
-  double u3 = y_sum - n * y_mean;
-  double u4 = x2_sum - n * x_mean * x_mean;
-  double u5 = xy_sum - n * x_mean * y_mean;
-  double u6 = y2_sum - n * y_mean * y_mean;
-  double denom = u1 * (u4 * u6 - u5 * u5) - u2 * (u2 * u6 - u3 * u5) + u5 * (u2 * u3 - u4 * u3);
-  if (std::abs(denom) < 1e-8) {
-    return Arc(0.0, 0.0, 0.0, std::numeric_limits<double>::max());
-  }
-  double x0 = (u4 * u6 - u5 * u5) * u2 + u5 * (u3 * u4 - u5 * u2) - u6 * (u2 * u3 - u4 * u3);
-  double y0 = (u4 * u6 - u5 * u5) * u3 + u5 * (u2 * u3 - u4 * u3) - u4 * (u2 * u3 - u4 * u3);
-  x0 /= denom;
-  y0 /= denom;
-  double r = std::sqrt((u2 * u2 + u3 * u3 + x0 * x0 + y0 * y0 - 2.0 * (u2 * x0 + u3 * y0)) / n);
-  double theta1 = std::atan2(points[0].y - y0, points[0].x - x0);
-  double theta2 = std::atan2(points.back().y - y0, points.back().x - x0);
-  double angle = angleDifference(theta2, theta1);
-  return Arc(x0, y0, r, angle);
-}
-
-
-void write_curve(const std::vector<Arc> &circles, const std::string &filename)
+// 比较函数，按照元组中的第一个 int 值进行升序排序
+bool compareTuple(const std::tuple<int, Point, Direction> &t1, const std::tuple<int, Point, Direction> &t2)
 {
-    std::ofstream file(filename);
-    for (const auto &circle : circles)
+    return std::get<0>(t1) < std::get<0>(t2);
+}
+int straight_length = 0;
+int main()
+{
+    // setp1 粗拟合
+    auto trajectory = read_trajectory("/home/thj/Desktop/TestProject/test_curvefitting/newfitting/worker_trajectory.txt");
+    
+    // auto straight_trajectory.assign(trajectory.begin(), trajectory.end());
+    if(trajectory[0].x < 1e-3 && trajectory[0].y < 1e-3)
+        std::reverse(trajectory.begin(), trajectory.end());
+    int origin_size = trajectory.size();
+    trajectory.erase(std::remove_if(trajectory.begin(), trajectory.end(), [](Point point)
+                                    { return std::abs(point.x - 0) < 1e-3 && std::abs(point.heading - M_PI_2) < 1e-3; }),
+                     trajectory.end());
+
+    // 分段拟合圆弧
+    straight_length = origin_size - trajectory.size();
+    std::vector<Circle> circles;
+    const int segmentLength = 8;                                              // 每段轨迹的长度
+    std::vector<std::tuple<int, Point, Direction>> shift_points = {};          // 换挡点(id, coordinate， direction)
+    std::vector<std::tuple<int, Point, Direction>> straight_points = {};       // 直线段(id, coordinate， direction)
+    std::vector<std::tuple<int, Point, Direction>> inflection_points = {};     // 折点(id, coordinate， direction)
+    std::vector<std::tuple<int, Point, Direction>> new_inflection_points = {}; // 折点(id, coordinate， direction) 补全方向信息
+    std::vector<std::tuple<int, Point, Direction, double>> inflection_points_ = {};    // 折点(id, coordinate， direction, 半径) 最终的折点信息
+
+    // 添加起点到折点信息中
+    if (isAngleGreater90(Vector{trajectory[0].x, trajectory[0].y, trajectory[1].x, trajectory[1].y}, trajectory[0].heading)) // Backward
+        shift_points.emplace_back(std::make_tuple(0, Point{trajectory[0].x, trajectory[0].y}, Backward));
+    else
+        shift_points.emplace_back(std::make_tuple(0, Point{trajectory[0].x, trajectory[0].y}, Forward));
+
+    // 识别换挡点
+    for (int i = 0; i < trajectory.size() - 2; ++i)
     {
-        file << circle.cx << " " << circle.cy << " " << circle.radius << "\n";
+        if (isAngleGreater90(Vector{trajectory[i].x, trajectory[i].y, trajectory[i + 1].x, trajectory[i + 1].y},
+                             Vector{trajectory[i + 1].x, trajectory[i + 1].y, trajectory[i + 2].x, trajectory[i + 2].y}))
+            if (isAngleGreater90(Vector{trajectory[i + 1].x, trajectory[i + 1].y, trajectory[i + 2].x, trajectory[i + 2].y}, trajectory[i].heading))
+                shift_points.emplace_back(std::make_tuple(i, Point{trajectory[i + 1].x, trajectory[i + 1].y}, Backward));
+            else
+                shift_points.emplace_back(std::make_tuple(i, Point{trajectory[i + 1].x, trajectory[i + 1].y}, Forward));
     }
+
+    // 识别直线段
+    auto straight_seg = DetectYawConsistency(trajectory, 8);
+    printf("trajectory size: %d, straight suze %d\n", trajectory.size(), straight_seg.size());
+    if (!straight_seg.empty())
+        for (auto i : straight_seg) {
+            straight_points.emplace_back(std::make_tuple(std::get<0>(i), trajectory[std::get<0>(i)], Unknown));
+            straight_points.emplace_back(std::make_tuple(std::get<1>(i), trajectory[std::get<1>(i)], Unknown));
+        }
+
+    // 识别折点
+    for (int i = segmentLength; i < trajectory.size(); i += segmentLength)
+    {
+        inflection_points.emplace_back(std::make_tuple(i, Point{trajectory[i].x, trajectory[i].y}, Unknown));
+    }
+
+    // 剔除相邻点
+    for (int i = 1; i < inflection_points.size(); ++i)
+    {
+        for (int j = 0; j < shift_points.size(); ++j)
+        {
+            if (std::abs(std::get<0>(inflection_points[i]) - std::get<0>(shift_points[j])) < (segmentLength / 2))
+            {
+                inflection_points.erase(inflection_points.begin() + i);
+                --i;
+                break;
+            }
+        }
+    }
+    
+    // 换挡点添加到折点中
+    inflection_points.insert(inflection_points.end(), shift_points.begin(), shift_points.end());
+
+    std::sort(inflection_points.begin(), inflection_points.end(), compareTuple);
+    
+    // 剔除相邻点
+    for (int i = 1; i < inflection_points.size(); ++i)
+    {
+        for (int j = 0; j < straight_seg.size(); ++j)
+        {
+            if (std::get<0>(inflection_points[i]) >= std::get<0>(straight_seg[j]) &&
+                std::get<0>(inflection_points[i]) <= std::get<1>(straight_seg[j]))
+            {
+                inflection_points.erase(inflection_points.begin() + i);
+                --i;
+                break;
+            }
+        }
+    }
+    
+
+    //直线段添加到折点中
+    inflection_points.insert(inflection_points.end(), straight_points.begin(), straight_points.end());
+
+    // 使用 std::sort 对 折点 进行排序，传入自定义的比较函数 compareTuple
+    std::sort(inflection_points.begin(), inflection_points.end(), compareTuple);
+
+    // 防止直线段距起点太近，这时把直线段起点删掉，直接用起点来连
+    for (int j = 0; j < straight_seg.size(); ++j)
+    {
+        if (std::abs(std::get<0>(inflection_points[0]) - std::get<0>(inflection_points[1])) < segmentLength / 2)
+        {
+            inflection_points.erase(inflection_points.begin() + 1);
+            break;
+        }
+    }
+
+    // 把轨迹上最后一个点添加到折点
+    if (trajectory.size() - std::get<0>(inflection_points.back()) > (segmentLength / 2))
+        inflection_points.emplace_back(std::make_tuple(static_cast<int>(trajectory.size() - 1), trajectory.back(), Unknown));
+    else
+    {
+        inflection_points.erase(inflection_points.end());
+        inflection_points.emplace_back(std::make_tuple(static_cast<int>(trajectory.size() - 1), trajectory.back(), Unknown));
+    }
+
+    // 补全折点的方向信息
+    for (int i = 0; i < inflection_points.size(); ++i)
+    {
+        if (std::get<2>(inflection_points[i]) == Unknown)
+        {
+            new_inflection_points.emplace_back(std::make_tuple(std::get<0>(inflection_points[i]),
+                                                               std::get<1>(inflection_points[i]),
+                                                               std::get<2>(new_inflection_points[i - 1])));
+        }
+        else
+            new_inflection_points.emplace_back(inflection_points[i]);
+    }
+    // 拟合圆弧
+    for (int i = 0; i < new_inflection_points.size() - 1; ++i)
+    {
+        std::vector<Point> segmentPoints(trajectory.begin() + std::get<0>(new_inflection_points[i]),
+                                         trajectory.begin() + std::get<0>(new_inflection_points[i + 1]) + 1);
+
+        std::cout << std::get<0>(new_inflection_points[i])  << " " << std::get<0>(new_inflection_points[i + 1]) + 1 << std::endl; 
+        std::for_each(segmentPoints.begin(), segmentPoints.end(), [](Point point){
+            std::cout << point.x << " " << point.y << std::endl;
+        });
+        std::cout << std::endl;
+        Circle circle = fitCircleToPoints(segmentPoints);
+        static Circle circle_last = {};
+        // std::cerr << std::sqrt(std::pow(circle.centerX - circle_last.centerX, 2) + std::pow(circle.centerY - circle_last.centerY, 2)) << " "
+        //           << std::abs(circle.radius - circle_last.radius) << std::endl;
+        // 粗拟合，合并相似轨迹
+        if (std::sqrt(std::pow(circle.centerX - circle_last.centerX, 2) + std::pow(circle.centerY - circle_last.centerY, 2)) < 0.1 &&
+            std::abs(circle.radius - circle_last.radius) < 0.1)
+            new_inflection_points.erase(new_inflection_points.begin() + i); //没用迭代器，不担心失效问题
+        memcpy(&circle_last, &circle, sizeof(Circle));
+    }
+    for (auto i : new_inflection_points)
+    {
+        printf("newinflection points: %d, %lf, %lf, %d\n", std::get<0>(i), std::get<1>(i).x, std::get<1>(i).y, std::get<2>(i));
+    }
+
+    // 拟合圆弧
+    for (int i = 0; i < new_inflection_points.size() - 1; ++i)
+    {
+        std::vector<Point> segmentPoints(trajectory.begin() + std::get<0>(new_inflection_points[i]), trajectory.begin() +
+                                                                                                         std::get<0>(new_inflection_points[i + 1]) + 1);
+
+        // std::for_each(segmentPoints.begin(), segmentPoints.end(), [](Point point){
+        //     std::cout << point.x << " ";
+        // });
+        // std::cout << std::endl;
+        Circle circle = fitCircleToPoints(segmentPoints);
+        circles.emplace_back(circle);
+        printf("circle: %lf, %lf, %lf\n", circle.centerX, circle.centerY, circle.radius);
+        printf("std::get<0>(new_inflection_points[i]): %d\n", std::get<0>(new_inflection_points[i]));
+        printf("std::get<0>(new_inflection_points[i] + 1): %d\n", std::get<0>(new_inflection_points[i + 1]));
+        for(auto i : segmentPoints)
+        {
+            printf("segmentPoints: %lf, %lf, %lf\n", i.x, i.y, i.heading);
+        }
+    }
+
+    for (int i = 0; i < circles.size(); ++i)
+    {
+        if (IsCircleClockWise(circles[i]))
+        {
+            if (std::get<2>(new_inflection_points[i]) == Forward)
+                inflection_points_.emplace_back(std::make_tuple(std::get<0>(new_inflection_points[i]), std::get<1>(new_inflection_points[i]), ForwardRight, circles[i].radius));
+            else if (std::get<2>(new_inflection_points[i]) == Backward)
+                inflection_points_.emplace_back(std::make_tuple(std::get<0>(new_inflection_points[i]), std::get<1>(new_inflection_points[i]), BackwardLeft, circles[i].radius));
+            else
+                inflection_points_.emplace_back(std::make_tuple(std::get<0>(new_inflection_points[i]), std::get<1>(new_inflection_points[i]), std::get<2>(inflection_points_[i - 1]), circles[i].radius));
+        }
+        else
+        {
+            if (std::get<2>(new_inflection_points[i]) == Forward)
+                inflection_points_.emplace_back(std::make_tuple(std::get<0>(new_inflection_points[i]), std::get<1>(new_inflection_points[i]), ForwardLeft, circles[i].radius));
+            else if (std::get<2>(new_inflection_points[i]) == Backward)
+                inflection_points_.emplace_back(std::make_tuple(std::get<0>(new_inflection_points[i]), std::get<1>(new_inflection_points[i]), BackwardRight, circles[i].radius));
+            else
+                inflection_points_.emplace_back(std::make_tuple(std::get<0>(new_inflection_points[i]), std::get<1>(new_inflection_points[i]), std::get<2>(inflection_points_[i - 1]), circles[i].radius));
+        }
+    }
+    inflection_points_.emplace_back(std::make_tuple(std::get<0>(new_inflection_points.back()), std::get<1>(new_inflection_points.back()), std::get<2>(inflection_points_.back()), circles.back().radius));
+
+    // 圆弧交界处平滑处理
+    // for (int i = 0; i < circles.size() - 1; i++)
+    // {
+    //     Circle &currentCircle = circles[i];
+    //     Circle &nextCircle = circles[i + 1];
+    //     double distance = std::sqrt((currentCircle.centerX - nextCircle.centerX) * (currentCircle.centerX - nextCircle.centerX) +
+    //                                 (currentCircle.centerY - nextCircle.centerY) * (currentCircle.centerY - nextCircle.centerY));
+
+    //     // 如果相邻圆弧之间的距离小于两个圆弧半径之和，则进行平滑处理
+    //     if (distance < currentCircle.radius + nextCircle.radius)
+    //     {
+    //         double ratio = currentCircle.radius / (currentCircle.radius + nextCircle.radius);
+    //         nextCircle.centerX = currentCircle.centerX + ratio * (nextCircle.centerX - currentCircle.centerX);
+    //         nextCircle.centerY = currentCircle.centerY + ratio * (nextCircle.centerY - currentCircle.centerY);
+    //     }
+    // }
+
+    // 输出拟合得到的圆弧信息
+    for (int i = 0; i < circles.size(); i++)
+    {
+        std::cout << circles[i].centerX << " " << circles[i].centerY << " " << circles[i].radius << " " << circles[i].start_point.x << " " << circles[i].start_point.y << " " << circles[i].end_point.x << " " << circles[i].end_point.y;
+        std::cout << std::endl;
+    }
+
+    for (int i = 0; i < inflection_points_.size(); i++)
+    {
+        std::cout << std::get<0>(inflection_points_[i]) << " " << std::get<1>(inflection_points_[i]).x << " "
+                  << std::get<1>(inflection_points_[i]).y << " " << std::get<2>(inflection_points_[i]) << " "
+                  << std::get<3>(inflection_points_[i]) << std::endl;
+    }
+
+    // step 2: 细拟合
+    return 0;
 }
-
-int main() {
-// std::vector<Point> points = {{0.0, 0.0, 0.0},
-// {1.0, 0.0, 0.0},
-// {2.0, 1.0, M_PI/4},
-// {3.0, 2.0, M_PI/2},
-// {4.0, 3.0, M_PI*3/4},
-// {5.0, 4.0, M_PI}};
-auto points = read_trajectory("trajectory.txt");
-std::vector<Arc> arcs = fitArcLeastSquares(points);
-for (const auto& arc : arcs) {
-std::cout << "cx = " << arc.cx << ", cy = " << arc.cy
-<< ", radius = " << arc.radius
-<< ", start_angle = " << arc.start_angle
-<< ", end_angle = " << arc.end_angle << std::endl;
-}
-
-write_curve(arcs, "curve.txt");
-return 0;
-}
-
-
-// 上述代码定义了一个Point结构体，用于存储轨迹点的横坐标、纵坐标和航向角信息；定义了一个Arc结构体，用于存储拟合出的圆弧的圆心坐标、半径和起始角度、终止角度信息。
-
-// fitArcs函数通过样条插值方法拟合多段圆弧，该方法先计算轨迹点之间的距离，并根据距离计算出参数t数组；然后根据轨迹点之间的方向角差和距离，计算出二次导数k数组；
-// 最后，根据轨迹点之间的距离和角度差，计算出每个圆弧的圆心坐标、半径和起始角度、终止角度信息，并存储在arcs数组中返回。
-
-// 在主函数中，定义了一个示例点集，调用fitArcs函数拟合圆弧，并输出拟合出的圆心坐标、半径和起始角度、终止角度信息。
-
-// 需要注意的是，上述代码只是一种简单的圆弧拟合方法，可能无法满足所有的应用需求。在实际应用中，还需要考虑诸如拟合精度、计算效率、对异常点的处理等问题，需要根据具体应用场景进行相应的改进和
-
-// 田谷歌
-// 继续
-
-// 改进。另外，上述代码只是实现了圆弧的拟合，如果需要将拟合出的圆弧用于机器人路径规划等应用，还需要将圆弧离散化为一系列路径点，例如使用等距离离散化或等时间离散化等方法。
-
-// 下面是一个等距离离散化的示例代码：
-
-// c++
-
-// 将拟合出的圆弧等距离离散化为一系列路径点
-// std::vector<Point> discreteArc(const Arc& arc, double step) {
-//   std::vector<Point> points;
-//   double len = std::abs(arc.radius * (arc.end_angle - arc.start_angle));
-//   int n = std::ceil(len / step);
-//   if (n < 2) {
-//     n = 2;
-//   }
-//   double dtheta = (arc.end_angle - arc.start_angle) / (n - 1);
-//   for (int i = 0; i < n; ++i) {
-//     double theta = arc.start_angle + i*dtheta;
-//     double x = arc.cx + arc.radius * std::cos(theta);
-//     double y = arc.cy + arc.radius * std::sin(theta);
-//     double yaw = theta + M_PI/2.0;
-//     points.push_back({x, y, yaw});
-//   }
-//   return points;
-// }
-
-// 该代码定义了一个discreteArc函数，输入参数为拟合出的圆弧和等距离步长，输出为一系列路径点。
-// 该函数首先计算出圆弧的长度len，然后根据步长计算出等距离离散化的路径点数n，如果n小于2，则强制设置为2；
-// 最后根据圆弧的起始角度、终止角度和等距离步长，计算出每个路径点的横坐标、纵坐标和航向角，并存储在points数组中返回。
-
-// 需要注意的是，上述等距离离散化的方法会产生离散化误差，因此在实际应用中，需要根据实际需求和场景选择合适的离散化方法，并进行相应的误差控制。
-

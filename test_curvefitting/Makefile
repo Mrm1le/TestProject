@@ -48,10 +48,10 @@ RM = /opt/cmake-3.15.6/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/thj/Desktop/TestProject/test_curvefitting
+CMAKE_SOURCE_DIR = /home/thj/Desktop/TestProject/test_curvefitting/newfitting
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/thj/Desktop/TestProject/test_curvefitting
+CMAKE_BINARY_DIR = /home/thj/Desktop/TestProject/test_curvefitting/newfitting
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/thj/Desktop/TestProject/test_curvefitting/CMakeFiles /home/thj/Desktop/TestProject/test_curvefitting/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/thj/Desktop/TestProject/test_curvefitting/newfitting/CMakeFiles /home/thj/Desktop/TestProject/test_curvefitting/newfitting/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/thj/Desktop/TestProject/test_curvefitting/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/thj/Desktop/TestProject/test_curvefitting/newfitting/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,44 +111,44 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named test4
+# Target rules for targets named test
 
 # Build rule for target.
-test4: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 test4
-.PHONY : test4
+test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test
+.PHONY : test
 
 # fast build rule for target.
-test4/fast:
-	$(MAKE) -f CMakeFiles/test4.dir/build.make CMakeFiles/test4.dir/build
-.PHONY : test4/fast
+test/fast:
+	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/build
+.PHONY : test/fast
 
-test4.o: test4.cc.o
+test.o: test.cc.o
 
-.PHONY : test4.o
+.PHONY : test.o
 
 # target to build an object file
-test4.cc.o:
-	$(MAKE) -f CMakeFiles/test4.dir/build.make CMakeFiles/test4.dir/test4.cc.o
-.PHONY : test4.cc.o
+test.cc.o:
+	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/test.cc.o
+.PHONY : test.cc.o
 
-test4.i: test4.cc.i
+test.i: test.cc.i
 
-.PHONY : test4.i
+.PHONY : test.i
 
 # target to preprocess a source file
-test4.cc.i:
-	$(MAKE) -f CMakeFiles/test4.dir/build.make CMakeFiles/test4.dir/test4.cc.i
-.PHONY : test4.cc.i
+test.cc.i:
+	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/test.cc.i
+.PHONY : test.cc.i
 
-test4.s: test4.cc.s
+test.s: test.cc.s
 
-.PHONY : test4.s
+.PHONY : test.s
 
 # target to generate assembly for a file
-test4.cc.s:
-	$(MAKE) -f CMakeFiles/test4.dir/build.make CMakeFiles/test4.dir/test4.cc.s
-.PHONY : test4.cc.s
+test.cc.s:
+	$(MAKE) -f CMakeFiles/test.dir/build.make CMakeFiles/test.dir/test.cc.s
+.PHONY : test.cc.s
 
 # Help Target
 help:
@@ -157,11 +157,11 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... test4"
+	@echo "... test"
 	@echo "... edit_cache"
-	@echo "... test4.o"
-	@echo "... test4.i"
-	@echo "... test4.s"
+	@echo "... test.o"
+	@echo "... test.i"
+	@echo "... test.s"
 .PHONY : help
 
 
