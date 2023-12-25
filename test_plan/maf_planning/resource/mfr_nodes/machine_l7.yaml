@@ -1,7 +1,0 @@
-log:
-  level: info
-  enable_stderr: true
-  export_frequence: 0
-
-shared_memory_name: planning_machine
-use_shared_memory: true

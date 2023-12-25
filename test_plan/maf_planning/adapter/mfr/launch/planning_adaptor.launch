@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<launch>
-  <node pkg="planning_mfr" type="planning_mfr2ros_adaptor" name="planning_mfr2ros_adaptor" output="screen" respawn="false"/>
-  <node pkg="planning_mfr" type="planning_ros2mfr_adaptor" name="planning_ros2mfr_adaptor" output="screen" respawn="false"/>
-</launch>

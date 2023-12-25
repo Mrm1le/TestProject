@@ -1,9 +1,0 @@
-{
-  "type": "graph",
-  "models": [
-    "ddp"
-  ],
-  "graph": {
-    "edges": []
-  }
-}
