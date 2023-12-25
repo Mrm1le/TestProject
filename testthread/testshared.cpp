@@ -1,1 +1,0 @@
-// auto diag_handle = std::make_shared<IMDiag>();

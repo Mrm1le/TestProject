@@ -1,8 +1,0 @@
-<launch>
-  <arg name="MSD_RESOURCE" default="$(find msquare_pnc_ros)/../../resource" />
-
-  <node pkg="msquare_pnc_ros" type="search_based_planning_node" name="search_based_planning_node" output="screen" respawn="true">
-    <param name="vehicle_calib_file" value="$(arg MSD_RESOURCE)/config/scenario_configs_json/parking/vehicle_param.yaml" />
-    <param name="enable_dump_file" value="true" />
-  </node>
-</launch>

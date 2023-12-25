@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<launch>
-  <include file="$(find msquare_pnc_ros)/launch/@WRAPPED_LAUNCH_FILE_NAME@" pass_all_args="true">
-    <arg name="MSD_RESOURCE" value="$(find msquare_pnc_ros)/resource/" />
-    <arg name="MSD_LIB_MIMALLOC_PATH" default="$(find msquare_pnc_ros)/../../lib/libmimalloc.so" />
-  </include>
-</launch>

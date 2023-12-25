@@ -1,4 +1,0 @@
-<launch>
-<node name="listener" pkg="learn_com" type="learn_com_listener" output="screen"/>
-<node name="talker" pkg="learn_com" type="learn_com_talker" output="screen"/>
-</launch>
