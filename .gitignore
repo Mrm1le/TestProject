@@ -101,3 +101,4 @@ qtcreator-*
 
 # Catkin custom files
 CATKIN_IGNORE
+.DS_Store*

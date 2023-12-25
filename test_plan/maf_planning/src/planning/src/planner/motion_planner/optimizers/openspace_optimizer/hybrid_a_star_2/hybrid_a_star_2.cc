@@ -1204,6 +1204,7 @@ bool HybridAstar2::Plan(const std::vector<SbpObstaclePtr> &obs_ptrs,
     result_.status = SbpStatus::EXCEPTION;
     return false;
   }
+  std::cout << "isParkIn(): " << isParkIn() << std::endl;
 
   Transform trans;
   if (isParkIn()) {
@@ -1225,6 +1226,7 @@ bool HybridAstar2::Plan(const std::vector<SbpObstaclePtr> &obs_ptrs,
     require_forward = true;
     require_backward = false;
   }
+  std::cout << "require_forward: " << require_forward << "require_backward: " << require_backward << std::endl;
 
   curve::Curve start_curve;
   start_curve.initAsStart(require_forward, require_backward);
@@ -1302,11 +1304,18 @@ bool HybridAstar2::Plan(const std::vector<SbpObstaclePtr> &obs_ptrs,
     discrete_obs.emplace_back(points);
     discrete_obs.back().setHeightType(type);
   }
-
   float extra_inflation = 0.025f * std::sqrt(2.0f) * 0.5f + 0.02f;
   obs_grid_.constructFromSbpObstacleMultiHeights(
       discrete_obs, mc_footprint_model_, end_node,
       lat_inflation_ + extra_inflation, lat_inflation_low_ + extra_inflation);
+  std::cout << "lat_inflation_: " << lat_inflation_ << " | "
+            << "lat_inflation_low_: " << lat_inflation_low_ << " | "
+            << "extra_inflation: " << extra_inflation  << " | "
+            << "node_config_.traj_gear_switch_penalty: " << node_config_.traj_gear_switch_penalty << " | "
+            << "max_iter_max_: " << max_iter_max_
+            << "max_iter_base_: " << max_iter_base_ << " | "
+            << "enable_offline_boundary_cost_: " << enable_offline_boundary_cost_ << " | "
+            << std::endl;
 
   obstacle_grid_cost_timer.Toc();
 
@@ -1324,9 +1333,9 @@ bool HybridAstar2::Plan(const std::vector<SbpObstaclePtr> &obs_ptrs,
     obs_grid_test_.getTestGridDiffResult();
   }
 #ifdef OBSTACLE_GRID_DEBUG_DUMP_IMAGE
-  obs_grid_.dumpGridImage("/tmp/obstacle_grid_debug_img_low.png",
+  obs_grid_.dumpGridImage("../build/obstacle_grid_debug_img_low.png",
                           ObstacleHeightType::LOW);
-  obs_grid_.dumpGridImage("/tmp/obstacle_grid_debug_img_high.png",
+  obs_grid_.dumpGridImage("../build/obstacle_grid_debug_img_high.png",
                           ObstacleHeightType::HIGH);
 
   //  obs_grid_legacy_.dumpGridImage("/tmp/obstacle_grid_legacy_debug_img.png");
@@ -1349,7 +1358,8 @@ bool HybridAstar2::Plan(const std::vector<SbpObstaclePtr> &obs_ptrs,
     result_.status = SbpStatus::EXCEPTION;
     return false;
   }
-
+  std::cout << "useHeuristicCostFromInside(): " << useHeuristicCostFromInside()
+            << std::endl;
   float heuristic_cost_from_inside_weight = 0.0f;
   if (useHeuristicCostFromInside()) {
     heuristic_cost_from_inside_weight = 1.0f;
@@ -1477,13 +1487,13 @@ bool HybridAstar2::Plan(const std::vector<SbpObstaclePtr> &obs_ptrs,
                   min_dis_low_wheels, min_dis_not_allow_close,
                   min_dis_full_body, node_x, node_y, node_theta);
           char file_name[512];
-          sprintf(file_name, "/tmp/obstacle_[%d][%02d]_low.png", (int)iter,
+          sprintf(file_name, "../build/obstacle_[%d][%02d]_low.png", (int)iter,
                   (int)i);
           obs_grid_.dumpcalcMinDistanceImage(file_name, mc_footprint_model_,
                                              ObstacleHeightType::LOW,
                                              debug_str);
 
-          sprintf(file_name, "/tmp/obstacle_[%d][%02d]_high.png", (int)iter,
+          sprintf(file_name, "../build/obstacle_[%d][%02d]_high.png", (int)iter,
                   (int)i);
           obs_grid_.dumpcalcMinDistanceImage(file_name, mc_footprint_model_,
                                              ObstacleHeightType::HIGH,
@@ -1592,7 +1602,7 @@ bool HybridAstar2::Plan(const std::vector<SbpObstaclePtr> &obs_ptrs,
 
   result_.iteration_times = iter;
   result_.debug_string = "iteration_times = " + std::to_string(iter);
-
+  std::cout << "iteration_times: " << iter << std::endl;
   plan_timer.Toc();
   return result_.status == SbpStatus::SUCCESS;
 }
