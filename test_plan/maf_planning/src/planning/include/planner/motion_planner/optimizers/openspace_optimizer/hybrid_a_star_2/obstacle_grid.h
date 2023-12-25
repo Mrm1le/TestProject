@@ -4,7 +4,7 @@
 // only init grid_data_f32_buffer_ in constructFromSbpObstacleMultiHeights now
 // so only this function is safety
 
-// #define OBSTACLE_GRID_DEBUG_DUMP_IMAGE
+#define OBSTACLE_GRID_DEBUG_DUMP_IMAGE
 
 #include <vector>
 
