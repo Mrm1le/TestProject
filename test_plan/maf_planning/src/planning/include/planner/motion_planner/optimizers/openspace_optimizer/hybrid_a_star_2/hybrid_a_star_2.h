@@ -50,6 +50,7 @@ inline float getRelativeY(const SearchNode &point, const SearchNode &ref) {
 
 class HybridAstar2 : public SearchBasedPlanner {
 public:
+  std::fstream  search_node_record;
   explicit HybridAstar2(const std::string &config_folder = std::string());
   ~HybridAstar2();
 

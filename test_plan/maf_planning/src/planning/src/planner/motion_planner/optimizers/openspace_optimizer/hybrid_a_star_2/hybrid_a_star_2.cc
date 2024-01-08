@@ -1166,6 +1166,7 @@ bool HybridAstar2::isReplanInSlot(const SearchNode &start) {
 bool HybridAstar2::Plan(const std::vector<SbpObstaclePtr> &obs_ptrs,
                         parking::SearchProcessDebug *sp_debug) {
                           std::cout << "astar Plan!" << std::endl;
+search_node_record.open("../build/search_node.txt", std::ios::out);
 #ifdef BUILD_IN_TEST_BAG_RECURRENT
   constexpr bool enable_timer = true;
 #else  // BUILD_IN_TEST_BAG_RECURRENT
@@ -1554,6 +1555,14 @@ bool HybridAstar2::Plan(const std::vector<SbpObstaclePtr> &obs_ptrs,
 
         pq_insert_timer.Tic();
         pq_.push(allocate_res.key);
+        parking::SearchDebugNode search_node_next(
+              copied_next.x(), copied_next.y(), copied_next.theta(),
+              copied_next.trajectory_cost(), copied_next.heuristic_cost());
+        trans.fromSelf(search_node_next);
+        // printf("search_node_next %.3f, %.3f, %.3f\n", nodes_pool_[allocate_res.key].x(),
+              //  nodes_pool_[allocate_res.key].y(),
+              //  nodes_pool_[allocate_res.key].theta());
+        // search_node_record << search_node_next.x << " " << search_node_next.y << " " << search_node_next.theta << std::endl;
         pq_insert_timer.Toc();
         int replaced = nodes_pool_.invalidKey();
         if (state_insert_res_fine_end.belong) {
