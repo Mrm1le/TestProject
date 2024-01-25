@@ -1255,6 +1255,8 @@ search_node_record.open("../build/search_node.txt", std::ios::out);
 
   trans.toSelf(start_node);
   trans.toSelf(end_node);
+  printf("end_node %.3f, %.3f, %.3f\n", end_node.x(), end_node.y(), end_node.theta());
+  printf("start_node %.3f, %.3f, %.3f\n", start_node.x(), start_node.y(), start_node.theta());
   if (slot_type_ == SlotType::PARALLEL) {
     simple_rs_euler_spiral_min_straight_len_ = 0.0f;
     if (isPlanInSlot(start_node)) {
@@ -1302,10 +1304,12 @@ search_node_record.open("../build/search_node.txt", std::ios::out);
     for (auto &point : points) {
       trans.toSelf(point);
     }
+    printf("type %d, points size %lu\n", (int)type, points.size());
     discrete_obs.emplace_back(points);
     discrete_obs.back().setHeightType(type);
   }
   float extra_inflation = 0.025f * std::sqrt(2.0f) * 0.5f + 0.02f;
+  obstacle_grid_cost_timer.Tic();
   obs_grid_.constructFromSbpObstacleMultiHeights(
       discrete_obs, mc_footprint_model_, end_node,
       lat_inflation_ + extra_inflation, lat_inflation_low_ + extra_inflation);
@@ -1360,6 +1364,7 @@ search_node_record.open("../build/search_node.txt", std::ios::out);
     return false;
   }
   std::cout << "useHeuristicCostFromInside(): " << useHeuristicCostFromInside()
+            << " enable_offline_boundary_cost_ " << enable_offline_boundary_cost_
             << std::endl;
   float heuristic_cost_from_inside_weight = 0.0f;
   if (useHeuristicCostFromInside()) {

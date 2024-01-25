@@ -4,7 +4,7 @@
 // only init grid_data_f32_buffer_ in constructFromSbpObstacleMultiHeights now
 // so only this function is safety
 
-#define OBSTACLE_GRID_DEBUG_DUMP_IMAGE
+// #define OBSTACLE_GRID_DEBUG_DUMP_IMAGE
 
 #include <vector>
 
@@ -148,6 +148,7 @@ public:
     // divide obstacles into multiple heights
     std::vector<SbpObstaclePoint>
         discrete_obs_by_heights[(int)ObstacleHeightType::HEIGHT_TYPE_NUM];
+    printf("discrete_obs size %lu\n", discrete_obs.size());
     for (std::size_t i = 0; i < discrete_obs.size(); i++) {
       ObstacleHeightType height = discrete_obs[i].getHeightType();
       if (height == ObstacleHeightType::UNKNOWN) {
@@ -162,6 +163,7 @@ public:
     grid_data_f32_buffer_.create(rows_, cols_, CV_32F);
     for (std::size_t i = 0; i < enabling_heights_.size(); i++) {
       ObstacleHeightType height = enabling_heights_[i];
+      printf("height %d\n", (int)height);
       float inflation = 0.0f;
       int footprint_model_index = -1;
       if (height == ObstacleHeightType::HIGH) {
@@ -213,6 +215,8 @@ public:
     for (std::size_t i = 0; i < discrete_obs.size(); i++) {
       const std::vector<planning_math::Vec2d> &obs_points =
           discrete_obs[i].getPoints();
+      printf("obs_points size %lu, origin_x_ %.3f, origin_y_ %.3f, inv_res_ %.3f\n", 
+          obs_points.size(), origin_x_, origin_y_, inv_res_);   
       for (const auto &point : obs_points) {
         bool valid = true;
         for (std::size_t k = 0; k < circles.size(); k++) {
@@ -224,6 +228,7 @@ public:
           float obs_x_in_grid = (point.x() - origin_x_) * inv_res_;
           float obs_y_in_grid = (point.y() - origin_y_) * inv_res_;
           obstacle_points_in_grid.emplace_back(obs_x_in_grid, obs_y_in_grid);
+          // printf("obs_x_in_grid %.3f, obs_y_in_grid %.3f\n", obs_x_in_grid, obs_y_in_grid);
         }
       }
     }
@@ -445,8 +450,7 @@ public:
       edge[0].x += edge[0].dx;
       edge[1].x += edge[1].dx;
     }
-
-
+    // printf("img.size() %d\n", img.rows);
   }
 
   inline bool convertSbpObstacleToPointsInGrid(
@@ -493,42 +497,84 @@ public:
       return true;
     }
     cv::Subdiv2D subdiv(cv::Rect(0, 0, cols_, rows_));
+    printf("height %d, rows_ %d, cols_ %d, points_in_grid size %lu\n", (int)height, rows_, cols_, points_in_grid.size());
     for (std::size_t i = 0; i < points_in_grid.size(); i++) {
       if(points_in_grid[i].x >=0 && points_in_grid[i].y >=0 && points_in_grid[i].x <=cols_-1 && points_in_grid[i].y <=rows_-1){
         subdiv.insert(cv::Point2f(points_in_grid[i].x, points_in_grid[i].y));
       }
     }
     
-    
     // auto get_voroni_timer =  msd_planning::utils::Timer<true>("get_voroni");
-    // auto fill_polygon_timer =  msd_planning::utils::TotalTimer<true>("fill_convex_poly");
+    auto fill_polygon_timer =  msd_planning::utils::Timer<true>("fill_convex_poly");
     
-    //get_voroni_timer.Tic();
+    // get_voroni_timer.Tic();
     subdiv.getVoronoiFacetList(std::vector<int>(), voroni_faces_buffer_, voroni_centers_buffer_);
-    //get_voroni_timer.Toc();
-
-    std::vector<cv::Point2l> facei_converted_to_point2i;
-
-    grid_data_f32_buffer_.setTo(10000.0);
-
-    for (size_t i = 0; i < voroni_faces_buffer_.size(); i++) {
-      facei_converted_to_point2i.resize(voroni_faces_buffer_[i].size());
-      for (size_t j = 0; j < voroni_faces_buffer_[i].size(); j++) {
-        facei_converted_to_point2i[j] =
-            cv::Point2l(std::round(voroni_faces_buffer_[i][j].x),
-                        std::round(voroni_faces_buffer_[i][j].y));
+    // get_voroni_timer.Toc();
+    printf("voroni_centers_buffer_ %lu, voroni_faces_buffer_ size %lu, voroni_faces_buffer_[0] size %lu\n", 
+            voroni_centers_buffer_.size(), voroni_faces_buffer_.size(), voroni_faces_buffer_.front().size());
+    std::fstream f_voroni_center;
+    std::fstream f_voroni_faces;
+    f_voroni_center.open("f_voroni_center.log", std::ios::out);
+    f_voroni_faces.open("f_voroni_face.log", std::ios::out);
+    // std::vector<cv::Point2l> facei_converted_to_point2i;
+    for(auto center : voroni_centers_buffer_){
+      f_voroni_center << center.x << " " << center.y << std::endl;
+    }
+    for(auto faces : voroni_faces_buffer_){
+      for(auto face : faces){
+        f_voroni_faces << face.x << " " << face.y << " ";
       }
-      // constructGridFillVoroniConvexPolyWithDistance2(grid_data, ( cv::Point2l*)facei_converted_to_point2i.data(), facei_converted_to_point2i.size(),
-      //   voroni_centers_buffer_[i].x, voroni_centers_buffer_[i].y, (int)i);
-      //fill_polygon_timer.Tic();
-      constructGridFillVoroniConvexPolyWithDistanceFloat(grid_data_f32_buffer_, ( cv::Point2f*)voroni_faces_buffer_[i].data(), voroni_faces_buffer_[i].size(),
-        voroni_centers_buffer_[i].x, voroni_centers_buffer_[i].y, (int)i);
-      // fill_polygon_timer.Toc();
+      f_voroni_faces << std::endl;
     }
 
+    f_voroni_center.close();
+    f_voroni_faces.close();
+    grid_data_f32_buffer_.setTo(10000.0);
+
+    // 将mat对象可视化
+    // 创建一个示例的 cv::Mat 对象
+    cv::Mat image2 = cv::Mat::zeros(12000, 12000, CV_8UC3);
+    // 获取 Delaunay 三角剖分的边界
+    std::vector<cv::Vec6f> triangles;
+    subdiv.getTriangleList(triangles);
+
+    
+    fill_polygon_timer.Tic();
+    for (size_t i = 0; i < voroni_faces_buffer_.size(); i++) {
+      // facei_converted_to_point2i.resize(voroni_faces_buffer_[i].size());
+      // for (size_t j = 0; j < voroni_faces_buffer_[i].size(); j++) {
+      //   facei_converted_to_point2i[j] =
+      //       cv::Point2l(std::round(voroni_faces_buffer_[i][j].x),
+      //                   std::round(voroni_faces_buffer_[i][j].y));
+      // }
+      // constructGridFillVoroniConvexPolyWithDistance2(grid_data, ( cv::Point2l*)facei_converted_to_point2i.data(), facei_converted_to_point2i.size(),
+      //   voroni_centers_buffer_[i].x, voroni_centers_buffer_[i].y, (int)i);
+      
+        constructGridFillVoroniConvexPolyWithDistanceFloat(grid_data_f32_buffer_, ( cv::Point2f*)voroni_faces_buffer_[i].data(), voroni_faces_buffer_[i].size(),
+        voroni_centers_buffer_[i].x, voroni_centers_buffer_[i].y, (int)i);
+
+    // 显示可视化结果
+    cv::Rect roi(200, 300, 400, 400);
+    // 提取感兴趣的区域
+    cv::Mat roiMatrix = grid_data_f32_buffer_(roi);
+    // 将矩阵的数值范围映射到[0, 1]
+    cv::normalize(roiMatrix, roiMatrix, 0, 1, cv::NORM_MINMAX);
+    bool success = cv::imwrite("saved_image.jpg", roiMatrix);
+    }
+    fill_polygon_timer.Toc();
     grid_data_u16_[(int)height].resize(rows_ * cols_);
     float *grid_data_ptr = (float *)grid_data_f32_buffer_.data;
+     
+    printf("grid_data_f32_buffer_rows %d cols %d\n", grid_data_f32_buffer_.rows, grid_data_f32_buffer_.cols);
+    // for (int i = 0; i < grid_data_f32_buffer_.rows; ++i) {
+    //     for (int j = 0; j < grid_data_f32_buffer_.cols; ++j) {
+    //         std::cout << grid_data_f32_buffer_.at<float>(i, j) << " ";
+    //     }
+    //     std::cout << std::endl;
+    // }
     for (std::size_t i = 0; i < grid_data_u16_[(int)height].size(); i++) {
+      if(i % 100000 == 0)
+        printf("grid_data_u16_ size %lu\n grid_data_f32_buffer_.data %.3f grid_data_scale_ %.3f", grid_data_u16_[(int)height].size(), grid_data_ptr[i], grid_data_scale_);
       grid_data_u16_[(int)height][i] = std::min(
           std::max(std::round(grid_data_ptr[i] / grid_data_scale_), 0.0f),
           float(std::numeric_limits<std::uint16_t>::max()));
