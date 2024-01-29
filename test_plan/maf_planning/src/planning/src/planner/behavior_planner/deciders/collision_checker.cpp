@@ -118,10 +118,10 @@ void CollisionChecker::collision_check(const PathPoint &path_point,
     double temp_dis = 0;
     if (result.s < 0.6) {
       if (ego_model_.get_ego_model_type() == EgoModelType::WHEEL_BASE) {
-        temp_dis = 
-          ego_model_
-              .get_ego_model_polygon(EgoModelType::WHEEL_BASE, path_point)
-              .DistanceTo(obs);
+        temp_dis =
+            ego_model_
+                .get_ego_model_polygon(EgoModelType::WHEEL_BASE, path_point)
+                .DistanceTo(obs);
       } else {
         temp_dis =
             ego_model_

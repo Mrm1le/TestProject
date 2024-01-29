@@ -35,8 +35,7 @@ template <typename _Tp, size_t _Bound> struct _MakeUniq<_Tp[_Bound]> {
 
 // std::make_unique for single objects
 template <typename _Tp, typename... _Args>
-inline typename _MakeUniq<_Tp>::__single_object
-make_unique(_Args &&... __args) {
+inline typename _MakeUniq<_Tp>::__single_object make_unique(_Args &&...__args) {
   return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...));
 }
 

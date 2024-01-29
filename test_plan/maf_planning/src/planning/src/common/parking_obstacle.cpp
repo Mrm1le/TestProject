@@ -69,8 +69,8 @@ const std::unordered_map<ObjectDecisionType::ObjectTagCase, int,
 
 // }
 
-Obstacle::Obstacle(int id, const Point3D &point, bool is_freespace, 
-    const GroundLineType fusion_type)
+Obstacle::Obstacle(int id, const Point3D &point, bool is_freespace,
+                   const GroundLineType fusion_type)
     : id_(id), perception_id_(id), is_static_(true),
       perception_bounding_box_({point.x, point.y}, 0.0, 0.1, 0.1),
       point_({point.x, point.y, point.z}) {
@@ -100,10 +100,9 @@ Obstacle::Obstacle(int id, const Point3D &point, bool is_freespace,
   }
 }
 
-Obstacle::Obstacle(int id, const Point3D &point,  const ObjectType& type)
+Obstacle::Obstacle(int id, const Point3D &point, const ObjectType &type)
     : id_(id), perception_id_(id), is_static_(true),
-      perception_bounding_box_({point.x, point.y}, 0.0, 0.1, 0.1),
-      type_(type) {
+      perception_bounding_box_({point.x, point.y}, 0.0, 0.1, 0.1), type_(type) {
 
   is_caution_level_obstacle_ = true;
   is_truncated_ = false;
@@ -309,8 +308,8 @@ Obstacle::Obstacle(int id, const planning_math::LineSegment2d &line,
 // }
 Obstacle::Obstacle(int id, const FusionObject &object, bool is_static)
     : id_(id), perception_id_(object.track_id), is_static_(is_static),
-      is_sf_static_(object.is_static), sf_type_(object.type), 
-      point_({object.position.x, object.position.y, 0.0}), 
+      is_sf_static_(object.is_static), sf_type_(object.type),
+      point_({object.position.x, object.position.y, 0.0}),
       perception_bounding_box_({object.position.x, object.position.y},
                                object.heading_yaw, object.shape.length,
                                object.shape.width) {
@@ -329,7 +328,7 @@ Obstacle::Obstacle(int id, const FusionObject &object, bool is_static)
   case 10002:
     // type_ = ObjectType::OFO;
     type_ = ObjectType::PEDESTRIAN;
-    //is_static_ = false;
+    // is_static_ = false;
     break;
   case 20001:
     type_ = ObjectType::CONE_BUCKET;

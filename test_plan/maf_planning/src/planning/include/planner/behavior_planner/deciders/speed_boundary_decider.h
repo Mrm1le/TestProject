@@ -30,11 +30,12 @@ private:
   void acc_curve_speed(double &vel_limit, double &a_cross,
                        const double ego_vel);
 
-  void getTargetLaneCurv(
-    double &vel_limit, double &a_cross, const double curv_turn,
-    const double max_centrifugal_acceleration, const double curv_filter_param,
-    const double ego_vel, const double pre_brake_curv,
-    PlanningStatus *planning_status);
+  void getTargetLaneCurv(double &vel_limit, double &a_cross,
+                         const double curv_turn,
+                         const double max_centrifugal_acceleration,
+                         const double curv_filter_param, const double ego_vel,
+                         const double pre_brake_curv,
+                         PlanningStatus *planning_status);
 
   int n_prebrake_curv_ = 0;
   double last_v_lim_curv_ = 33.3;

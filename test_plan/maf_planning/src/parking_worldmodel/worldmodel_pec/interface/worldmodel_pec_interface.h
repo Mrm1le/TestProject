@@ -6,18 +6,18 @@
 namespace worldmodel_pec {
 
 struct SystemManagerRequestBlackList {
-  //当前实现不太严谨，有HDMAP（推荐了地图ID）的情况下这个ID是地图ID，反之是trackID，需要算法内部基于当前“是否加载了地图车位列表”进行判断
-  //后续接口再做升级
+  // 当前实现不太严谨，有HDMAP（推荐了地图ID）的情况下这个ID是地图ID，反之是trackID，需要算法内部基于当前“是否加载了地图车位列表”进行判断
+  // 后续接口再做升级
   std::vector<int> blacklist_id_;
 };
 
 // WorldModelPEC模块的算法接口
-//执行机制：每个函数都是阻塞式的，内部没有多线程，执行完毕函数返回
-//线程安全性：绝大多数函数（isInited除外）都带同一个互斥锁，保证不会被多个线程同时执行
+// 执行机制：每个函数都是阻塞式的，内部没有多线程，执行完毕函数返回
+// 线程安全性：绝大多数函数（isInited除外）都带同一个互斥锁，保证不会被多个线程同时执行
 class WorldModelPEC {
 
 public:
-  //单例模式设计，通过此接口获取一个WorldModelPEC算法模组的唯一实例的指针。使用完毕无需释放
+  // 单例模式设计，通过此接口获取一个WorldModelPEC算法模组的唯一实例的指针。使用完毕无需释放
   static WorldModelPEC *getInstance();
 
 public:
@@ -33,10 +33,10 @@ public:
   //	函数名称	:	init
   //	描述		:	初始化WorldModelPEC功能
   //	输入		:	calib_folder
-  //标定参数文件夹（读取相机标定参数和车体参数） 	输出		:
+  // 标定参数文件夹（读取相机标定参数和车体参数） 	输出		:
   // true ： 初始化成功  false ： 初始化未成功
   //	特别注意	：
-  //初始化是不读取地图车位白名单的，白名单信息通过setSystemManagerRequestChangeRandomSearchList输入
+  // 初始化是不读取地图车位白名单的，白名单信息通过setSystemManagerRequestChangeRandomSearchList输入
   //////////////////////////////////////////////////////////////////////////////////////////////////////
   virtual bool init(std::string params_json_str) = 0;
 
@@ -78,7 +78,7 @@ public:
   //	函数名称	:	feedFusionGroundline
   //	描述		:	输入接地线融合信息
   //	输入		:	groundline_fusion
-  //以FusionAPA形式填充的地图车位信息
+  // 以FusionAPA形式填充的地图车位信息
   //	输出		:	true : 正常执行  false ：异常执行
   //////////////////////////////////////////////////////////////////////////////////////////////////////
   virtual bool
@@ -125,13 +125,13 @@ public:
   //	函数名称	:	setSystemManagerRequestChangeRandomSearchList
   //	描述		:	处理system_manager请求（修改随机搜索白名单）
   //	输入		:	map_folder
-  //地图文件夹（全路径）。当前的随机搜索白名单列表是保存在地图文件夹里，因此采用这种方式实现，后续会改成直接通过接口由外部发送。
+  // 地图文件夹（全路径）。当前的随机搜索白名单列表是保存在地图文件夹里，因此采用这种方式实现，后续会改成直接通过接口由外部发送。
   //			：
-  //特殊情况1：如果map_folder为空，则清除白名单。会返回正常执行且成功。例如从SVP切APA的时候。
+  // 特殊情况1：如果map_folder为空，则清除白名单。会返回正常执行且成功。例如从SVP切APA的时候。
   //			：
-  //特殊情况2：如果通过此函数输入了白名单，但没有输入地图车位列表（feedMapParkingSlot），则白名单功能无效，但输入的白名单ID列表仍然有效保存
+  // 特殊情况2：如果通过此函数输入了白名单，但没有输入地图车位列表（feedMapParkingSlot），则白名单功能无效，但输入的白名单ID列表仍然有效保存
   //			：
-  //致命错误：如果map_folder不为空，但读取不到指定的地图文件，则会报错，清除掉白名单，并将整个WorldModelPEC
+  // 致命错误：如果map_folder不为空，但读取不到指定的地图文件，则会报错，清除掉白名单，并将整个WorldModelPEC
   // instance设置为未初始化状态，无法接受任何指令，直到重新初始化为止 	输出
   //:	true : 正常执行且成功  false ：异常执行或失败
   //////////////////////////////////////////////////////////////////////////////////////////////////////

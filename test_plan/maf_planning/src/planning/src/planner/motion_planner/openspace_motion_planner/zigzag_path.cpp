@@ -148,16 +148,16 @@ std::vector<DirTrajectoryPoint>::const_iterator ZigzagPath::get_stage_upper(
   return stages_info_.begin()->get_upper();
 }
 
-std::vector<DirTrajectoryPoint> 
-  ZigzagPath::get_segment_traj(size_t seg_index) const {
-  std::vector<DirTrajectoryPoint>  result_traj;
+std::vector<DirTrajectoryPoint>
+ZigzagPath::get_segment_traj(size_t seg_index) const {
+  std::vector<DirTrajectoryPoint> result_traj;
   result_traj.clear();
   if (seg_index >= stages_info_.size()) {
     return result_traj;
   }
-  result_traj = std::vector<DirTrajectoryPoint>(
-    (stages_info_[seg_index]).get_lower(),
-    (stages_info_[seg_index]).get_upper());
+  result_traj =
+      std::vector<DirTrajectoryPoint>((stages_info_[seg_index]).get_lower(),
+                                      (stages_info_[seg_index]).get_upper());
   return result_traj;
 }
 

@@ -207,4 +207,4 @@ double p1evl(double x, void *coef, int N) {
 
   return (ans);
 }
-}
+} // namespace clothoid

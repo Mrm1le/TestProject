@@ -14,10 +14,10 @@
   do {                                                                         \
     std::string str;                                                           \
     str = prio;                                                                \
-    if (strcmp(prio, LOCAL_INFO)==0)                                                    \
+    if (strcmp(prio, LOCAL_INFO) == 0)                                         \
       fprintf(stdout, "\033[0;32m[%s, %s: line%d]: " msg " \033[0m\n",         \
               str.c_str(), __FUNCTION__, __LINE__, ##__VA_ARGS__);             \
-    else if (strcmp(prio, LOCAL_INFO)==0)                                              \
+    else if (strcmp(prio, LOCAL_INFO) == 0)                                    \
       fprintf(stdout, "\033[0;31m[%s, %s: line%d]: " msg " \033[0m\n",         \
               str.c_str(), __FUNCTION__, __LINE__, ##__VA_ARGS__);             \
     fflush(stdout);                                                            \

@@ -24,7 +24,7 @@ public:
   }
 
   template <typename T, typename... T_ARGS>
-  void trace(T &&info, T_ARGS &&... args) {
+  void trace(T &&info, T_ARGS &&...args) {
     trace(std::forward<T>(info));
     trace(std::forward<T_ARGS>(args)...);
   }

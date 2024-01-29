@@ -82,7 +82,8 @@ bool ParkingLongitudinalBehaviorPlanner::calculate() {
   if (VehicleParam::Instance()->geometry_contour_.is_using_geometry_contour()) {
     *PlanningContext::Instance()->mutable_planning_debug_info() += ",[contour]";
   } else {
-    *PlanningContext::Instance()->mutable_planning_debug_info() += ",[not contour]";
+    *PlanningContext::Instance()->mutable_planning_debug_info() +=
+        ",[not contour]";
   }
   //
   std::vector<double> time_duration;
@@ -136,7 +137,8 @@ bool ParkingLongitudinalBehaviorPlanner::calculate() {
 
   if (!is_sop_collsion_model)
     (void)compute(lead_point_polygon, &old_mpc_sl_points);
-  time_duration.emplace_back(MTIME()->timestamp().ms() - last_time); // 2 - point
+  time_duration.emplace_back(MTIME()->timestamp().ms() -
+                             last_time); // 2 - point
   last_time = MTIME()->timestamp().ms();
   double after_fs = MTIME()->timestamp().sec();
   auto update_fs = after_fs - start_fs;
@@ -149,7 +151,8 @@ bool ParkingLongitudinalBehaviorPlanner::calculate() {
   if (is_sop_collsion_model) {
     std::unique_ptr<RemainDistDecider> remain_dist_decider;
     remain_dist_decider = std::make_unique<RemainDistDecider>(world_model_);
-    remain_decider_status = remain_dist_decider->MakeDecision(ego_model, 
+    remain_decider_status = remain_dist_decider->MakeDecision(
+        ego_model,
         PlanningContext::Instance()
             ->parking_behavior_planner_output()
             .has_moved,
@@ -157,7 +160,8 @@ bool ParkingLongitudinalBehaviorPlanner::calculate() {
         this->mutable_out_hole_param());
   }
 
-  time_duration.emplace_back(MTIME()->timestamp().ms() - last_time); // 3 - remain
+  time_duration.emplace_back(MTIME()->timestamp().ms() -
+                             last_time); // 3 - remain
   last_time = MTIME()->timestamp().ms();
   // collision check model switch
   if (is_sop_collsion_model) {
@@ -200,8 +204,9 @@ bool ParkingLongitudinalBehaviorPlanner::calculate() {
         max_comsume_time3 = it;
     }
   }
-  time_duration_str += "),max_t=(" + std::to_string(max_comsume_time2).substr(0, 5) +
-                       ", " + std::to_string(max_comsume_time3).substr(0, 5) + ") ";
+  time_duration_str += "),max_t=(" +
+                       std::to_string(max_comsume_time2).substr(0, 5) + ", " +
+                       std::to_string(max_comsume_time3).substr(0, 5) + ") ";
   *PlanningContext::Instance()->mutable_planning_debug_info() +=
       time_duration_str;
 
@@ -491,7 +496,7 @@ bool ParkingLongitudinalBehaviorPlanner::compute(
 
   // donot consider too fast mpc trajectory
   Pose2DTrajectory filter_mpc_traj;
-  for (const auto& it : mpc_traj) {
+  for (const auto &it : mpc_traj) {
     if (it.s < kLonConsiderDistance) {
       filter_mpc_traj.emplace_back(it);
     } else {
@@ -500,10 +505,11 @@ bool ParkingLongitudinalBehaviorPlanner::compute(
   }
   // obs_pts is obstacle points which ,
   std::string cc_debug_str;
-  if(!filter_mpc_traj.empty())
-    cc_debug_str += ",mpc_s" + std::to_string(filter_mpc_traj.back().s).substr(0, 5) + ", ";
-  collision_checker_.remainDisCheck(obs_pts, filter_mpc_traj, plan_traj, is_reverse,
-                                    is_moved, ego_pose, &lead_point,
+  if (!filter_mpc_traj.empty())
+    cc_debug_str +=
+        ",mpc_s" + std::to_string(filter_mpc_traj.back().s).substr(0, 5) + ", ";
+  collision_checker_.remainDisCheck(obs_pts, filter_mpc_traj, plan_traj,
+                                    is_reverse, is_moved, ego_pose, &lead_point,
                                     &cc_debug_str, ptr_old_mpc_sl_points);
   *PlanningContext::Instance()->mutable_planning_debug_info() += cc_debug_str;
 
@@ -532,7 +538,8 @@ bool ParkingLongitudinalBehaviorPlanner::compute(
     if (!result.is_collision) {
       continue;
     }
-    // double d_rel = result.s + CarParams::GetInstance()->lat_inflation() * 0.5;
+    // double d_rel = result.s + CarParams::GetInstance()->lat_inflation() *
+    // 0.5;
     double d_rel = result.s;
     if (d_rel < lead_point.d_rel || lead_point.id == -1) {
       lead_point.d_rel = d_rel;
@@ -672,8 +679,8 @@ bool ParkingLongitudinalBehaviorPlanner::compute(FreespaceLine &lead_line) {
       ObjectDecisionType map_obs_decision;
       auto mutable_map_obs_decision = map_obs_decision.mutable_lead();
 
-      CollisionCheckStatus result =
-          check_fs_line_collision(map_obs->PerceptionLine(), map_obs->LineFusionType());
+      CollisionCheckStatus result = check_fs_line_collision(
+          map_obs->PerceptionLine(), map_obs->LineFusionType());
       if (result.is_collision /*  && result.s > 0.0 */) {
         double d_rel =
             result.s + CarParams::GetInstance()->lat_inflation() * 0.5;
@@ -697,7 +704,8 @@ bool ParkingLongitudinalBehaviorPlanner::compute(FreespaceLine &lead_line) {
       double temp_min_distance = 100.0;
       bool temp_is_collision = false;
       for (auto &gate_edge : map_obs->PerceptionBoundingBox().GetAllEdges()) {
-        CollisionCheckStatus result = check_fs_line_collision(gate_edge, map_obs->LineFusionType());
+        CollisionCheckStatus result =
+            check_fs_line_collision(gate_edge, map_obs->LineFusionType());
         if (result.is_collision) {
           temp_is_collision = true;
           if (result.s < temp_d_rel) {
@@ -729,7 +737,7 @@ bool ParkingLongitudinalBehaviorPlanner::compute(FreespaceLine &lead_line) {
   double parking_slot_iou = 0.0;
   if (parking_slot_info.original_corners.size() == 4) {
     std::vector<planning_math::Vec2d> origin_corners;
-    for (const auto& corner : parking_slot_info.original_corners) {
+    for (const auto &corner : parking_slot_info.original_corners) {
       origin_corners.emplace_back(corner.x, corner.y);
     }
     planning_math::Polygon2d overlap_polygon;
@@ -738,8 +746,8 @@ bool ParkingLongitudinalBehaviorPlanner::compute(FreespaceLine &lead_line) {
     (void)ego_polygon.ComputeOverlap(slot_polygon, &overlap_polygon);
     parking_slot_iou = overlap_polygon.area() / ego_polygon.area();
   }
-  if(parking_slot_info.type.value == ParkingSlotType::PARALLEL) {
-    if(special_slot_type == 0 && parking_slot_iou > 0.1) {
+  if (parking_slot_info.type.value == ParkingSlotType::PARALLEL) {
+    if (special_slot_type == 0 && parking_slot_iou > 0.1) {
       lead_line.d_rel -= 0.05;
     }
   }
@@ -801,10 +809,10 @@ bool ParkingLongitudinalBehaviorPlanner::compute(FreespaceLine &lead_line) {
 bool ParkingLongitudinalBehaviorPlanner::MakeSpecialCase(
     const double side_safe_threshold, FreespacePoint *const ptr_lead_point) {
   // for out_put
-  auto& lead_point = *ptr_lead_point;
+  auto &lead_point = *ptr_lead_point;
   double chrono_ms = -1.0;
-  MSD_LOG(ERROR, "begin: %.3f %d %.3f end", lead_point.d_rel,
-          lead_point.id, chrono_ms);
+  MSD_LOG(ERROR, "begin: %.3f %d %.3f end", lead_point.d_rel, lead_point.id,
+          chrono_ms);
 
   auto &parking_slot_info = PlanningContext::Instance()
                                 ->parking_behavior_planner_output()
@@ -812,7 +820,7 @@ bool ParkingLongitudinalBehaviorPlanner::MakeSpecialCase(
   double parking_slot_iou = 0.0;
   if (parking_slot_info.original_corners.size() == 4) {
     std::vector<planning_math::Vec2d> origin_corners;
-    for (const auto& corner : parking_slot_info.original_corners) {
+    for (const auto &corner : parking_slot_info.original_corners) {
       origin_corners.emplace_back(corner.x, corner.y);
     }
     planning_math::Polygon2d overlap_polygon;
@@ -831,16 +839,17 @@ bool ParkingLongitudinalBehaviorPlanner::MakeSpecialCase(
   }
 
   int special_slot_type = parking_slot_info.special_slot_type;
-  if(parking_slot_info.type.value == ParkingSlotType::PARALLEL) {
-    if(special_slot_type == 0 && parking_slot_iou > 0.1) {
+  if (parking_slot_info.type.value == ParkingSlotType::PARALLEL) {
+    if (special_slot_type == 0 && parking_slot_iou > 0.1) {
       lead_point.d_rel -= 0.05;
     }
   }
 
   // TODO(root): alignment to 1.5.6 lon performance
   if (true) {
-  // if (parking_slot_iou > 0.25 &&
-  //     std::abs(world_model_->get_ego_state().ego_vel) < kSlowSpeedThreshold) {
+    // if (parking_slot_iou > 0.25 &&
+    //     std::abs(world_model_->get_ego_state().ego_vel) <
+    //     kSlowSpeedThreshold) {
     lead_point.d_rel += side_safe_threshold;
     *PlanningContext::Instance()->mutable_planning_debug_info() +=
         ", in_slot-8.5cm, ";
@@ -1613,7 +1622,8 @@ ParkingLongitudinalBehaviorPlanner::check_fs_point_collision(
 
 CollisionCheckStatus
 ParkingLongitudinalBehaviorPlanner::check_fs_line_collision(
-    const planning_math::LineSegment2d &fs_line, const GroundLineType fusion_type) {
+    const planning_math::LineSegment2d &fs_line,
+    const GroundLineType fusion_type) {
   auto scene_avp =
       PlanningContext::Instance()->planning_status().planning_result.scene_avp;
   planning_math::Box2d ego_box;
@@ -1680,7 +1690,8 @@ ParkingLongitudinalBehaviorPlanner::check_fs_line_collision(
           ->parking_behavior_planner_output()
           .planner_type == PlannerType::OPENSPACE) {
     if (fusion_type == GroundLineType::GROUND_LINE_USS_TYPE_STEP) {
-      MSD_LOG(ERROR, "[%s] low line fusion type: %d", __FUNCTION__, (int)fusion_type);
+      MSD_LOG(ERROR, "[%s] low line fusion type: %d", __FUNCTION__,
+              (int)fusion_type);
       (void)ego_model_.set_model_type(EgoModelType::WHEEL_BASE);
     } else {
       (void)ego_model_.set_model_type(EgoModelType::POLYGON);
@@ -1759,14 +1770,14 @@ void ParkingLongitudinalBehaviorPlanner::freespace_point_debug(
 
   if (!plan_traj.empty()) {
     // get plan path's max kappa
-    //std::vector<std::pair<double, double>> vec_s_kappa;
+    // std::vector<std::pair<double, double>> vec_s_kappa;
     std::pair<double, double> max_s_kappa = std::make_pair(0.0, 0.0);
     for (const auto &pt : planning_path) {
       double abs_kappa = std::abs(pt.kappa());
       if (abs_kappa > max_s_kappa.second) {
         max_s_kappa = std::make_pair(pt.const_s(), pt.kappa());
       }
-      //vec_s_kappa.emplace_back(std::make_pair(pt.const_s(), pt.kappa()));
+      // vec_s_kappa.emplace_back(std::make_pair(pt.const_s(), pt.kappa()));
     }
     Pose2D final_path_point = plan_traj.size() > 3
                                   ? plan_traj.at(plan_traj.size() - 3)
@@ -1848,7 +1859,7 @@ void ParkingLongitudinalBehaviorPlanner::freespace_point_debug(
         std::to_string(lead_point_polygon.x).substr(0, 5) + ", " +
         std::to_string(lead_point_polygon.y).substr(0, 5) + ", " +
         std::to_string(lead_point_polygon.d_rel).substr(0, 5) + ")";
-                 std::to_string(lead_point_polygon.d_rel).substr(0, 5) + ")";
+    std::to_string(lead_point_polygon.d_rel).substr(0, 5) + ")";
   }
   *PlanningContext::Instance()->mutable_planning_debug_info() += remain_ss1;
 
@@ -1903,7 +1914,8 @@ void ParkingLongitudinalBehaviorPlanner::freespace_point_debug(
     // if (closest_s < 0.1) { // valid s
     //   remain_ss << "    ((" << obs_transformed_x << ", " << obs_transformed_y
     //             << "), \'dl="
-    //             << std::to_string(closest_sl_grid.second - lead_point_polygon.l)
+    //             << std::to_string(closest_sl_grid.second -
+    //             lead_point_polygon.l)
     //             << ", ds="
     //             << std::to_string(lead_point_grid.s - lead_point_polygon.s)
     //             << "\'"
@@ -1913,8 +1925,7 @@ void ParkingLongitudinalBehaviorPlanner::freespace_point_debug(
     // if (lead_point_polygon.is_collision != lead_point_grid.is_collision) {
     //   remain_ss << "\n. diff result!";
     // }
-    *PlanningContext::Instance()->mutable_planning_debug_info() +=
-        remain_ss;
+    *PlanningContext::Instance()->mutable_planning_debug_info() += remain_ss;
   }
   // end
   //////////
@@ -1942,8 +1953,8 @@ void ParkingLongitudinalBehaviorPlanner::freespace_point_debug(
 
 bool ParkingLongitudinalBehaviorPlanner::compute_lead_obs_info(
     const ParkingSlotInfo &park_info,
-    LongitudinalBehaviorPlannerOutput::RemainDistInfo *ptr_remain_dist_info, 
-    int* ptr_is_need_pause) {
+    LongitudinalBehaviorPlannerOutput::RemainDistInfo *ptr_remain_dist_info,
+    int *ptr_is_need_pause) {
   auto &fs_point = PlanningContext::Instance()
                        ->longitudinal_behavior_planner_output()
                        .free_space;
@@ -1966,7 +1977,7 @@ bool ParkingLongitudinalBehaviorPlanner::compute_lead_obs_info(
        PlanningContext::Instance()
                ->parking_behavior_planner_output()
                .parking_slot_info.type.value != ParkingSlotType::PARALLEL)
-                     ? LON_INFLATION_FOR_STEP
+          ? LON_INFLATION_FOR_STEP
           : CarParams::GetInstance()->lon_inflation_min;
   if (fs_point.id >= 0) {
     double remain_temp = fs_point.d_rel - fs_point_lon_inflation;
@@ -1981,7 +1992,8 @@ bool ParkingLongitudinalBehaviorPlanner::compute_lead_obs_info(
   remaining_dist_debug_vec.emplace_back(remaining_distance);
 
   if (lead_one.id >= 0 && lead_one.type == ObjectType::PEDESTRIAN) {
-    double remain_temp = lead_one.d_rel - CarParams::GetInstance()->lon_inflation_min;
+    double remain_temp =
+        lead_one.d_rel - CarParams::GetInstance()->lon_inflation_min;
     if (remain_temp <= remaining_distance) {
       remaining_distance = remain_temp;
       bool is_static = true;
@@ -1993,7 +2005,8 @@ bool ParkingLongitudinalBehaviorPlanner::compute_lead_obs_info(
   }
   if (lead_one.id >= 0 && lead_one.type == ObjectType::COUPE &&
       !lead_one.is_static) {
-    double remain_temp = lead_one.d_rel - CarParams::GetInstance()->lon_inflation_min;
+    double remain_temp =
+        lead_one.d_rel - CarParams::GetInstance()->lon_inflation_min;
     if (remain_temp <= remaining_distance) {
       remaining_distance = remain_temp;
       ptr_remain_dist_info->set_value(
@@ -2005,7 +2018,8 @@ bool ParkingLongitudinalBehaviorPlanner::compute_lead_obs_info(
   remaining_dist_debug_vec.emplace_back(remaining_distance);
 
   if (fs_line.id >= 0) {
-    double remain_temp = fs_line.d_rel - CarParams::GetInstance()->lon_inflation_min;
+    double remain_temp =
+        fs_line.d_rel - CarParams::GetInstance()->lon_inflation_min;
     if (remain_temp <= remaining_distance) {
       remaining_distance = remain_temp;
       ptr_remain_dist_info->set_value(
@@ -2024,9 +2038,9 @@ bool ParkingLongitudinalBehaviorPlanner::compute_lead_obs_info(
   // calculate is_need_pause
   if (ptr_remain_dist_info->remaining_distance_ < 0.1 ||
       (PlanningContext::Instance()->planning_status().blocked &&
-          (lead_one.id <= 0 ||
-           lead_one.d_rel >
-               CarParams::GetInstance()->lon_inflation() + 0.1))) { // deadzone
+       (lead_one.id <= 0 ||
+        lead_one.d_rel >
+            CarParams::GetInstance()->lon_inflation() + 0.1))) { // deadzone
     *ptr_is_need_pause = 1;
   } else {
     *ptr_is_need_pause = 0;

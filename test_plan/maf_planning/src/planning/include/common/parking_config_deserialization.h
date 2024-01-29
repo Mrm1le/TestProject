@@ -4,7 +4,6 @@
 #include "planner/motion_planner/optimizers/openspace_optimizer/config.h"
 #include "planner/motion_planner/optimizers/openspace_optimizer/search_based_planner.h"
 
-
 namespace msquare {
 namespace parking {
 

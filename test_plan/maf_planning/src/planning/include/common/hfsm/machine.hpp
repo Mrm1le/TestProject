@@ -231,9 +231,13 @@ private:
 
   template <typename... TS> struct WrapState;
 
-  template <typename T> struct WrapState<T> { using Type = _S<T>; };
+  template <typename T> struct WrapState<T> {
+    using Type = _S<T>;
+  };
 
-  template <typename T> struct WrapState<_S<T>> { using Type = _S<T>; };
+  template <typename T> struct WrapState<_S<T>> {
+    using Type = _S<T>;
+  };
 
   template <typename T, typename... TS> struct WrapState<_C<T, TS...>> {
     using Type = _C<T, TS...>;

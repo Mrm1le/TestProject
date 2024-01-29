@@ -94,13 +94,12 @@ public:
     step_pts_ = step_pts;
   }
 
-
-
   std::vector<msquare::planning_math::LineSegment2d> obs_lines_;
   std::vector<msquare::planning_math::Vec2d> obs_pts_;
 
   std::vector<msquare::planning_math::LineSegment2d> step_lines_;
   std::vector<msquare::planning_math::Vec2d> step_pts_;
+
 private:
   CollisionShapeGenerator csg_;
   Parameter para_;

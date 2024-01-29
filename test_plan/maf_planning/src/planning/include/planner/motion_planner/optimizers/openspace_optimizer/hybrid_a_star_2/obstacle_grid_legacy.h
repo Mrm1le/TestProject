@@ -1,6 +1,6 @@
 #pragma once
 
-//#define OBSTACLE_GRID_DEBUG_DUMP_IMAGE
+// #define OBSTACLE_GRID_DEBUG_DUMP_IMAGE
 
 #include <vector>
 
@@ -79,7 +79,7 @@ public:
           discrete_obs[i].getPoints();
       points.insert(points.end(), obs_points.begin(), obs_points.end());
     }
-    debug_obs_point_num = (int)points.size();    
+    debug_obs_point_num = (int)points.size();
 
     for (int gy = 0; gy < rows_; gy++) {
       double y = gy * res_ + origin_y_;
@@ -121,8 +121,9 @@ public:
   }
 
   double calcMinDistanceAndCompareWithGroundtruthDebug(
-    const std::shared_ptr<MultiCircleFootprintModel> &footprint_model, const std::vector<SbpObstaclePtr> &obs_ptrs) {
-    
+      const std::shared_ptr<MultiCircleFootprintModel> &footprint_model,
+      const std::vector<SbpObstaclePtr> &obs_ptrs) {
+
     std::vector<planning_math::Vec2d> points;
     for (std::size_t i = 0; i < obs_ptrs.size(); i++) {
       std::vector<planning_math::Vec2d> obs_points =
@@ -140,20 +141,21 @@ public:
       for (std::size_t i = 0; i < points.size(); i++) {
         double dx = points[i].x() - x;
         double dy = points[i].y() - y;
-        min_distance_gt = std::min(min_distance_gt, sqrt(dx * dx + dy * dy) - radius);
+        min_distance_gt =
+            std::min(min_distance_gt, sqrt(dx * dx + dy * dy) - radius);
       }
     }
     double min_distance = calcMinDistance(footprint_model);
 
     double diff = min_distance - min_distance_gt;
 
-    if(diff > 0.0){
+    if (diff > 0.0) {
       debug_max_positive_diff = std::max(debug_max_positive_diff, diff);
     } else {
       debug_max_minus_diff = std::min(debug_max_minus_diff, diff);
     }
     debug_sum_abs_diff += std::abs(diff);
-    debug_calcdis_function_called_num ++;
+    debug_calcdis_function_called_num++;
 
     return min_distance;
   }

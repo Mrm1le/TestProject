@@ -1,4 +1,0 @@
-FROM artifactory.momenta.works/docker-momenta/np_planning/evaluation_base:maf3.1_mfr2.5.13-3a7febe_v1.1_format
-COPY . /opt/maf_planning/
-LABEL maf_version="maf3.1"
-RUN bash -c "cd /opt/maf_planning; make ci_build RUN_ON_CPU=ON BUILD_FPP_MFR=ON NUM_JOB=4 "

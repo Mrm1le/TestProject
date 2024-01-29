@@ -65,9 +65,7 @@ public:
     return active_target_l_;
   }
 
-  Intelligent_Dodge_Info get_dodge_info() const {
-    return pre_dodge_info_;
-  }
+  Intelligent_Dodge_Info get_dodge_info() const { return pre_dodge_info_; }
 
   const AimPolygon &get_left_aim() const { return left_aim_; }
   const AimPolygon &get_right_aim() const { return right_aim_; }

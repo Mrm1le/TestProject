@@ -68,7 +68,6 @@ void AccTakeoverHmi::Process(
   const double acc_takeover_dec_thr =
       longitudinal_motion_planner_config.acc_takeover_dec_thr;
 
-
   acc_takeover_info.start_flag =
       ego_acc < acc_takeover_dec_thr && !cipv_info.is_road_boundary &&
       cipv_info.ttc < acc_takeover_ttc_thr && this->IsCooldown();

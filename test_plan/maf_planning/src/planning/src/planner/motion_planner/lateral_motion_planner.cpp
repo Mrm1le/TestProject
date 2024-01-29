@@ -173,9 +173,9 @@ bool LateralMotionPlanner::calculate() {
   planning_result.overlap_lane = (int)avd_result_info.overlap_lane;
 
   planner_debug->intelligent_avd_info.ego_faster_truck =
-        planning_result.ego_faster_truck;
+      planning_result.ego_faster_truck;
   planner_debug->intelligent_avd_info.overlap_lane =
-        planning_result.overlap_lane;
+      planning_result.overlap_lane;
   double end_time = MTIME()->timestamp().sec();
   MSD_LOG(INFO, "planner_cost time new_path_planner_cost time : %.9f",
           end_time - start_time);

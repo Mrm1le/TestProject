@@ -169,7 +169,8 @@ bool ApoaOpenspaceDecider::gather_map_info() {
     // for (auto &point : points) {
     //   // remove the uss points which in parking lot
     //   if (parking_lot_box_available &&
-    //       parking_lot_box.IsPointIn(point->PerceptionBoundingBox().center())) {
+    //       parking_lot_box.IsPointIn(point->PerceptionBoundingBox().center()))
+    //       {
     //     continue;
     //   }
     //   points_.emplace_back(point->PerceptionBoundingBox().center());
@@ -192,11 +193,13 @@ bool ApoaOpenspaceDecider::gather_map_info() {
             obs.type == GroundLineType::GROUND_LINE_USS_TYPE_STEP ||
             obs.type == GroundLineType::GROUND_LINE_USS_TYPE_SPECIAL ||
             obs.type == GroundLineType::GROUND_LINE_USS_TYPE_VEHICLE ||
-            obs.type == GroundLineType::GROUND_LINE_USS_TYPE_ONLY_USS_UNKNOWN)) {
+            obs.type ==
+                GroundLineType::GROUND_LINE_USS_TYPE_ONLY_USS_UNKNOWN)) {
         for (int i = 0; i < obs.pts.size(); i++) {
           Vec2d point{obs.pts[i].x, obs.pts[i].y};
           // remove the uss points which in parking lot
-          if (obs.type == GroundLineType::GROUND_LINE_USS_TYPE_POINT_GENERAL_STEP) {
+          if (obs.type ==
+              GroundLineType::GROUND_LINE_USS_TYPE_POINT_GENERAL_STEP) {
             step_points_.emplace_back(point);
           } else {
             points_.emplace_back(point);

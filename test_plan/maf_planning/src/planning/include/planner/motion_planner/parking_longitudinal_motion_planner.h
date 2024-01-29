@@ -6,10 +6,10 @@
 #include "common/obstacle_manager.h"
 #include "common/utils/timer.h"
 #include "planner/behavior_planner/deciders/collision_checker.h"
+#include "planner/behavior_planner/parking/speed_margin_limiter.h"
 #include "planner/message_type.h"
 #include "planner/motion_planner/parking_motion_planner.h"
 #include "planner/planning_config.h"
-#include "planner/behavior_planner/parking/speed_margin_limiter.h"
 
 #include "planner/behavior_planner/parking/sv_speed_generator.h"
 
@@ -27,6 +27,7 @@ public:
 
 private:
   bool run_calculate();
+
 private:
   bool clear_each_loop();
 
@@ -122,34 +123,42 @@ private:
 
   // 设置规划结果
   void set_planning_result(const std::vector<double> &c_param);
-  bool checkBlock(const LeaderPair &lead_cars, const FreespacePoint &free_space, const FreespaceLine &fs_line);
+  bool checkBlock(const LeaderPair &lead_cars, const FreespacePoint &free_space,
+                  const FreespaceLine &fs_line);
 
   // sop speed planner
   bool limit_speed_for_margin_limit();
-  bool marginVelocityLimit(const Pose2DTrajectory &plan_traj, const std::vector<double>& curs);
-  bool checkBlockV2(const LeaderPair &lead_cars, const FreespacePoint &free_space, const FreespaceLine &fs_line);
-  bool compute_speed_with_leadsV2(const LeaderPair lead_cars, const double v_ego, const bool isAPA);
-  void compute_speed_for_remain_distanceV2(
-  const LeaderPair& lead_cars,const FreespacePoint& lead_point,
-  const FreespaceLine &fs_line, bool is_reverse);
+  bool marginVelocityLimit(const Pose2DTrajectory &plan_traj,
+                           const std::vector<double> &curs);
+  bool checkBlockV2(const LeaderPair &lead_cars,
+                    const FreespacePoint &free_space,
+                    const FreespaceLine &fs_line);
+  bool compute_speed_with_leadsV2(const LeaderPair lead_cars,
+                                  const double v_ego, const bool isAPA);
+  void compute_speed_for_remain_distanceV2(const LeaderPair &lead_cars,
+                                           const FreespacePoint &lead_point,
+                                           const FreespaceLine &fs_line,
+                                           bool is_reverse);
   bool compute_speed_for_prediction_obstacleV2(
       const std::vector<int> predcition_obstacles, const double v_ego);
   bool speed_qp_optimize(bool is_path_update);
-  void compute_speed_use_osqp(const LeaderPair& lead_cars,
-                            const FreespacePoint& lead_point,
-                            const FreespaceLine &fs_line, 
-                            bool is_reverse,
-                            bool is_stop_status);
-  double compute_remain_distance_for_qp(const LeaderPair& lead_cars,
-                                        const FreespacePoint& lead_point,
+  void compute_speed_use_osqp(const LeaderPair &lead_cars,
+                              const FreespacePoint &lead_point,
+                              const FreespaceLine &fs_line, bool is_reverse,
+                              bool is_stop_status);
+  double compute_remain_distance_for_qp(const LeaderPair &lead_cars,
+                                        const FreespacePoint &lead_point,
                                         const FreespaceLine &fs_line);
   bool compute_speed_for_apaV2();
   void compute_speed_for_curvature();
   void set_planning_resultV2(const double v_ego);
-  double getInitSpeedForQP(const SpeedData& speed_data, double ego_speed, double* init_a);
-  bool computeSTFromODObs(const LeaderPair lead_cars, const double v_ego, 
-                const bool isAPA,msquare::parking::VecST& first_st_obs, 
-                msquare::parking::VecST& second_st_obs, double delta_t);
+  double getInitSpeedForQP(const SpeedData &speed_data, double ego_speed,
+                           double *init_a);
+  bool computeSTFromODObs(const LeaderPair lead_cars, const double v_ego,
+                          const bool isAPA,
+                          msquare::parking::VecST &first_st_obs,
+                          msquare::parking::VecST &second_st_obs,
+                          double delta_t);
 
   bool create_planning_debug_string(const std::pair<double, double> &a_target);
 
@@ -209,7 +218,6 @@ private:
   double current_jerk_ = 0.0;
   double last_margin_v_ = -1.0;
 
-
   Timer blocker_timer_;
   Timer parking_stopper_timer_;
   GearState gear_ = GearState::PARK;
@@ -221,9 +229,9 @@ private:
   SpeedRes last_res_;
   SvSpeedParam sv_speed_param_;
 
-  // debug info 
+  // debug info
   std::vector<double> vec_target_speed_debug_;
-  int current_v_count_debug_ = 0;  
+  int current_v_count_debug_ = 0;
 };
 
 } // namespace parking

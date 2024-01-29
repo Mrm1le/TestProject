@@ -10,7 +10,7 @@ namespace {
 constexpr double kModelSwitchHeight = 0.2;
 constexpr double kSafeRemainDistance = 1.2;
 
-}
+} // namespace
 
 void CollisionCarParams::update() {
   front_edge_to_center = VehicleParam::Instance()->front_edge_to_center;
@@ -167,7 +167,8 @@ void CollisionChecker::remainDisCheck(
   // }
   // for (const auto& data : pts) {
   //   MSD_LOG(ERROR, "pt result is: %d, remain is: %f, id %d, x:%f , x:%f",
-  //   data.result.is_collision, data.result.s, data.p.Id(),data.p.x(), data.p.y());
+  //   data.result.is_collision, data.result.s, data.p.Id(),data.p.x(),
+  //   data.p.y());
   // }
   ptr_lead_point->collision_type = CollisionType::PLANPATH;
 

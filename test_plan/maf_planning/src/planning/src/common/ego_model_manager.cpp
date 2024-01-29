@@ -9,7 +9,7 @@ namespace msquare {
 namespace {
 constexpr double kChassisHeight = 0.17;
 constexpr double kCutBackLength = 0.78 - 0.24;
-}
+} // namespace
 
 EgoModelManager::EgoModelManager() { (void)init(); }
 
@@ -101,8 +101,10 @@ EgoModelManager::get_ego_model_polygon(const EgoModelType ego_model_type,
   case EgoModelType::HEXADECAGON:
     if (VehicleParam::Instance()
             ->geometry_contour_.is_using_geometry_contour()) {
-      set_geometry_contour_model(reverse_, EgoModelType::HEXADECAGON, center_point, 
-          VehicleParam::Instance()->geometry_contour_.hexadecagon_contour_point());
+      set_geometry_contour_model(
+          reverse_, EgoModelType::HEXADECAGON, center_point,
+          VehicleParam::Instance()
+              ->geometry_contour_.hexadecagon_contour_point());
     } else {
       set_hexadecagon_model();
     }
@@ -128,8 +130,7 @@ bool EgoModelManager::set_origin_model(double lat_expansion,
   double center_y = point_.y + point_theta_sin * deviation_length_;
   double dx1 = point_theta_cos * (vehicle_param_->length / 2.0);
   double dy1 = point_theta_sin * (vehicle_param_->length / 2.0);
-  double dx2 =
-      point_theta_sin * (vehicle_param_->width / 2.0 + lat_expansion_);
+  double dx2 = point_theta_sin * (vehicle_param_->width / 2.0 + lat_expansion_);
   double dy2 =
       -point_theta_cos * (vehicle_param_->width / 2.0 + lat_expansion_);
   origin_model_points_[0].set_point(
@@ -155,11 +156,11 @@ bool EgoModelManager::set_polygon_model(double lat_expansion,
     double center_x_front =
         point_.x +
         point_theta_cos * (deviation_length_ + vehicle_param_->length / 4.0 +
-                             cut_length_ * cut_scaler_ / 2.0);
+                           cut_length_ * cut_scaler_ / 2.0);
     double center_y_front =
         point_.y +
         point_theta_sin * (deviation_length_ + vehicle_param_->length / 4.0 +
-                             cut_length_ * cut_scaler_ / 2.0);
+                           cut_length_ * cut_scaler_ / 2.0);
     double center_x_rear =
         point_.x +
         point_theta_cos * (deviation_length_ - vehicle_param_->length / 4.0);
@@ -204,11 +205,11 @@ bool EgoModelManager::set_polygon_model(double lat_expansion,
     double center_x_rear =
         point_.x +
         point_theta_cos * (deviation_length_ - vehicle_param_->length / 4.0 +
-                             cut_length_ * cut_scaler_ / 2.0);
+                           cut_length_ * cut_scaler_ / 2.0);
     double center_y_rear =
         point_.y +
         point_theta_sin * (deviation_length_ - vehicle_param_->length / 4.0 +
-                             cut_length_ * cut_scaler_ / 2.0);
+                           cut_length_ * cut_scaler_ / 2.0);
     double dx1_front = point_theta_cos * vehicle_param_->length / 4.0;
     double dy1_front = point_theta_sin * vehicle_param_->length / 4.0;
     double dx2_front =
@@ -352,11 +353,11 @@ bool EgoModelManager::set_decagon_model(double lat_expansion,
     double center_x_front =
         point_.x +
         point_theta_cos * (deviation_length_ + vehicle_param_->length / 4.0 +
-                             cut_length_ * cut_scaler_ / 2.0);
+                           cut_length_ * cut_scaler_ / 2.0);
     double center_y_front =
         point_.y +
         point_theta_sin * (deviation_length_ + vehicle_param_->length / 4.0 +
-                             cut_length_ * cut_scaler_ / 2.0);
+                           cut_length_ * cut_scaler_ / 2.0);
     double center_x_rear =
         point_.x +
         point_theta_cos * (deviation_length_ - vehicle_param_->length / 4.0);
@@ -364,9 +365,9 @@ bool EgoModelManager::set_decagon_model(double lat_expansion,
         point_.y +
         point_theta_sin * (deviation_length_ - vehicle_param_->length / 4.0);
     double dx1_front = point_theta_cos * (vehicle_param_->length / 4.0 +
-                                            cut_length_ * cut_scaler_ / 2.0);
+                                          cut_length_ * cut_scaler_ / 2.0);
     double dy1_front = point_theta_sin * (vehicle_param_->length / 4.0 +
-                                            cut_length_ * cut_scaler_ / 2.0);
+                                          cut_length_ * cut_scaler_ / 2.0);
     double dx2_front = point_theta_sin * vehicle_param_->width / 2.0;
     double dy2_front = -point_theta_cos * vehicle_param_->width / 2.0;
     double dx1_rear = point_theta_cos * vehicle_param_->length / 4.0;
@@ -379,20 +380,16 @@ bool EgoModelManager::set_decagon_model(double lat_expansion,
                                        center_y_front - dy1_front + dy2_front);
     decagon_model_points_[1].set_point(
         center_x_front + dx1_front - point_theta_cos * triangle_b + dx2_front,
-        center_y_front - point_theta_sin * triangle_b + dy1_front +
-            dy2_front);
-    decagon_model_points_[2].set_point(center_x_front + dx1_front + dx2_front -
-                                           point_theta_sin * triangle_a,
-                                       center_y_front + dy1_front + dy2_front -
-                                           point_theta_cos * triangle_a);
-    decagon_model_points_[3].set_point(center_x_front + dx1_front - dx2_front +
-                                           point_theta_sin * triangle_a,
-                                       center_y_front + dy1_front - dy2_front +
-                                           point_theta_cos * triangle_a);
+        center_y_front - point_theta_sin * triangle_b + dy1_front + dy2_front);
+    decagon_model_points_[2].set_point(
+        center_x_front + dx1_front + dx2_front - point_theta_sin * triangle_a,
+        center_y_front + dy1_front + dy2_front - point_theta_cos * triangle_a);
+    decagon_model_points_[3].set_point(
+        center_x_front + dx1_front - dx2_front + point_theta_sin * triangle_a,
+        center_y_front + dy1_front - dy2_front + point_theta_cos * triangle_a);
     decagon_model_points_[4].set_point(
         center_x_front + dx1_front - point_theta_cos * triangle_b - dx2_front,
-        center_y_front - point_theta_sin * triangle_b + dy1_front -
-            dy2_front);
+        center_y_front - point_theta_sin * triangle_b + dy1_front - dy2_front);
     decagon_model_points_[5].set_point(center_x_front - dx1_front - dx2_front,
                                        center_y_front - dy1_front - dy2_front);
     decagon_model_points_[6].set_point(center_x_rear + dx1_rear - dx2_rear,
@@ -414,11 +411,11 @@ bool EgoModelManager::set_decagon_model(double lat_expansion,
     double center_x_rear =
         point_.x +
         point_theta_cos * (deviation_length_ - vehicle_param_->length / 4.0 +
-                             cut_length_ * cut_scaler_ / 2.0);
+                           cut_length_ * cut_scaler_ / 2.0);
     double center_y_rear =
         point_.y +
         point_theta_sin * (deviation_length_ - vehicle_param_->length / 4.0 +
-                             cut_length_ * cut_scaler_ / 2.0);
+                           cut_length_ * cut_scaler_ / 2.0);
     double dx1_front = point_theta_cos * vehicle_param_->length / 4.0;
     double dy1_front = point_theta_sin * vehicle_param_->length / 4.0;
     double dx2_front =
@@ -426,9 +423,9 @@ bool EgoModelManager::set_decagon_model(double lat_expansion,
     double dy2_front =
         -point_theta_cos * (vehicle_param_->width / 2.0 + lat_expansion_);
     double dx1_rear = point_theta_cos * (vehicle_param_->length / 4.0 +
-                                           cut_length_ * cut_scaler_ / 2.0);
+                                         cut_length_ * cut_scaler_ / 2.0);
     double dy1_rear = point_theta_sin * (vehicle_param_->length / 4.0 +
-                                           cut_length_ * cut_scaler_ / 2.0);
+                                         cut_length_ * cut_scaler_ / 2.0);
     double dx2_rear =
         point_theta_sin *
         (vehicle_param_->width_wo_rearview_mirror / 2.0 + lat_expansion_);
@@ -439,20 +436,16 @@ bool EgoModelManager::set_decagon_model(double lat_expansion,
                                        center_y_front - dy1_front + dy2_front);
     decagon_model_points_[1].set_point(
         center_x_front + dx1_front - point_theta_cos * triangle_b + dx2_front,
-        center_y_front - point_theta_sin * triangle_b + dy1_front +
-            dy2_front);
-    decagon_model_points_[2].set_point(center_x_front + dx1_front + dx2_front -
-                                           point_theta_sin * triangle_a,
-                                       center_y_front + dy1_front + dy2_front -
-                                           point_theta_cos * triangle_a);
-    decagon_model_points_[3].set_point(center_x_front + dx1_front - dx2_front +
-                                           point_theta_sin * triangle_a,
-                                       center_y_front + dy1_front - dy2_front +
-                                           point_theta_cos * triangle_a);
+        center_y_front - point_theta_sin * triangle_b + dy1_front + dy2_front);
+    decagon_model_points_[2].set_point(
+        center_x_front + dx1_front + dx2_front - point_theta_sin * triangle_a,
+        center_y_front + dy1_front + dy2_front - point_theta_cos * triangle_a);
+    decagon_model_points_[3].set_point(
+        center_x_front + dx1_front - dx2_front + point_theta_sin * triangle_a,
+        center_y_front + dy1_front - dy2_front + point_theta_cos * triangle_a);
     decagon_model_points_[4].set_point(
         center_x_front + dx1_front - point_theta_cos * triangle_b - dx2_front,
-        center_y_front - point_theta_sin * triangle_b + dy1_front -
-            dy2_front);
+        center_y_front - point_theta_sin * triangle_b + dy1_front - dy2_front);
     decagon_model_points_[5].set_point(center_x_front - dx1_front - dx2_front,
                                        center_y_front - dy1_front - dy2_front);
     decagon_model_points_[6].set_point(center_x_rear + dx1_rear - dx2_rear,
@@ -509,11 +502,11 @@ bool EgoModelManager::set_tetradecagon_model(double lat_expansion,
     tetradecagon_model_points_[0].set_point(
         center_x_front +
             point_theta_cos * (vehicle_param_->length / 4.0 -
-                                 vehicle_param_->front_edge_to_mirror) +
+                               vehicle_param_->front_edge_to_mirror) +
             dx2_front,
         center_y_front +
             point_theta_sin * (vehicle_param_->length / 4.0 -
-                                 vehicle_param_->front_edge_to_mirror) +
+                               vehicle_param_->front_edge_to_mirror) +
             dy2_front);
     tetradecagon_model_points_[1].set_point(
         center_x_front +
@@ -584,21 +577,21 @@ bool EgoModelManager::set_tetradecagon_model(double lat_expansion,
     tetradecagon_model_points_[9].set_point(
         center_x_front +
             point_theta_cos * (vehicle_param_->length / 4.0 -
-                                 vehicle_param_->front_edge_to_mirror) -
+                               vehicle_param_->front_edge_to_mirror) -
             dx2_front,
         center_y_front +
             point_theta_sin * (vehicle_param_->length / 4.0 -
-                                 vehicle_param_->front_edge_to_mirror) -
+                               vehicle_param_->front_edge_to_mirror) -
             dy2_front);
 
     tetradecagon_model_points_[10].set_point(
         center_x_rear + dx1_rear +
             point_theta_cos * (vehicle_param_->length / 2.0 -
-                                 vehicle_param_->front_edge_to_mirror) -
+                               vehicle_param_->front_edge_to_mirror) -
             dx2_rear,
         center_y_rear + dy1_rear +
             point_theta_sin * (vehicle_param_->length / 2.0 -
-                                 vehicle_param_->front_edge_to_mirror) -
+                               vehicle_param_->front_edge_to_mirror) -
             dy2_rear);
     tetradecagon_model_points_[11].set_point(
         center_x_rear - dx1_rear - dx2_rear,
@@ -609,11 +602,11 @@ bool EgoModelManager::set_tetradecagon_model(double lat_expansion,
     tetradecagon_model_points_[13].set_point(
         center_x_rear + dx1_rear +
             point_theta_cos * (vehicle_param_->length / 2.0 -
-                                 vehicle_param_->front_edge_to_mirror) +
+                               vehicle_param_->front_edge_to_mirror) +
             dx2_rear,
         center_y_rear + dy1_rear +
             point_theta_sin * (vehicle_param_->length / 2.0 -
-                                 vehicle_param_->front_edge_to_mirror) +
+                               vehicle_param_->front_edge_to_mirror) +
             dy2_rear);
 
   } else {
@@ -626,11 +619,11 @@ bool EgoModelManager::set_tetradecagon_model(double lat_expansion,
     double center_x_rear =
         point_.x +
         point_theta_cos * (deviation_length_ - vehicle_param_->length / 4.0 +
-                             cut_length_ * cut_scaler_ / 2.0);
+                           cut_length_ * cut_scaler_ / 2.0);
     double center_y_rear =
         point_.y +
         point_theta_sin * (deviation_length_ - vehicle_param_->length / 4.0 +
-                             cut_length_ * cut_scaler_ / 2.0);
+                           cut_length_ * cut_scaler_ / 2.0);
     double dx1_front = point_theta_cos * vehicle_param_->length / 4.0;
     double dy1_front = point_theta_sin * vehicle_param_->length / 4.0;
     double dx2_front =
@@ -638,9 +631,9 @@ bool EgoModelManager::set_tetradecagon_model(double lat_expansion,
     double dy2_front =
         -point_theta_cos * (vehicle_param_->width / 2.0 + lat_expansion_);
     double dx1_rear = point_theta_cos * (vehicle_param_->length / 4.0 -
-                                           cut_length_ * cut_scaler_ / 2.0);
+                                         cut_length_ * cut_scaler_ / 2.0);
     double dy1_rear = point_theta_sin * (vehicle_param_->length / 4.0 -
-                                           cut_length_ * cut_scaler_ / 2.0);
+                                         cut_length_ * cut_scaler_ / 2.0);
     double dx2_rear =
         point_theta_sin *
         (vehicle_param_->width_wo_rearview_mirror / 2.0 + lat_expansion_);
@@ -650,11 +643,11 @@ bool EgoModelManager::set_tetradecagon_model(double lat_expansion,
     tetradecagon_model_points_[0].set_point(
         center_x_front +
             point_theta_cos * (vehicle_param_->length / 4.0 -
-                                 vehicle_param_->front_edge_to_mirror) +
+                               vehicle_param_->front_edge_to_mirror) +
             dx2_front,
         center_y_front +
             point_theta_sin * (vehicle_param_->length / 4.0 -
-                                 vehicle_param_->front_edge_to_mirror) +
+                               vehicle_param_->front_edge_to_mirror) +
             dy2_front);
     tetradecagon_model_points_[1].set_point(
         center_x_front +
@@ -725,21 +718,21 @@ bool EgoModelManager::set_tetradecagon_model(double lat_expansion,
     tetradecagon_model_points_[9].set_point(
         center_x_front +
             point_theta_cos * (vehicle_param_->length / 4.0 -
-                                 vehicle_param_->front_edge_to_mirror) -
+                               vehicle_param_->front_edge_to_mirror) -
             dx2_front,
         center_y_front +
             point_theta_sin * (vehicle_param_->length / 4.0 -
-                                 vehicle_param_->front_edge_to_mirror) -
+                               vehicle_param_->front_edge_to_mirror) -
             dy2_front);
 
     tetradecagon_model_points_[10].set_point(
         center_x_rear + dx1_rear +
             point_theta_cos * (vehicle_param_->length / 2.0 -
-                                 vehicle_param_->front_edge_to_mirror) -
+                               vehicle_param_->front_edge_to_mirror) -
             dx2_rear,
         center_y_rear + dy1_rear +
             point_theta_sin * (vehicle_param_->length / 2.0 -
-                                 vehicle_param_->front_edge_to_mirror) -
+                               vehicle_param_->front_edge_to_mirror) -
             dy2_rear);
     tetradecagon_model_points_[11].set_point(
         center_x_rear - dx1_rear - dx2_rear,
@@ -750,11 +743,11 @@ bool EgoModelManager::set_tetradecagon_model(double lat_expansion,
     tetradecagon_model_points_[13].set_point(
         center_x_rear + dx1_rear +
             point_theta_cos * (vehicle_param_->length / 2.0 -
-                                 vehicle_param_->front_edge_to_mirror) +
+                               vehicle_param_->front_edge_to_mirror) +
             dx2_rear,
         center_y_rear + dy1_rear +
             point_theta_sin * (vehicle_param_->length / 2.0 -
-                                 vehicle_param_->front_edge_to_mirror) +
+                               vehicle_param_->front_edge_to_mirror) +
             dy2_rear);
   }
   ego_model_polygon_.set_points(tetradecagon_model_points_);
@@ -805,11 +798,11 @@ bool EgoModelManager::set_hexadecagon_model(double lat_expansion,
     hexadecagon_model_points_[0].set_point(
         center_x_front +
             point_theta_cos * (vehicle_param_->length / 4.0 -
-                                 vehicle_param_->front_edge_to_mirror) +
+                               vehicle_param_->front_edge_to_mirror) +
             dx2_front,
         center_y_front +
             point_theta_sin * (vehicle_param_->length / 4.0 -
-                                 vehicle_param_->front_edge_to_mirror) +
+                               vehicle_param_->front_edge_to_mirror) +
             dy2_front);
     hexadecagon_model_points_[1].set_point(
         center_x_front +
@@ -879,67 +872,59 @@ bool EgoModelManager::set_hexadecagon_model(double lat_expansion,
     hexadecagon_model_points_[9].set_point(
         center_x_front +
             point_theta_cos * (vehicle_param_->length / 4.0 -
-                                 vehicle_param_->front_edge_to_mirror) -
+                               vehicle_param_->front_edge_to_mirror) -
             dx2_front,
         center_y_front +
             point_theta_sin * (vehicle_param_->length / 4.0 -
-                                 vehicle_param_->front_edge_to_mirror) -
+                               vehicle_param_->front_edge_to_mirror) -
             dy2_front);
     hexadecagon_model_points_[10].set_point(
         center_x_rear + dx1_rear +
             point_theta_cos * (vehicle_param_->length / 2.0 -
-                                 vehicle_param_->front_edge_to_mirror) -
+                               vehicle_param_->front_edge_to_mirror) -
             dx2_rear,
         center_y_rear + dy1_rear +
             point_theta_sin * (vehicle_param_->length / 2.0 -
-                                 vehicle_param_->front_edge_to_mirror) -
+                               vehicle_param_->front_edge_to_mirror) -
             dy2_rear);
     hexadecagon_model_points_[11].set_point(
         center_x_rear -
-            point_theta_cos *
-                (vehicle_param_->length / 4.0 - back_triangle_b) -
+            point_theta_cos * (vehicle_param_->length / 4.0 - back_triangle_b) -
             dx2_rear,
         center_y_rear -
-            point_theta_sin *
-                (vehicle_param_->length / 4.0 - back_triangle_b) -
+            point_theta_sin * (vehicle_param_->length / 4.0 - back_triangle_b) -
             dy2_rear);
     hexadecagon_model_points_[12].set_point(
         center_x_rear - dx1_rear -
-            point_theta_sin *
-                (vehicle_param_->width_wo_rearview_mirror / 2.0 -
-                 back_triangle_a),
+            point_theta_sin * (vehicle_param_->width_wo_rearview_mirror / 2.0 -
+                               back_triangle_a),
         center_y_rear - dy1_rear +
-            point_theta_cos *
-                (vehicle_param_->width_wo_rearview_mirror / 2.0 -
-                 back_triangle_a));
+            point_theta_cos * (vehicle_param_->width_wo_rearview_mirror / 2.0 -
+                               back_triangle_a));
     hexadecagon_model_points_[13].set_point(
         center_x_rear - dx1_rear +
-            point_theta_sin *
-                (vehicle_param_->width_wo_rearview_mirror / 2.0 -
-                 back_triangle_a),
+            point_theta_sin * (vehicle_param_->width_wo_rearview_mirror / 2.0 -
+                               back_triangle_a),
         center_y_rear - dy1_rear -
-            point_theta_cos *
-                (vehicle_param_->width_wo_rearview_mirror / 2.0 -
-                 back_triangle_a));
+            point_theta_cos * (vehicle_param_->width_wo_rearview_mirror / 2.0 -
+                               back_triangle_a));
 
     hexadecagon_model_points_[14].set_point(
         center_x_rear -
-            point_theta_cos *
-                (vehicle_param_->length / 4.0 - back_triangle_b) +
+            point_theta_cos * (vehicle_param_->length / 4.0 - back_triangle_b) +
             dx2_rear,
         center_y_rear -
-            point_theta_sin *
-                (vehicle_param_->length / 4.0 - back_triangle_b) +
+            point_theta_sin * (vehicle_param_->length / 4.0 - back_triangle_b) +
             dy2_rear);
 
     hexadecagon_model_points_[15].set_point(
         center_x_rear + dx1_rear +
             point_theta_cos * (vehicle_param_->length / 2.0 -
-                                 vehicle_param_->front_edge_to_mirror) +
+                               vehicle_param_->front_edge_to_mirror) +
             dx2_rear,
         center_y_rear + dy1_rear +
             point_theta_sin * (vehicle_param_->length / 2.0 -
-                                 vehicle_param_->front_edge_to_mirror) +
+                               vehicle_param_->front_edge_to_mirror) +
             dy2_rear);
   } else {
     double center_x_front =
@@ -951,11 +936,11 @@ bool EgoModelManager::set_hexadecagon_model(double lat_expansion,
     double center_x_rear =
         point_.x +
         point_theta_cos * (deviation_length_ - vehicle_param_->length / 4.0 +
-                             cut_length_ * cut_scaler_ / 2.0);
+                           cut_length_ * cut_scaler_ / 2.0);
     double center_y_rear =
         point_.y +
         point_theta_sin * (deviation_length_ - vehicle_param_->length / 4.0 +
-                             cut_length_ * cut_scaler_ / 2.0);
+                           cut_length_ * cut_scaler_ / 2.0);
     double dx1_front = point_theta_cos * vehicle_param_->length / 4.0;
     double dy1_front = point_theta_sin * vehicle_param_->length / 4.0;
     double dx2_front =
@@ -963,9 +948,9 @@ bool EgoModelManager::set_hexadecagon_model(double lat_expansion,
     double dy2_front =
         -point_theta_cos * (vehicle_param_->width / 2.0 + lat_expansion_);
     double dx1_rear = point_theta_cos * (vehicle_param_->length / 4.0 -
-                                           cut_length_ * cut_scaler_ / 2.0);
+                                         cut_length_ * cut_scaler_ / 2.0);
     double dy1_rear = point_theta_sin * (vehicle_param_->length / 4.0 -
-                                           cut_length_ * cut_scaler_ / 2.0);
+                                         cut_length_ * cut_scaler_ / 2.0);
     double dx2_rear =
         point_theta_sin *
         (vehicle_param_->width_wo_rearview_mirror / 2.0 + lat_expansion_);
@@ -975,11 +960,11 @@ bool EgoModelManager::set_hexadecagon_model(double lat_expansion,
     hexadecagon_model_points_[0].set_point(
         center_x_front +
             point_theta_cos * (vehicle_param_->length / 4.0 -
-                                 vehicle_param_->front_edge_to_mirror) +
+                               vehicle_param_->front_edge_to_mirror) +
             dx2_front,
         center_y_front +
             point_theta_sin * (vehicle_param_->length / 4.0 -
-                                 vehicle_param_->front_edge_to_mirror) +
+                               vehicle_param_->front_edge_to_mirror) +
             dy2_front);
     hexadecagon_model_points_[1].set_point(
         center_x_front +
@@ -1050,67 +1035,59 @@ bool EgoModelManager::set_hexadecagon_model(double lat_expansion,
     hexadecagon_model_points_[9].set_point(
         center_x_front +
             point_theta_cos * (vehicle_param_->length / 4.0 -
-                                 vehicle_param_->front_edge_to_mirror) -
+                               vehicle_param_->front_edge_to_mirror) -
             dx2_front,
         center_y_front +
             point_theta_sin * (vehicle_param_->length / 4.0 -
-                                 vehicle_param_->front_edge_to_mirror) -
+                               vehicle_param_->front_edge_to_mirror) -
             dy2_front);
 
     hexadecagon_model_points_[10].set_point(
         center_x_rear + dx1_rear +
             point_theta_cos * (vehicle_param_->length / 2.0 -
-                                 vehicle_param_->front_edge_to_mirror) -
+                               vehicle_param_->front_edge_to_mirror) -
             dx2_rear,
         center_y_rear + dy1_rear +
             point_theta_sin * (vehicle_param_->length / 2.0 -
-                                 vehicle_param_->front_edge_to_mirror) -
+                               vehicle_param_->front_edge_to_mirror) -
             dy2_rear);
     hexadecagon_model_points_[11].set_point(
         center_x_rear -
-            point_theta_cos *
-                (vehicle_param_->length / 4.0 - back_triangle_b) -
+            point_theta_cos * (vehicle_param_->length / 4.0 - back_triangle_b) -
             dx2_rear,
         center_y_rear -
-            point_theta_sin *
-                (vehicle_param_->length / 4.0 - back_triangle_b) -
+            point_theta_sin * (vehicle_param_->length / 4.0 - back_triangle_b) -
             dy2_rear);
     hexadecagon_model_points_[12].set_point(
         center_x_rear - dx1_rear -
-            point_theta_sin *
-                (vehicle_param_->width_wo_rearview_mirror / 2.0 -
-                 back_triangle_a),
+            point_theta_sin * (vehicle_param_->width_wo_rearview_mirror / 2.0 -
+                               back_triangle_a),
         center_y_rear - dy1_rear +
-            point_theta_cos *
-                (vehicle_param_->width_wo_rearview_mirror / 2.0 -
-                 back_triangle_a));
+            point_theta_cos * (vehicle_param_->width_wo_rearview_mirror / 2.0 -
+                               back_triangle_a));
     hexadecagon_model_points_[13].set_point(
         center_x_rear - dx1_rear +
-            point_theta_sin *
-                (vehicle_param_->width_wo_rearview_mirror / 2.0 -
-                 back_triangle_a),
+            point_theta_sin * (vehicle_param_->width_wo_rearview_mirror / 2.0 -
+                               back_triangle_a),
         center_y_rear - dy1_rear -
-            point_theta_cos *
-                (vehicle_param_->width_wo_rearview_mirror / 2.0 -
-                 back_triangle_a));
+            point_theta_cos * (vehicle_param_->width_wo_rearview_mirror / 2.0 -
+                               back_triangle_a));
 
     hexadecagon_model_points_[14].set_point(
         center_x_rear -
-            point_theta_cos *
-                (vehicle_param_->length / 4.0 - back_triangle_b) +
+            point_theta_cos * (vehicle_param_->length / 4.0 - back_triangle_b) +
             dx2_rear,
         center_y_rear -
-            point_theta_sin *
-                (vehicle_param_->length / 4.0 - back_triangle_b) +
+            point_theta_sin * (vehicle_param_->length / 4.0 - back_triangle_b) +
             dy2_rear);
     hexadecagon_model_points_[15].set_point(
         center_x_rear + dx1_rear +
             point_theta_cos * (vehicle_param_->length / 2.0 -
-                                 vehicle_param_->front_edge_to_mirror) +
+                               vehicle_param_->front_edge_to_mirror) +
             dx2_rear,
         center_y_rear + dy1_rear +
             point_theta_sin * (vehicle_param_->length / 2.0 -
-                                 vehicle_param_->front_edge_to_mirror) +
+                               vehicle_param_->front_edge_to_mirror) +
             dy2_rear);
   }
   ego_model_polygon_.set_points(hexadecagon_model_points_);
@@ -1128,9 +1105,9 @@ bool EgoModelManager::set_wheel_base_model(double lat_expansion,
   double center_y =
       point_.y + point_theta_sin * (vehicle_param_->wheel_base / 2.0);
   double dx1 = point_theta_cos * (vehicle_param_->wheel_base / 2.0 +
-                                    chassis_cutting_rolling_length_);
+                                  chassis_cutting_rolling_length_);
   double dy1 = point_theta_sin * (vehicle_param_->wheel_base / 2.0 +
-                                    chassis_cutting_rolling_length_);
+                                  chassis_cutting_rolling_length_);
   double dx2 = point_theta_sin *
                (vehicle_param_->width_wo_rearview_mirror / 2.0 + lat_expansion);
   double dy2 = -point_theta_cos *
@@ -1161,8 +1138,8 @@ bool EgoModelManager::set_geometry_contour_model(
       origin_pt.set_x(pt.x() + kCutBackLength);
     }
 
-    planning_math::Vec2d new_pt = planning_math::tf2d_inv(
-        center_point, origin_pt);
+    planning_math::Vec2d new_pt =
+        planning_math::tf2d_inv(center_point, origin_pt);
     model_points.emplace_back(new_pt);
   }
   ego_model_polygon_.set_points(model_points);

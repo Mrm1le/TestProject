@@ -74,7 +74,7 @@ public:
     } else if (!tick_receiver_->empty()) {
       uint64_t temp{0};
       auto ret = tick_receiver_->fetch_newest_and_clear(temp);
-      if(ret){
+      if (ret) {
         tick_count = temp;
       }
     } else {
@@ -225,7 +225,7 @@ private:
       reset();
     }
 
-    if(steering_wheel_data_list_.empty()) {
+    if (steering_wheel_data_list_.empty()) {
       reset();
       return false;
     }
@@ -410,9 +410,11 @@ private:
 
   void update_mpc_trajectory(double current_time) {
     if (!mpc_trajectory_receiver_->empty()) {
-      std::shared_ptr<maf_planning::MpcTrajectoryResult> mpc_trajectory{nullptr};
-      auto ret = mpc_trajectory_receiver_->fetch_newest_and_clear(mpc_trajectory);
-      if(!ret){
+      std::shared_ptr<maf_planning::MpcTrajectoryResult> mpc_trajectory{
+          nullptr};
+      auto ret =
+          mpc_trajectory_receiver_->fetch_newest_and_clear(mpc_trajectory);
+      if (!ret) {
         return;
       }
 

@@ -689,8 +689,8 @@ int GeneralMotionPlanner::check_current_process(
 bool GeneralMotionPlanner::is_speed_unreachable(const BehaviorAdvice &behavior,
                                                 const int &current_step) {
   st_speed_limit_ = ConfigurationContext::Instance()
-            ->planner_config()
-            .lateral_behavior_planner_config.st_speed_limit;
+                        ->planner_config()
+                        .lateral_behavior_planner_config.st_speed_limit;
   if (lc_proceed_time_ > 0.001) {
     accel_limit_control_ = 3.0;
     decel_limit_control_ = -3.5;
@@ -2716,13 +2716,13 @@ BehaviorAdvice GeneralMotionPlanner::evaluate_behavior(
                             false == is_lane_stable_)) {
       cost = 200;
     }
-    
+
     if (wait_to_proceed && (!has_tlane_ && has_olane_)) {
       cost = 200;
       is_lane_error = true;
     }
 
-    if(is_in_lc && !has_tlane_ && has_olane_){
+    if (is_in_lc && !has_tlane_ && has_olane_) {
       cost = 200;
       is_lane_error = true;
     }
@@ -2743,7 +2743,8 @@ BehaviorAdvice GeneralMotionPlanner::evaluate_behavior(
             behavior.motion_type, behavior.cost, behavior.st_array.a[2],
             st_a_buffer_.back(), gap_info[0].pos_init.x, gap_info[1].pos_init.x,
             gap_rear_too_close, gap_front_too_close, gap_rear_too_fast,
-            v_over_120kph, is_solid_line_, valid_body_, is_lane_stable_,is_lane_error);
+            v_over_120kph, is_solid_line_, valid_body_, is_lane_stable_,
+            is_lane_error);
   }
   auto cmp = [](const BehaviorAdvice &a, const BehaviorAdvice &b) {
     return a.cost < b.cost;
@@ -3122,8 +3123,7 @@ void GeneralMotionPlanner::conclude_lane_change_decision(void) {
           MTIME()->timestamp().sec() - gmp_created_time_, gmp_decision_valid,
           lc_action_state_, lc_wait, motion_result, task_type_, has_tlane_,
           has_olane_, ego_speed);
-  if (task_type_ != 1 && !has_tlane_ && !has_olane_ &&
-             lc_request_ != 1) {
+  if (task_type_ != 1 && !has_tlane_ && !has_olane_ && lc_request_ != 1) {
     MSD_LOG(INFO, "gmp external_request: no tlane and no olane");
     lc_action_state_ = 0;
     lc_wait = 0;

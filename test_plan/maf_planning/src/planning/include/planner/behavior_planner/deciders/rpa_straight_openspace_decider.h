@@ -22,7 +22,7 @@ public:
   ~RpaStraightOpenspaceDecider();
 
   virtual void set_init_and_target(const TrajectoryPoint &init_state,
-                           const TrajectoryPoint &target_state) {
+                                   const TrajectoryPoint &target_state) {
     ego_state_ = init_state;
     target_state_ = target_state;
   }

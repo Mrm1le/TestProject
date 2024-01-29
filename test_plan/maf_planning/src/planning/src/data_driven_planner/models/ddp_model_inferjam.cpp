@@ -332,10 +332,10 @@ void DdpModel::load_model() {
   auto network_config = NetworkConfig::make("graph");
   std::string model_root = "";
   if (std::getenv("APA_PLANNING_RESOURCE_PATH") != nullptr) {
-    model_root =
-        std::string(std::getenv(         // parasoft-suppress AUTOSAR-A5_3_2-a
-            "APA_PLANNING_RESOURCE_PATH")) + // parasoft-suppress AUTOSAR-A5_3_2-a
-        config_.model_path_inferjam;
+    model_root = std::string(std::getenv( // parasoft-suppress AUTOSAR-A5_3_2-a
+                     "APA_PLANNING_RESOURCE_PATH")) + // parasoft-suppress
+                                                      // AUTOSAR-A5_3_2-a
+                 config_.model_path_inferjam;
   }
   MSD_LOG(INFO, "model_root_path: %s", model_root.c_str());
   std::string model_platform = get_model_platform();

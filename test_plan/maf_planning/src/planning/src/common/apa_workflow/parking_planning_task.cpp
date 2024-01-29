@@ -1,29 +1,24 @@
 #include "common/apa_workflow/parking_planning_task.hpp"
+#include "common/apa_workflow/apa_state_machine_logger.hpp"
 #include "common/planning_task.hpp"
-#include "common/utils/trajectory_point_utils.h"
-#include "common/utils/parking_behavior_planner_output.hpp"
 #include "common/sbp_strategy.h"
 #include "common/search_based_planning_utils.h"
+#include "common/utils/parking_behavior_planner_output.hpp"
+#include "common/utils/trajectory_point_utils.h"
 #include "mlog_core/mlog.h"
 #include "mlog_msg_id/mlog_msg_id.hpp"
 #include "nlohmann/json.hpp"
-#include "planner/motion_planner/optimizers/openspace_optimizer/config.h"
-#include "common/apa_workflow/apa_state_machine_logger.hpp"
 #include "planner/behavior_planner/parking/speed_margin_limiter.h"
-
+#include "planner/motion_planner/optimizers/openspace_optimizer/config.h"
 
 #ifdef __x86_64__
 #include <sys/time.h>
-static double now_ms()
-{
+static double now_ms() {
   struct timeval tv;
   struct timezone tz;
-  if(gettimeofday(&tv,&tz) ==0)
-  {
-    return (double)tv.tv_sec*1000.0 + ((double)tv.tv_usec)*1.0e-3;
-  }
-  else
-  {
+  if (gettimeofday(&tv, &tz) == 0) {
+    return (double)tv.tv_sec * 1000.0 + ((double)tv.tv_usec) * 1.0e-3;
+  } else {
     return 0;
   }
 }
@@ -43,9 +38,7 @@ bool PlanningTask::is_in_simulation() {
   return is_in_simulation;
 }
 
-void PlanningTask::on_running() {
-  _runner();
-}
+void PlanningTask::on_running() { _runner(); }
 
 void PlanningTask::_run_in_simulation() {
 #ifdef __x86_64__
@@ -54,10 +47,11 @@ void PlanningTask::_run_in_simulation() {
   _run_in_reality();
 #ifdef __x86_64__
   double end_time = now_ms();
-  MSD_LOG(ERROR, "ParkingPlanningTask run_once cost: %f\n", (end_time-begin_time));
+  MSD_LOG(ERROR, "ParkingPlanningTask run_once cost: %f\n",
+          (end_time - begin_time));
 #endif
   if (module_control_cmd_request_.running_mode.value !=
-          maf_system_manager::RunningModeEnum::PARKING) {
+      maf_system_manager::RunningModeEnum::PARKING) {
     MSD_LOG(INFO, "not run parking planning");
     return;
   }
@@ -158,31 +152,51 @@ void PlanningTask::_run_in_reality() {
   fill_openspace_motion_planner_output(
       odo,
       PlanningContext::Instance()->mutable_openspace_motion_planner_output());
-  
-  WlcInfo &wlc_info_ref = PlanningContext::Instance()->mutable_planning_status()->wlc_info;
-  auto &wireless_charger_report_data = world_model_->get_wireless_charger_report_data();
-  wlc_info_ref.x_offset = (double)wireless_charger_report_data.offset_x / 1000.0;
-  wlc_info_ref.y_offset = (double)wireless_charger_report_data.offset_y / 1000.0;
-  wlc_info_ref.is_valid = wireless_charger_report_data.detected_state.value
-    == maf_endpoint::WrlsChrgDetResult::WIRELESS_CHARGER_DETECED_RESULT_DEFAULT;
-  wlc_info_ref.is_valid = wlc_info_ref.is_valid || wireless_charger_report_data.detected_state.value
-    == maf_endpoint::WrlsChrgDetResult::WIRELESS_CHARGER_DETECED_RESULT_OK;
-  wlc_info_ref.is_valid = wlc_info_ref.is_valid || wireless_charger_report_data.detected_state.value
-    == maf_endpoint::WrlsChrgDetResult::WIRELESS_CHARGER_DETECED_RESULT_OFFSET_X_NOT_OK;
-  wlc_info_ref.is_valid = wlc_info_ref.is_valid || wireless_charger_report_data.detected_state.value
-    == maf_endpoint::WrlsChrgDetResult::WIRELESS_CHARGER_DETECED_RESULT_OFFSET_Y_NOT_OK;
-  wlc_info_ref.is_valid = wlc_info_ref.is_valid || wireless_charger_report_data.detected_state.value
-    == maf_endpoint::WrlsChrgDetResult::WIRELESS_CHARGER_DETECED_RESULT_OFFSET_XY_NOT_OK;
-  const std::vector<ParkingLotDetectionInfo> &parking_lots_detection_fusion_results =
-      world_model_->get_parking_map_info().parking_lots_detection_fusion_results;
-  
-  MSD_LOG(ERROR, "[wlc.if@%s,%d]!parking_lots_detection_fusion_results.empty()(%d) AND !PlanningContext::Instance()\
+
+  WlcInfo &wlc_info_ref =
+      PlanningContext::Instance()->mutable_planning_status()->wlc_info;
+  auto &wireless_charger_report_data =
+      world_model_->get_wireless_charger_report_data();
+  wlc_info_ref.x_offset =
+      (double)wireless_charger_report_data.offset_x / 1000.0;
+  wlc_info_ref.y_offset =
+      (double)wireless_charger_report_data.offset_y / 1000.0;
+  wlc_info_ref.is_valid =
+      wireless_charger_report_data.detected_state.value ==
+      maf_endpoint::WrlsChrgDetResult::WIRELESS_CHARGER_DETECED_RESULT_DEFAULT;
+  wlc_info_ref.is_valid =
+      wlc_info_ref.is_valid ||
+      wireless_charger_report_data.detected_state.value ==
+          maf_endpoint::WrlsChrgDetResult::WIRELESS_CHARGER_DETECED_RESULT_OK;
+  wlc_info_ref.is_valid =
+      wlc_info_ref.is_valid ||
+      wireless_charger_report_data.detected_state.value ==
+          maf_endpoint::WrlsChrgDetResult::
+              WIRELESS_CHARGER_DETECED_RESULT_OFFSET_X_NOT_OK;
+  wlc_info_ref.is_valid =
+      wlc_info_ref.is_valid ||
+      wireless_charger_report_data.detected_state.value ==
+          maf_endpoint::WrlsChrgDetResult::
+              WIRELESS_CHARGER_DETECED_RESULT_OFFSET_Y_NOT_OK;
+  wlc_info_ref.is_valid =
+      wlc_info_ref.is_valid ||
+      wireless_charger_report_data.detected_state.value ==
+          maf_endpoint::WrlsChrgDetResult::
+              WIRELESS_CHARGER_DETECED_RESULT_OFFSET_XY_NOT_OK;
+  const std::vector<ParkingLotDetectionInfo>
+      &parking_lots_detection_fusion_results =
+          world_model_->get_parking_map_info()
+              .parking_lots_detection_fusion_results;
+
+  MSD_LOG(
+      ERROR,
+      "[wlc.if@%s,%d]!parking_lots_detection_fusion_results.empty()(%d) AND !PlanningContext::Instance()\
     ->mutable_parking_behavior_planner_output()->is_request_to_ego_slot(%d)",
-    __FUNCTION__,
-    __LINE__,
-    (int)!parking_lots_detection_fusion_results.empty(),
-    (int)!PlanningContext::Instance()->mutable_parking_behavior_planner_output()->is_request_to_ego_slot
-    );
+      __FUNCTION__, __LINE__,
+      (int)!parking_lots_detection_fusion_results.empty(),
+      (int)!PlanningContext::Instance()
+          ->mutable_parking_behavior_planner_output()
+          ->is_request_to_ego_slot);
   if (!parking_lots_detection_fusion_results.empty()) {
     MSD_LOG(ERROR, "[wlc.enter_if@%s,%d]", __FUNCTION__, __LINE__);
     int target_id = world_model_->get_planning_request().id;
@@ -190,12 +204,17 @@ void PlanningTask::_run_in_reality() {
     for (auto &parking_lot : parking_lots_detection_fusion_results) {
       if (parking_lot.id == target_id) {
         // printf("wlc charge_property updated for slot: %d\n", target_id);
-        wlc_info_ref.is_fusion_wlc_property_valid = parking_lot.charge_property != 0;
-        MSD_LOG(ERROR, "[wlc.operator@%s,%d] wlc_info_ref.is_fusion_wlc_property_valid(%d)\
+        wlc_info_ref.is_fusion_wlc_property_valid =
+            parking_lot.charge_property != 0;
+        MSD_LOG(
+            ERROR,
+            "[wlc.operator@%s,%d] wlc_info_ref.is_fusion_wlc_property_valid(%d)\
         = parking_lot.charge_property(%d) != 0;",
-        __FUNCTION__, __LINE__,
-        (int)wlc_info_ref.is_fusion_wlc_property_valid, (int)parking_lot.charge_property);
-        wlc_info_ref.is_fusion_wlc_property_valid = parking_lot.charge_property != 0;
+            __FUNCTION__, __LINE__,
+            (int)wlc_info_ref.is_fusion_wlc_property_valid,
+            (int)parking_lot.charge_property);
+        wlc_info_ref.is_fusion_wlc_property_valid =
+            parking_lot.charge_property != 0;
       } else {
         // printf("wlc charge_property: %d, %d\n", parking_lot.id, target_id);
       }
@@ -203,11 +222,15 @@ void PlanningTask::_run_in_reality() {
   } else {
     MSD_LOG(ERROR, "[wlc.exit_if@%s,%d]", __FUNCTION__, __LINE__);
   }
-  if (!PlanningContext::Instance()->mutable_parking_behavior_planner_output()->is_request_to_ego_slot) {
-    wlc_info_ref.is_valid = wlc_info_ref.is_valid && wlc_info_ref.is_fusion_wlc_property_valid;
+  if (!PlanningContext::Instance()
+           ->mutable_parking_behavior_planner_output()
+           ->is_request_to_ego_slot) {
+    wlc_info_ref.is_valid =
+        wlc_info_ref.is_valid && wlc_info_ref.is_fusion_wlc_property_valid;
   }
-  MSD_LOG(INFO, "%s: wlc_info_ref.is_valid = %d\n", __FUNCTION__, wlc_info_ref.is_valid);
-  
+  MSD_LOG(INFO, "%s: wlc_info_ref.is_valid = %d\n", __FUNCTION__,
+          wlc_info_ref.is_valid);
+
   double start_time = MTIME()->timestamp().ms();
   *PlanningContext::Instance()->mutable_planning_start_time_ms() = start_time;
   MSD_LOG(INFO, "parking (%s)tick_count: %lu", __FUNCTION__, tick_count);
@@ -219,7 +242,8 @@ void PlanningTask::_run_in_reality() {
         PlanningContext::Instance()->planning_status();
 
     maf_planning::Planning maf_planning_output;
-    if (msquare::CarParams::GetInstance()->car_config.lon_config.use_sop_algorithm) {
+    if (msquare::CarParams::GetInstance()
+            ->car_config.lon_config.use_sop_algorithm) {
       maf_planning_output = generate_planning_output_sop();
     } else {
       maf_planning_output = generate_planning_output();
@@ -274,12 +298,14 @@ PlanningTask::gen_sbp_request(const OpenspaceDeciderOutput &problem,
 }
 
 bool PlanningTask::run_once() {
-  std::string now_time_str = "Now: " + std::to_string(MTIME()->timestamp().sec()).substr(6, 7);
+  std::string now_time_str =
+      "Now: " + std::to_string(MTIME()->timestamp().sec()).substr(6, 7);
   *PlanningContext::Instance()->mutable_now_time_seq_str() =
       std::to_string(MTIME()->timestamp().sec()).substr(6, 7);
   *PlanningContext::Instance()->mutable_planning_debug_info() += now_time_str;
-  *PlanningContext::Instance()->mutable_planning_debug_info() += ", sbp_req" +
-  std::to_string(PlanningContext::Instance()->sbp_request_count()) + ", ";
+  *PlanningContext::Instance()->mutable_planning_debug_info() +=
+      ", sbp_req" +
+      std::to_string(PlanningContext::Instance()->sbp_request_count()) + ", ";
   MSD_LOG(ERROR, "%s\n", now_time_str.c_str());
 
   MLOG_PROFILING("run_once");
@@ -400,8 +426,8 @@ bool PlanningTask::run_once() {
     switch (task_status.status) {
     case TaskStatusType::SUCCEEDED:
       if ((world_model_->get_planning_request().cmd.value ==
-              ParkingCommand::STOP ||
-          world_model_->get_steering_reset()) &&
+               ParkingCommand::STOP ||
+           world_model_->get_steering_reset()) &&
           world_model_->get_gear_report().gear_status.value ==
               maf_vehicle_status::GearType::PARK) {
         (void)monitor_->try_change_status(
@@ -456,12 +482,12 @@ bool PlanningTask::run_once() {
         break;
       }
     } else if (PlanningContext::Instance()
-                 ->parking_behavior_planner_output()
-                 .is_move_ready &&
-             (task_status.task != StatusType::WAIT &&
-              task_status.task != StatusType::RPA_STRAIGHT_STANDBY)) {
-    monitor_->set_node_status_detail_status(
-        (uint16_t)node_status::DetailStatus::PLANNING_OK);
+                   ->parking_behavior_planner_output()
+                   .is_move_ready &&
+               (task_status.task != StatusType::WAIT &&
+                task_status.task != StatusType::RPA_STRAIGHT_STANDBY)) {
+      monitor_->set_node_status_detail_status(
+          (uint16_t)node_status::DetailStatus::PLANNING_OK);
     } else {
       monitor_->set_node_status_detail_status(0);
     }
@@ -511,7 +537,8 @@ void PlanningTask::fill_openspace_motion_planner_output(
       }
       ompo->traj = convertSbpResult2Traj(sbp_result);
       regulateVelocity(StrategyParams::GetInstance(), ompo->traj);
-      *PlanningContext::Instance()->mutable_is_planner_update_plan_path() = true;
+      *PlanningContext::Instance()->mutable_is_planner_update_plan_path() =
+          true;
     }
   }
 }
@@ -1005,7 +1032,7 @@ maf_planning::Planning PlanningTask::generate_planning_output() {
   double parking_slot_iou = 0.0;
   if (parking_slot_info.original_corners.size() == 4) {
     std::vector<planning_math::Vec2d> origin_corners;
-    for (const auto& corner : parking_slot_info.original_corners) {
+    for (const auto &corner : parking_slot_info.original_corners) {
       origin_corners.emplace_back(corner.x, corner.y);
     }
     planning_math::Polygon2d overlap_polygon;
@@ -1149,19 +1176,19 @@ maf_planning::Planning PlanningTask::generate_planning_output() {
                                       ->parking_behavior_planner_output()
                                       .dist_to_wheel_stop;
   extra_json["min_dist_to_opening"] = PlanningContext::Instance()
-                                      ->parking_behavior_planner_output()
-                                      .min_dist_to_opening;
+                                          ->parking_behavior_planner_output()
+                                          .min_dist_to_opening;
   extra_json["min_dist_to_bottom"] = PlanningContext::Instance()
-                                      ->parking_behavior_planner_output()
-                                      .min_dist_to_bottom;
+                                         ->parking_behavior_planner_output()
+                                         .min_dist_to_bottom;
 
   int special_slot_type = 0;
-  if(parking_slot_info.type.value == ParkingSlotType::PARALLEL) {
-    if(std::abs(parking_slot_iou) > 0.1) {
-      if(parking_slot_info.special_slot_type == 1) {
+  if (parking_slot_info.type.value == ParkingSlotType::PARALLEL) {
+    if (std::abs(parking_slot_iou) > 0.1) {
+      if (parking_slot_info.special_slot_type == 1) {
         special_slot_type = 1;
       }
-      if(parking_slot_info.special_slot_type == 2) {
+      if (parking_slot_info.special_slot_type == 2) {
         special_slot_type = 2;
       }
     }
@@ -1173,7 +1200,6 @@ maf_planning::Planning PlanningTask::generate_planning_output() {
   }
   extra_json["special_slot_type"] = special_slot_type;
   extra_json["lon_inflation"] = CarParams::GetInstance()->lon_inflation();
-
 
   // auto &t_lines =
   //     PlanningContext::Instance()->openspace_decider_output().T_lines;
@@ -1228,7 +1254,7 @@ maf_planning::Planning PlanningTask::generate_planning_output() {
 
   int perpendicular_bottom_line_type = 0;
   if (VehicleParam::Instance()->car_type == "C03") {
-    if(parking_slot_info.type.value == ParkingSlotType::PERPENDICULAR) {
+    if (parking_slot_info.type.value == ParkingSlotType::PERPENDICULAR) {
       if (parking_slot_info.bottom_line_type == 1 && parking_slot_iou > 0.25) {
         perpendicular_bottom_line_type = 1;
       }
@@ -1238,19 +1264,22 @@ maf_planning::Planning PlanningTask::generate_planning_output() {
 
   extra_json["lead_free_space_type"] = (int)fs_point.type;
 
-   // when planning, remaining_distance is set to 0
+  // when planning, remaining_distance is set to 0
   const ParkingBehaviorPlannerOutput &parking_behavior_planner_output =
       PlanningContext::Instance()->parking_behavior_planner_output();
-  const auto& sv_config2 = msquare::CarParams::GetInstance()->car_config.sv_config;
-  if (!parking_behavior_planner_output.is_move_ready && sv_config2.use_sv_speed_generator) {
+  const auto &sv_config2 =
+      msquare::CarParams::GetInstance()->car_config.sv_config;
+  if (!parking_behavior_planner_output.is_move_ready &&
+      sv_config2.use_sv_speed_generator) {
     PlanningContext::Instance()
-      ->mutable_longitudinal_behavior_planner_output()
-      ->remain_dist_info_.remaining_distance_ = 0.0;
+        ->mutable_longitudinal_behavior_planner_output()
+        ->remain_dist_info_.remaining_distance_ = 0.0;
   }
 
-  extra_json["remaining_distance"] = mjson::Json(PlanningContext::Instance()
-      ->mutable_longitudinal_behavior_planner_output()
-      ->remain_dist_info_.remaining_distance_);
+  extra_json["remaining_distance"] =
+      mjson::Json(PlanningContext::Instance()
+                      ->mutable_longitudinal_behavior_planner_output()
+                      ->remain_dist_info_.remaining_distance_);
 
   extra_json["has_wheel_stop"] =
       mjson::Json(parking_slot_info.wheel_stop_info.available);
@@ -1265,24 +1294,23 @@ maf_planning::Planning PlanningTask::generate_planning_output() {
 
   auto vec_sl_points = PlanningContext::Instance()->vec_sl_points();
   mjson::Json::array v_arr;
-  if (!vec_sl_points.empty() &&
-      !vec_sl_points[0].empty()) {
-      int i = 0;
-      for (const auto& vec : vec_sl_points) {
-        mjson::Json::array arr;
-        for (const auto& p : vec) {
-          // limit mpc trajectory sl's length to 1.0m
-          if (i == 0 && p.first > 1.0)
-            break;
-          auto obj = mjson::Json(mjson::Json::object());
-          obj["s"] = p.first;
-          obj["l"] = p.second;
-          arr.push_back(obj);
-        }
-        i++;
-        v_arr.emplace_back(arr);
+  if (!vec_sl_points.empty() && !vec_sl_points[0].empty()) {
+    int i = 0;
+    for (const auto &vec : vec_sl_points) {
+      mjson::Json::array arr;
+      for (const auto &p : vec) {
+        // limit mpc trajectory sl's length to 1.0m
+        if (i == 0 && p.first > 1.0)
+          break;
+        auto obj = mjson::Json(mjson::Json::object());
+        obj["s"] = p.first;
+        obj["l"] = p.second;
+        arr.push_back(obj);
       }
-      extra_json["vec_sl_points"] = v_arr;
+      i++;
+      v_arr.emplace_back(arr);
+    }
+    extra_json["vec_sl_points"] = v_arr;
   }
 
   double not_use_comfortable_min_s =
@@ -1293,7 +1321,7 @@ maf_planning::Planning PlanningTask::generate_planning_output() {
               ->mutable_longitudinal_behavior_planner_output()
               ->remain_dist_info_.remaining_distance_ <
           not_use_comfortable_min_s) {
-      extra_json["is_comfortable_brake"] = false;
+    extra_json["is_comfortable_brake"] = false;
   }
 
   msg.extra.json = extra_json.dump();
@@ -1342,19 +1370,21 @@ maf_planning::Planning PlanningTask::generate_planning_output_sop() {
   msg.header.frame_id = "map";
   msg.meta.timestamp_us = ego_pose_timestamp_us_;
   msg.meta.plan_timestamp_us = timestamp.us(); // TODO: add plan ts @tianbo
-  PlanningContext::Instance()->mutable_planning_status()
+  PlanningContext::Instance()
+      ->mutable_planning_status()
       ->planning_result.pre_planning_time = msg.meta.plan_timestamp_us;
 
   msg.trajectory.available |= maf_planning::Trajectory::PATH;
-  const auto& second_trajectory = planning_result.second_traj_pose_array;
-  const auto& first_trajectory = planning_result.traj_pose_array;
-  const auto& first_curvature = planning_result.traj_curvature;
-  const auto& second_traj_curvature = planning_result.second_traj_curvature;
-  MSD_LOG(ERROR, "the first trajectory path size is: %d, the curvature size is: %d", 
-      first_trajectory.size(), first_curvature.size());
+  const auto &second_trajectory = planning_result.second_traj_pose_array;
+  const auto &first_trajectory = planning_result.traj_pose_array;
+  const auto &first_curvature = planning_result.traj_curvature;
+  const auto &second_traj_curvature = planning_result.second_traj_curvature;
+  MSD_LOG(ERROR,
+          "the first trajectory path size is: %d, the curvature size is: %d",
+          first_trajectory.size(), first_curvature.size());
   if (first_trajectory.size() >= 10 && second_trajectory.size() >= 0) {
     msg.trajectory.path.resize(first_trajectory.size() +
-        second_trajectory.size() - 10);
+                               second_trajectory.size() - 10);
     // std::cout << "the first size  is: " << first_trajectory.size()
     //           << "  second_trajectory size is: " << second_trajectory.size()
     //           << " ve size is: " << planning_result.traj_vel_array.size()
@@ -1363,18 +1393,16 @@ maf_planning::Planning PlanningTask::generate_planning_output_sop() {
     //   std::cout << "the first traj final pt is:" << first_trajectory.back().x
     //             << " y:" << first_trajectory.back().y
     //             << std::endl;
-    //   std::cout << "the second traj final pt is:" << second_trajectory.back().x
+    //   std::cout << "the second traj final pt is:" <<
+    //   second_trajectory.back().x
     //             << " y:" << second_trajectory.back().y
     //             << std::endl;
     // }
     for (size_t i = 0; i < first_trajectory.size(); i++) {
-      msg.trajectory.path[i].position_enu.x =
-          first_trajectory[i].x;
-      msg.trajectory.path[i].position_enu.y =
-          first_trajectory[i].y;
+      msg.trajectory.path[i].position_enu.x = first_trajectory[i].x;
+      msg.trajectory.path[i].position_enu.y = first_trajectory[i].y;
 
-      msg.trajectory.path[i].heading_yaw =
-          first_trajectory[i].theta;
+      msg.trajectory.path[i].heading_yaw = first_trajectory[i].theta;
       if (i < first_curvature.size()) {
         msg.trajectory.path[i].curvature = first_curvature[i];
       }
@@ -1388,10 +1416,11 @@ maf_planning::Planning PlanningTask::generate_planning_output_sop() {
     planning_control_interface.gear_change_index = first_trajectory.size() - 10;
     if (msg.trajectory.path.size() > 0) {
       MLOG_ERROR("the last point is x: %f, y %f",
-          msg.trajectory.path.back().position_enu.x,
-          msg.trajectory.path.back().position_enu.y);
+                 msg.trajectory.path.back().position_enu.x,
+                 msg.trajectory.path.back().position_enu.y);
     }
-    for (size_t i = first_trajectory.size() - 10; i < msg.trajectory.path.size(); i++) {
+    for (size_t i = first_trajectory.size() - 10;
+         i < msg.trajectory.path.size(); i++) {
       msg.trajectory.path[i].position_enu.x =
           second_trajectory[i - first_trajectory.size() + 10].x;
       msg.trajectory.path[i].position_enu.y =
@@ -1400,7 +1429,8 @@ maf_planning::Planning PlanningTask::generate_planning_output_sop() {
       msg.trajectory.path[i].heading_yaw =
           second_trajectory[i - first_trajectory.size() + 10].theta;
       if (i - first_trajectory.size() + 10 < second_traj_curvature.size()) {
-        msg.trajectory.path[i].curvature = second_traj_curvature[i - first_trajectory.size() + 10];
+        msg.trajectory.path[i].curvature =
+            second_traj_curvature[i - first_trajectory.size() + 10];
       }
     }
   }
@@ -1409,7 +1439,7 @@ maf_planning::Planning PlanningTask::generate_planning_output_sop() {
   msg.trajectory.velocity.target_value = planning_result.v_target;
   msg.trajectory.velocity.available |= maf_planning::Velocity::VEL_POINTS;
   const auto pwj_trajectory = planning_result.pwj_trajectory;
-  for (const auto& traj_pt : pwj_trajectory) {
+  for (const auto &traj_pt : pwj_trajectory) {
     maf_planning::VelocityPoint vel_pt;
     maf_planning::AccelerationPoint accel_pt;
     vel_pt.relative_time = traj_pt.relative_time;
@@ -1419,7 +1449,6 @@ maf_planning::Planning PlanningTask::generate_planning_output_sop() {
     msg.trajectory.velocity.vel_points.emplace_back(vel_pt);
     msg.trajectory.acceleration.acc_points.emplace_back(accel_pt);
   }
-
 
   msg.trajectory.available |= maf_planning::Trajectory::ACCELERATION;
   msg.trajectory.acceleration.available |=
@@ -1585,7 +1614,7 @@ maf_planning::Planning PlanningTask::generate_planning_output_sop() {
   double parking_slot_iou = 0.0;
   if (parking_slot_info.original_corners.size() == 4) {
     std::vector<planning_math::Vec2d> origin_corners;
-    for (const auto& corner : parking_slot_info.original_corners) {
+    for (const auto &corner : parking_slot_info.original_corners) {
       origin_corners.emplace_back(corner.x, corner.y);
     }
     planning_math::Polygon2d overlap_polygon;
@@ -1611,7 +1640,7 @@ maf_planning::Planning PlanningTask::generate_planning_output_sop() {
                                    .is_last_path;
 
   // calculate dist to PSD opening and bottom line
-    PlanningContext::Instance()
+  PlanningContext::Instance()
       ->mutable_parking_behavior_planner_output()
       ->dist_to_wheel_stop = 2.0;
   PlanningContext::Instance()
@@ -1729,19 +1758,19 @@ maf_planning::Planning PlanningTask::generate_planning_output_sop() {
                                       ->parking_behavior_planner_output()
                                       .dist_to_wheel_stop;
   extra_json["min_dist_to_opening"] = PlanningContext::Instance()
-                                      ->parking_behavior_planner_output()
-                                      .min_dist_to_opening;
+                                          ->parking_behavior_planner_output()
+                                          .min_dist_to_opening;
   extra_json["min_dist_to_bottom"] = PlanningContext::Instance()
-                                      ->parking_behavior_planner_output()
-                                      .min_dist_to_bottom;
+                                         ->parking_behavior_planner_output()
+                                         .min_dist_to_bottom;
 
   int special_slot_type = 0;
-  if(parking_slot_info.type.value == ParkingSlotType::PARALLEL) {
-    if(std::abs(parking_slot_iou) > 0.1) {
-      if(parking_slot_info.special_slot_type == 1) {
+  if (parking_slot_info.type.value == ParkingSlotType::PARALLEL) {
+    if (std::abs(parking_slot_iou) > 0.1) {
+      if (parking_slot_info.special_slot_type == 1) {
         special_slot_type = 1;
       }
-      if(parking_slot_info.special_slot_type == 2) {
+      if (parking_slot_info.special_slot_type == 2) {
         special_slot_type = 2;
       }
     }
@@ -1768,10 +1797,9 @@ maf_planning::Planning PlanningTask::generate_planning_output_sop() {
                        ->longitudinal_behavior_planner_output()
                        .free_space;
 
-
   int perpendicular_bottom_line_type = 0;
   if (VehicleParam::Instance()->car_type == "C03") {
-    if(parking_slot_info.type.value == ParkingSlotType::PERPENDICULAR) {
+    if (parking_slot_info.type.value == ParkingSlotType::PERPENDICULAR) {
       if (parking_slot_info.bottom_line_type == 1 && parking_slot_iou > 0.25) {
         perpendicular_bottom_line_type = 1;
       }
@@ -1783,17 +1811,21 @@ maf_planning::Planning PlanningTask::generate_planning_output_sop() {
 
   const ParkingBehaviorPlannerOutput &parking_behavior_planner_output =
       PlanningContext::Instance()->parking_behavior_planner_output();
-  const auto& sv_config2 = msquare::CarParams::GetInstance()->car_config.sv_config;
-  if (!parking_behavior_planner_output.is_move_ready && sv_config2.use_sv_speed_generator) {
+  const auto &sv_config2 =
+      msquare::CarParams::GetInstance()->car_config.sv_config;
+  if (!parking_behavior_planner_output.is_move_ready &&
+      sv_config2.use_sv_speed_generator) {
     PlanningContext::Instance()
-      ->mutable_longitudinal_behavior_planner_output()
-      ->remain_dist_info_.remaining_distance_ = 0.0;
+        ->mutable_longitudinal_behavior_planner_output()
+        ->remain_dist_info_.remaining_distance_ = 0.0;
   }
 
-  extra_json["remaining_distance"] = mjson::Json(PlanningContext::Instance()
-      ->mutable_longitudinal_behavior_planner_output()
-      ->remain_dist_info_.remaining_distance_);
-  const auto& planner_output = PlanningContext::Instance()->longitudinal_behavior_planner_output();
+  extra_json["remaining_distance"] =
+      mjson::Json(PlanningContext::Instance()
+                      ->mutable_longitudinal_behavior_planner_output()
+                      ->remain_dist_info_.remaining_distance_);
+  const auto &planner_output =
+      PlanningContext::Instance()->longitudinal_behavior_planner_output();
   extra_json["traj_length"] = mjson::Json(planner_output.traj_length);
 
   extra_json["has_wheel_stop"] =
@@ -1806,12 +1838,13 @@ maf_planning::Planning PlanningTask::generate_planning_output_sop() {
       mjson::Json(PlanningContext::Instance()
                       ->openspace_motion_planner_output()
                       .planner_calc_duration);
-  
-  planning_control_interface.remain_traj = 
-    PlanningContext::Instance()
-                        ->longitudinal_behavior_planner_output()
-                        .traj_length;
-  // if (PlanningContext::Instance()->parking_behavior_planner_output().is_last_path
+
+  planning_control_interface.remain_traj =
+      PlanningContext::Instance()
+          ->longitudinal_behavior_planner_output()
+          .traj_length;
+  // if
+  // (PlanningContext::Instance()->parking_behavior_planner_output().is_last_path
   //     && parking_slot_info.type.value == ParkingSlotType::PERPENDICULAR
   //     && planning_control_interface.is_static
   //     && planning_control_interface.remain_traj < 0.2) {
@@ -1819,33 +1852,35 @@ maf_planning::Planning PlanningTask::generate_planning_output_sop() {
   //     planning_control_interface.remain_traj = 0.0;
   // }
   if (parking_slot_info.type.value == ParkingSlotType::PERPENDICULAR) {
-    planning_control_interface.remain_traj = 
-        std::min(planning_control_interface.remain_traj, 
-        PlanningContext::Instance()
-                        ->parking_behavior_planner_output()
-                        .min_remain_distance);
-      PlanningContext::Instance()
-          ->mutable_parking_behavior_planner_output()
-          ->min_remain_distance = 999.0;
-    MSD_LOG(ERROR, "advance to the end. set the remain to 0"); 
+    planning_control_interface.remain_traj =
+        std::min(planning_control_interface.remain_traj,
+                 PlanningContext::Instance()
+                     ->parking_behavior_planner_output()
+                     .min_remain_distance);
+    PlanningContext::Instance()
+        ->mutable_parking_behavior_planner_output()
+        ->min_remain_distance = 999.0;
+    MSD_LOG(ERROR, "advance to the end. set the remain to 0");
   }
 
   MSD_LOG(ERROR, "set to control obs remain distance %f",
-      PlanningContext::Instance()
-      ->mutable_longitudinal_behavior_planner_output()
-      ->remain_dist_info_.remaining_distance_ );
-  
+          PlanningContext::Instance()
+              ->mutable_longitudinal_behavior_planner_output()
+              ->remain_dist_info_.remaining_distance_);
+
   if (PlanningContext::Instance()
-      ->mutable_longitudinal_behavior_planner_output()
-      ->remain_dist_info_.remaining_distance_ + CarParams::GetInstance()->lon_inflation_min < 0.5) {
+              ->mutable_longitudinal_behavior_planner_output()
+              ->remain_dist_info_.remaining_distance_ +
+          CarParams::GetInstance()->lon_inflation_min <
+      0.5) {
     MSD_LOG(ERROR, "near to obs not extend");
     planning_control_interface.is_extended = false;
   }
 
   if (!planning_control_interface.is_extended) {
-      planning_control_interface.is_use_traj_s_and_v = false;
-      planning_control_interface.second_remain_traj = 0.0;
-      planning_control_interface.second_traj_target_v = 0.0;
+    planning_control_interface.is_use_traj_s_and_v = false;
+    planning_control_interface.second_remain_traj = 0.0;
+    planning_control_interface.second_traj_target_v = 0.0;
   }
 
   auto getTargetV = [&planning_result, this](double remain_s) {
@@ -1856,33 +1891,36 @@ maf_planning::Planning PlanningTask::generate_planning_output_sop() {
     }
     std::vector<planning_math::Box2d> obs_boxes;
     std::vector<planning_math::Vec2d> obs_pts;
-    for(const auto& box_obs:world_model_->obstacle_manager().get_obstacles().Items()){
+    for (const auto &box_obs :
+         world_model_->obstacle_manager().get_obstacles().Items()) {
       obs_boxes.emplace_back(box_obs->PerceptionBoundingBox());
     }
-    for(const auto& p_obs:world_model_->obstacle_manager().get_points().Items()){
+    for (const auto &p_obs :
+         world_model_->obstacle_manager().get_points().Items()) {
       obs_pts.emplace_back(p_obs->PerceptionBoundingBox().center());
     }
     auto line_obs = world_model_->obstacle_manager().get_lines().Items();
-    auto & pillars = world_model_->obstacle_manager().get_pillars().Items();
-    auto & road_borders = world_model_->obstacle_manager().get_road_borders().Items();
-    auto & gates = world_model_->obstacle_manager().get_gates().Items();
+    auto &pillars = world_model_->obstacle_manager().get_pillars().Items();
+    auto &road_borders =
+        world_model_->obstacle_manager().get_road_borders().Items();
+    auto &gates = world_model_->obstacle_manager().get_gates().Items();
     line_obs.insert(line_obs.end(), pillars.begin(), pillars.end());
-    line_obs.insert(line_obs.end(), road_borders.begin(),road_borders.end());
+    line_obs.insert(line_obs.end(), road_borders.begin(), road_borders.end());
     line_obs.insert(line_obs.end(), gates.begin(), gates.end());
     std::vector<msquare::planning_math::LineSegment2d> line_obs_final;
-    for(const auto& l_obs:line_obs){
+    for (const auto &l_obs : line_obs) {
       line_obs_final.emplace_back(l_obs->PerceptionLine());
     }
 
     SpeedMarginPara speed_margin_para;
-    speed_margin_para.init(is_reverse, false, obs_boxes, obs_pts, line_obs_final);
+    speed_margin_para.init(is_reverse, false, obs_boxes, obs_pts,
+                           line_obs_final);
     MSD_LOG(ERROR, "the traj size is: %d, the curvature is:%d",
             planning_result.second_traj_pose_array.size(),
             planning_result.second_traj_curvature.size());
     SpeedMarginLimiter speed_margin_limiter(
-      speed_margin_para,
-      planning_result.second_traj_pose_array,
-      planning_result.second_traj_curvature, false);
+        speed_margin_para, planning_result.second_traj_pose_array,
+        planning_result.second_traj_curvature, false);
     speed_margin_limiter.filterSV();
     double target_v = 0;
     msquare::parking::SpeedRes temp_res;
@@ -1896,28 +1934,33 @@ maf_planning::Planning PlanningTask::generate_planning_output_sop() {
   //                         ->longitudinal_behavior_planner_output()
   //                         .traj_length;
   MSD_LOG(ERROR, "The extend is: %d, is_use_s_and_v: %d, remain dis is: %f",
-      planning_control_interface.is_extended, planning_control_interface.is_use_traj_s_and_v,
-      planning_control_interface.remain_traj);
-  if (planning_control_interface.is_extended
-      && !planning_control_interface.is_use_traj_s_and_v
-      && planning_control_interface.remain_traj < 0.25) {
+          planning_control_interface.is_extended,
+          planning_control_interface.is_use_traj_s_and_v,
+          planning_control_interface.remain_traj);
+  if (planning_control_interface.is_extended &&
+      !planning_control_interface.is_use_traj_s_and_v &&
+      planning_control_interface.remain_traj < 0.25) {
     if (planning_result.second_traj_pose_array.size() >= 2) {
-      std::vector<Pose2D> traj_pose_array_ = planning_result.second_traj_pose_array;
-      std::vector<float> traj_vel_array_ = planning_result.second_traj_vel_array;
+      std::vector<Pose2D> traj_pose_array_ =
+          planning_result.second_traj_pose_array;
+      std::vector<float> traj_vel_array_ =
+          planning_result.second_traj_vel_array;
       double second_traj_remain_s = planning_math::getRemainDistance(
-          traj_pose_array_,traj_vel_array_, world_model_->get_ego_state().ego_pose);
+          traj_pose_array_, traj_vel_array_,
+          world_model_->get_ego_state().ego_pose);
       planning_control_interface.is_use_traj_s_and_v = true;
       planning_control_interface.second_remain_traj = second_traj_remain_s;
       planning_control_interface.second_traj_target_v =
           getTargetV(second_traj_remain_s);
       MSD_LOG(ERROR, "the remain s is: %f, the target v is:%f, the flag is:%d",
-              second_traj_remain_s, planning_control_interface.second_traj_target_v,
-              1);
+              second_traj_remain_s,
+              planning_control_interface.second_traj_target_v, 1);
     }
   }
 
   MSD_LOG(ERROR, "Current Gear is: %d", int(planning_result.gear));
-  if (planning_result.is_finished_flag || planning_result.gear == GearState::PARK) {
+  if (planning_result.is_finished_flag ||
+      planning_result.gear == GearState::PARK) {
     MSD_LOG(ERROR, "finished set is_extend to true");
     planning_control_interface.is_extended = false;
     planning_control_interface.first_gear = 1;
@@ -1949,11 +1992,11 @@ maf_planning::Planning PlanningTask::generate_planning_output_sop() {
   }
 
   auto planning_control_interface_json = mjson::Json(mjson::Json::object());
-  planning_control_interface_json["is_extended"] = 
+  planning_control_interface_json["is_extended"] =
       planning_control_interface.is_extended;
-  planning_control_interface_json["extend_type"] = 
+  planning_control_interface_json["extend_type"] =
       planning_control_interface.extend_type;
-  planning_control_interface_json["remain_traj"] = 
+  planning_control_interface_json["remain_traj"] =
       planning_control_interface.remain_traj;
   planning_control_interface_json["second_remain_traj"] =
       planning_control_interface.second_remain_traj;
@@ -1963,42 +2006,48 @@ maf_planning::Planning PlanningTask::generate_planning_output_sop() {
       planning_control_interface.is_use_traj_s_and_v;
   planning_control_interface_json["first_gear"] =
       planning_control_interface.first_gear;
-  planning_control_interface_json["second_gear"] = 
+  planning_control_interface_json["second_gear"] =
       planning_control_interface.second_gear;
-  planning_control_interface_json["gear_change_index"] = 
+  planning_control_interface_json["gear_change_index"] =
       planning_control_interface.gear_change_index;
   extra_json["plan_param"] = planning_control_interface_json;
-  MSD_LOG(ERROR, "is_extended:%d : extend_type: %d,remain_traj: %f; second_remain_traj: %f, second_traj_target_v:%f,is_use_traj_s_and_v: %d, first_gear: %d, second_gear %d, gear_change_index %d",
-    planning_control_interface.is_extended,
-    planning_control_interface.extend_type,
-    planning_control_interface.remain_traj,
-    planning_control_interface.second_remain_traj,
-    planning_control_interface.second_traj_target_v,
-    planning_control_interface.is_use_traj_s_and_v,
-    planning_control_interface.first_gear,
-    planning_control_interface.second_gear,
-    planning_control_interface.gear_change_index);
-  const std::string& speed_margin_debug_string 
-      = PlanningContext::Instance()->longitudinal_behavior_planner_output().speed_margin_debug;
+  MSD_LOG(
+      ERROR,
+      "is_extended:%d : extend_type: %d,remain_traj: %f; second_remain_traj: "
+      "%f, second_traj_target_v:%f,is_use_traj_s_and_v: %d, first_gear: %d, "
+      "second_gear %d, gear_change_index %d",
+      planning_control_interface.is_extended,
+      planning_control_interface.extend_type,
+      planning_control_interface.remain_traj,
+      planning_control_interface.second_remain_traj,
+      planning_control_interface.second_traj_target_v,
+      planning_control_interface.is_use_traj_s_and_v,
+      planning_control_interface.first_gear,
+      planning_control_interface.second_gear,
+      planning_control_interface.gear_change_index);
+  const std::string &speed_margin_debug_string =
+      PlanningContext::Instance()
+          ->longitudinal_behavior_planner_output()
+          .speed_margin_debug;
   extra_json["speed_margin_debug"] = speed_margin_debug_string;
-  PlanningContext::Instance()->mutable_longitudinal_behavior_planner_output()->speed_margin_debug = "";
-
+  PlanningContext::Instance()
+      ->mutable_longitudinal_behavior_planner_output()
+      ->speed_margin_debug = "";
 
   auto vec_sl_points = PlanningContext::Instance()->vec_sl_points();
   mjson::Json::array v_arr;
-  if (!vec_sl_points.empty() &&
-      !vec_sl_points[0].empty()) {
-      for (const auto& vec : vec_sl_points) {
-        mjson::Json::array arr;
-        for (const auto& p : vec) {
-          auto obj = mjson::Json(mjson::Json::object());
-          obj["s"] = p.first;
-          obj["l"] = p.second;
-          arr.push_back(obj);
-        }
-        v_arr.emplace_back(arr);
+  if (!vec_sl_points.empty() && !vec_sl_points[0].empty()) {
+    for (const auto &vec : vec_sl_points) {
+      mjson::Json::array arr;
+      for (const auto &p : vec) {
+        auto obj = mjson::Json(mjson::Json::object());
+        obj["s"] = p.first;
+        obj["l"] = p.second;
+        arr.push_back(obj);
       }
-      extra_json["vec_sl_points"] = v_arr;
+      v_arr.emplace_back(arr);
+    }
+    extra_json["vec_sl_points"] = v_arr;
   }
 
   double not_use_comfortable_min_s =
@@ -2009,11 +2058,12 @@ maf_planning::Planning PlanningTask::generate_planning_output_sop() {
               ->mutable_longitudinal_behavior_planner_output()
               ->remain_dist_info_.remaining_distance_ <
           not_use_comfortable_min_s) {
-      extra_json["is_comfortable_brake"] = false;
+    extra_json["is_comfortable_brake"] = false;
   }
 
   msg.extra.json = extra_json.dump();
-  // std::cout << "The extend flag is: " << planning_control_interface.is_extended << std::endl;
+  // std::cout << "The extend flag is: " <<
+  // planning_control_interface.is_extended << std::endl;
 
   nlohmann::json plan_strategy_name_json;
   plan_strategy_name_json["behavior"] =
@@ -2038,7 +2088,8 @@ maf_planning::Planning PlanningTask::generate_planning_output_sop() {
     sbp_debug_info_ += sbp_debug + ". ";
   }
   plan_strategy_name_json["sbp_debug"] = sbp_debug_info_;
-  *PlanningContext::Instance()->mutable_planning_debug_info() += "\n[task info]" + sbp_debug_info_;
+  *PlanningContext::Instance()->mutable_planning_debug_info() +=
+      "\n[task info]" + sbp_debug_info_;
   sbp_debug_info_ = "";
   msg.meta.plan_strategy_name = plan_strategy_name_json.dump();
 

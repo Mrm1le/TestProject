@@ -3,10 +3,10 @@
 #include "common/math/box2d.h"
 #include "common/math/line_segment2d.h"
 #include "common/parking_planner_types.h"
+#include "common/utils/yaml_utils_parking.h"
 #include "maf_interface/maf_planning.h"
 #include "planner/motion_planner/optimizers/openspace_optimizer/config.h"
 #include <yaml-cpp/yaml.h>
-#include "common/utils/yaml_utils_parking.h"
 
 // namespace msquare {
 // namespace parking {

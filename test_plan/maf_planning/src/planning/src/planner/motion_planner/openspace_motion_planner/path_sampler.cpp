@@ -65,7 +65,9 @@ bool PathSampler::calculate() {
 
   if (PlanningContext::Instance()->open_space_path().isNew()) {
     set_path(PlanningContext::Instance()->mutable_open_space_path()->unstash());
-    PlanningContext::Instance()->mutable_longitudinal_behavior_planner_output()->path_segment_updated = true;
+    PlanningContext::Instance()
+        ->mutable_longitudinal_behavior_planner_output()
+        ->path_segment_updated = true;
   }
   MSD_LOG(INFO, "PathSampler::calculate\n");
   PlanningStatus *planning_status =
@@ -90,10 +92,11 @@ bool PathSampler::calculate() {
     planning_result.gear = GearState::PARK;
   }
   if (world_model_->get_ego_state().is_static &&
-      planning_status->scenario.status_type == StatusType::RPA_STRAIGHT_STANDBY) {
+      planning_status->scenario.status_type ==
+          StatusType::RPA_STRAIGHT_STANDBY) {
     planning_result.gear = GearState::PARK;
   }
-  
+
   if (fsm_ctx_.path.get_points().empty()) {
     // not trajectory available but in APA task
     if (planning_status->scenario.status_type == StatusType::APA ||
@@ -153,14 +156,16 @@ bool PathSampler::calculate() {
                             fsm_->isActive<Follow::Drive>() &&
                                 planning_result.gear == GearState::DRIVE;
     // enforce the upper_bound reaching condition
-    double min_finish_len = CarParams::GetInstance()->car_config.common_config.min_finish_len;
+    double min_finish_len =
+        CarParams::GetInstance()->car_config.common_config.min_finish_len;
     bool can_skip_to_upper_bound = (min_dis_iter + 2 == search_upper_bound);
     if (can_skip_to_upper_bound && is_gear_matching &&
         PlanningContext::Instance()
                 ->longitudinal_behavior_planner_output()
                 .traj_length < min_finish_len) {
       fsm_ctx_.path_iter = min_dis_iter + 1;
-      PlanningContext::Instance()->mutable_longitudinal_behavior_planner_output()
+      PlanningContext::Instance()
+          ->mutable_longitudinal_behavior_planner_output()
           ->path_segment_updated = true;
     } else {
       fsm_ctx_.path_iter = min_dis_iter;
@@ -195,7 +200,7 @@ bool PathSampler::calculate() {
   PlanningContext::Instance()
       ->mutable_longitudinal_behavior_planner_output()
       ->is_at_last_segment = is_at_last_segment();
-  
+
   // debug
   *PlanningContext::Instance()->mutable_planning_debug_info() +=
       "[sampler]ps_sm" + std::to_string((int)this->getCurrentState()) +
@@ -230,22 +235,28 @@ bool PathSampler::calculate_sop() {
 
   if (PlanningContext::Instance()->open_space_path().isNew()) {
     MSD_LOG(ERROR, "update path segment: receive new path");
-    PlanningContext::Instance()->mutable_longitudinal_behavior_planner_output()->path_segment_updated = true;
+    PlanningContext::Instance()
+        ->mutable_longitudinal_behavior_planner_output()
+        ->path_segment_updated = true;
     set_path(PlanningContext::Instance()->mutable_open_space_path()->unstash());
-    PlanningContext::Instance()->mutable_planning_status()->plan_control_interface.is_extended = true;
+    PlanningContext::Instance()
+        ->mutable_planning_status()
+        ->plan_control_interface.is_extended = true;
     PlanningResult &tmp_planning_result =
         PlanningContext::Instance()->mutable_planning_status()->planning_result;
-    tmp_planning_result.second_traj_not_replan_scope
-                = std::make_pair(0,0);
+    tmp_planning_result.second_traj_not_replan_scope = std::make_pair(0, 0);
     tmp_planning_result.pre_segment_index = 0;
     tmp_planning_result.real_gear_change_flag = false;
     // tmp_planning_result.smart_change_direction_flag = false;
     tmp_planning_result.is_use_reach_the_end_flag = false;
-    PlanningContext::Instance()->mutable_planning_status()
+    PlanningContext::Instance()
+        ->mutable_planning_status()
         ->plan_control_interface.is_use_traj_s_and_v = false;
-    PlanningContext::Instance()->mutable_planning_status()
+    PlanningContext::Instance()
+        ->mutable_planning_status()
         ->plan_control_interface.second_remain_traj = 0.0;
-    PlanningContext::Instance()->mutable_planning_status()
+    PlanningContext::Instance()
+        ->mutable_planning_status()
         ->plan_control_interface.second_traj_target_v = 0.0;
     tmp_planning_result.pre_real_gear = 0;
     tmp_planning_result.pre_wheel_velocity = 0;
@@ -298,12 +309,12 @@ bool PathSampler::calculate_sop() {
   }
   fsm_->update();
   if (mock_is_static_flag_) {
-    MSD_LOG(ERROR," mock is_static flag");
+    MSD_LOG(ERROR, " mock is_static flag");
     fsm_ctx_.is_vehicle_static = true;
   } else {
     fsm_ctx_.is_vehicle_static = world_model_->get_ego_state().is_static;
   }
-  MSD_LOG(ERROR," mock is_static flag %d", mock_is_static_flag_);
+  MSD_LOG(ERROR, " mock is_static flag %d", mock_is_static_flag_);
   fsm_ctx_.gear.value = world_model_->get_gear_report().gear_status.value;
   bool is_change_traj = false;
   // std::cout << "************************************ SAtart" << std::endl;
@@ -312,10 +323,11 @@ bool PathSampler::calculate_sop() {
             int(fsm_ctx_.path.get_stage_idx(fsm_ctx_.path_iter)));
 
     /******** update path iter in fsm context ********/
-    // std::cout << "the stage is: " 
+    // std::cout << "the stage is: "
     //           << int(fsm_ctx_.path.get_stage_idx(fsm_ctx_.path_iter))
     //           << std::endl;
-    MSD_LOG(ERROR, "the stage is: %d",  int(fsm_ctx_.path.get_stage_idx(fsm_ctx_.path_iter)));
+    MSD_LOG(ERROR, "the stage is: %d",
+            int(fsm_ctx_.path.get_stage_idx(fsm_ctx_.path_iter)));
     MSD_LOG(ERROR, "sum stage is %d, ", int(fsm_ctx_.path.get_num_stages()));
 
     auto ego_pose = world_model_->get_ego_state().ego_pose;
@@ -332,7 +344,7 @@ bool PathSampler::calculate_sop() {
       double tmp_x = iter->path_point.x;
       double tmp_y = iter->path_point.y;
       if (std::isnan(tmp_x) || std::isnan(tmp_y)) {
-        MSD_LOG(ERROR,"the x or y is nan");
+        MSD_LOG(ERROR, "the x or y is nan");
         continue;
       }
       double tmp_dis = std::hypot(tmp_x - ego_point.x, tmp_y - ego_point.y);
@@ -358,11 +370,14 @@ bool PathSampler::calculate_sop() {
     // std::cout << " the Reverse" << fsm_->isActive<Follow::Reverse>()
     //           << " the Drive" << fsm_->isActive<Follow::Drive>()
     //           << std::endl;
-    MSD_LOG(ERROR, "cur path point index is: %d, the end point index is: %d",
+    MSD_LOG(
+        ERROR, "cur path point index is: %d, the end point index is: %d",
         std::distance(fsm_ctx_.path.get_points().begin(), min_dis_iter),
         std::distance(fsm_ctx_.path.get_points().begin(), search_upper_bound));
-    // std::cout << " index is: " << std::distance(fsm_ctx_.path.get_points().begin(), min_dis_iter);
-    // std::cout << " stage end index is:" << std::distance(fsm_ctx_.path.get_points().begin(), search_upper_bound);
+    // std::cout << " index is: " <<
+    // std::distance(fsm_ctx_.path.get_points().begin(), min_dis_iter);
+    // std::cout << " stage end index is:" <<
+    // std::distance(fsm_ctx_.path.get_points().begin(), search_upper_bound);
     bool can_skip_to_upper_bound = (min_dis_iter + 2 == search_upper_bound);
     // std::cout << "is gear matching:" << is_gear_matching
     //           << " can_skip_to_upper_bound " << can_skip_to_upper_bound
@@ -371,39 +386,52 @@ bool PathSampler::calculate_sop() {
     //             ->longitudinal_behavior_planner_output()
     //             .traj_length
     //           << std::endl;
-    MSD_LOG(ERROR, "is gear matching: %d . can_skip_to_upper_bound  %d . trajectory length: %f",
-      is_gear_matching, can_skip_to_upper_bound, 
-      PlanningContext::Instance()->longitudinal_behavior_planner_output().traj_length);
-    bool reach_trajectory_end = 
+    MSD_LOG(ERROR,
+            "is gear matching: %d . can_skip_to_upper_bound  %d . trajectory "
+            "length: %f",
+            is_gear_matching, can_skip_to_upper_bound,
+            PlanningContext::Instance()
+                ->longitudinal_behavior_planner_output()
+                .traj_length);
+    bool reach_trajectory_end =
         PlanningContext::Instance()->planning_status().is_reached_end;
     if (reach_trajectory_end && !not_use_reached_info) {
       planning_result.is_use_reach_the_end_flag = true;
     }
-    MSD_LOG(ERROR, "the control reached info is: %d, not_use_reached_info is: %d",
-        reach_trajectory_end, not_use_reached_info);
-    // std::cout << "the control reached info is:" << reach_trajectory_end << std::endl;
-    if (can_skip_to_upper_bound
-        && is_gear_matching && PlanningContext::Instance()
+    MSD_LOG(ERROR,
+            "the control reached info is: %d, not_use_reached_info is: %d",
+            reach_trajectory_end, not_use_reached_info);
+    // std::cout << "the control reached info is:" << reach_trajectory_end <<
+    // std::endl;
+    if (can_skip_to_upper_bound && is_gear_matching &&
+        PlanningContext::Instance()
                 ->longitudinal_behavior_planner_output()
                 .traj_length < 0.1) {
       fsm_ctx_.path_iter = min_dis_iter + 1;
       MSD_LOG(ERROR, "update path segment sucess");
       is_change_traj = true;
-      PlanningContext::Instance()->mutable_longitudinal_behavior_planner_output()
+      PlanningContext::Instance()
+          ->mutable_longitudinal_behavior_planner_output()
           ->path_segment_updated = true;
     } else {
       fsm_ctx_.path_iter = min_dis_iter;
       is_change_traj = false;
     }
 
-    int current_segment_0 = int(fsm_ctx_.path.get_stage_idx(fsm_ctx_.path_iter));
-    MSD_LOG(ERROR,"current_segment_0 is: %d, last_segment_ %d", current_segment_0, last_segment_);
+    int current_segment_0 =
+        int(fsm_ctx_.path.get_stage_idx(fsm_ctx_.path_iter));
+    MSD_LOG(ERROR, "current_segment_0 is: %d, last_segment_ %d",
+            current_segment_0, last_segment_);
     static int once_use;
-    MSD_LOG(ERROR,"is_use_reach_the_end_flag is: %d, is_extended %d traj_length %f, once_use %d",
-      planning_result.is_use_reach_the_end_flag, planning_status->plan_control_interface.is_extended,
-      PlanningContext::Instance()
-              ->longitudinal_behavior_planner_output()
-              .traj_length, once_use);
+    MSD_LOG(ERROR,
+            "is_use_reach_the_end_flag is: %d, is_extended %d traj_length %f, "
+            "once_use %d",
+            planning_result.is_use_reach_the_end_flag,
+            planning_status->plan_control_interface.is_extended,
+            PlanningContext::Instance()
+                ->longitudinal_behavior_planner_output()
+                .traj_length,
+            once_use);
     if (current_segment_0 == last_segment_) {
       MSD_LOG(ERROR, "update path in curr segment");
       if (planning_result.is_use_reach_the_end_flag &&
@@ -413,7 +441,7 @@ bool PathSampler::calculate_sop() {
       }
     }
     MSD_LOG(ERROR, "smart_change_direction_flag is %d, switch_traj_flag %d",
-        smart_change_direction_flag, switch_traj_flag);
+            smart_change_direction_flag, switch_traj_flag);
     bool is_gear_match_velocity = false;
     int cur_real_gear = int(world_model_->get_gear_report().gear_status.value);
     if (planning_result.pre_real_gear != cur_real_gear) {
@@ -424,20 +452,23 @@ bool PathSampler::calculate_sop() {
         MSD_LOG(ERROR, "set gear change to true");
       }
     }
-    double curr_gear_v =  VehicleParam::Instance()->wheel_rolling_radius *
-        (world_model_->get_wheel_speed_report().rear_left +
-         world_model_->get_wheel_speed_report().rear_right +
-         world_model_->get_wheel_speed_report().front_right +
-         world_model_->get_wheel_speed_report().front_left ) / 4;
-    MSD_LOG(ERROR, "curr gear is %d, the pre real gear is %d, real_gear_change_flag %d, and curr velocity is:%f, pre velocity is:%f",
-        int(fsm_ctx_.gear.value),planning_result.pre_real_gear,
-        planning_result.real_gear_change_flag, curr_gear_v,
-        planning_result.pre_wheel_velocity);
+    double curr_gear_v = VehicleParam::Instance()->wheel_rolling_radius *
+                         (world_model_->get_wheel_speed_report().rear_left +
+                          world_model_->get_wheel_speed_report().rear_right +
+                          world_model_->get_wheel_speed_report().front_right +
+                          world_model_->get_wheel_speed_report().front_left) /
+                         4;
+    MSD_LOG(ERROR,
+            "curr gear is %d, the pre real gear is %d, real_gear_change_flag "
+            "%d, and curr velocity is:%f, pre velocity is:%f",
+            int(fsm_ctx_.gear.value), planning_result.pre_real_gear,
+            planning_result.real_gear_change_flag, curr_gear_v,
+            planning_result.pre_wheel_velocity);
     planning_result.pre_real_gear = int(fsm_ctx_.gear.value);
-    if (planning_result.real_gear_change_flag
-        && (std::fabs(curr_gear_v) < 0.05
-        || planning_result.pre_wheel_velocity * curr_gear_v <= 0)) {
-      MSD_LOG(ERROR,"the gear is match to the velocity");
+    if (planning_result.real_gear_change_flag &&
+        (std::fabs(curr_gear_v) < 0.05 ||
+         planning_result.pre_wheel_velocity * curr_gear_v <= 0)) {
+      MSD_LOG(ERROR, "the gear is match to the velocity");
       is_gear_match_velocity = true;
     }
     planning_result.pre_wheel_velocity = curr_gear_v;
@@ -448,7 +479,9 @@ bool PathSampler::calculate_sop() {
       switch_traj_flag = true;
       mock_is_static_flag_ = true;
       not_use_reached_info = true;
-      MSD_LOG(ERROR,"the gear is match the gear velocity, ready change next trajectory");
+      MSD_LOG(
+          ERROR,
+          "the gear is match the gear velocity, ready change next trajectory");
       // if (!world_model_->get_pause_status()) {
       //   if (fsm_ctx_.path_iter->direction == -1 ){
       //     if (planning_result.gear != GearState::REVERSE) {
@@ -463,14 +496,17 @@ bool PathSampler::calculate_sop() {
       //   }
       // }
     }
-    int current_segment_1 = int(fsm_ctx_.path.get_stage_idx(fsm_ctx_.path_iter));
-    if(current_segment_1 != last_segment_){
+    int current_segment_1 =
+        int(fsm_ctx_.path.get_stage_idx(fsm_ctx_.path_iter));
+    if (current_segment_1 != last_segment_) {
       once_use = false;
       switch_traj_flag = true;
       planning_result.real_gear_change_flag = false;
       smart_change_direction_flag = false;
       MSD_LOG(ERROR, "update path segment 2");
-      PlanningContext::Instance()->mutable_longitudinal_behavior_planner_output()->path_segment_updated = true;
+      PlanningContext::Instance()
+          ->mutable_longitudinal_behavior_planner_output()
+          ->path_segment_updated = true;
       last_segment_ = current_segment_1;
       planning_status->plan_control_interface.is_use_traj_s_and_v = false;
       planning_status->plan_control_interface.second_remain_traj = 0.0;
@@ -505,9 +541,12 @@ bool PathSampler::calculate_sop() {
     // std::cout << "cur gear is:" << planning_gear
     //           << " expect gear is:" << int(planning_result.gear)
     //           << std::endl;
-    MSD_LOG(ERROR, "cur gear is: %d. expect gear is: %d", planning_gear, int(planning_result.gear));
-    // std::cout << " index is: " << std::distance(fsm_ctx_.path.get_points().begin(), min_dis_iter);
-    // std::cout << " stage end index is:" << std::distance(fsm_ctx_.path.get_points().begin(), search_upper_bound);
+    MSD_LOG(ERROR, "cur gear is: %d. expect gear is: %d", planning_gear,
+            int(planning_result.gear));
+    // std::cout << " index is: " <<
+    // std::distance(fsm_ctx_.path.get_points().begin(), min_dis_iter);
+    // std::cout << " stage end index is:" <<
+    // std::distance(fsm_ctx_.path.get_points().begin(), search_upper_bound);
     MSD_LOG(INFO, "%s: index: %d", __FUNCTION__,
             std::distance(fsm_ctx_.path.get_points().begin(), min_dis_iter));
     MSD_LOG(
@@ -515,8 +554,10 @@ bool PathSampler::calculate_sop() {
         std::distance(fsm_ctx_.path.get_points().begin(), search_upper_bound));
   }
 
-  MSD_LOG(ERROR, "The extend flag is %d",planning_status->plan_control_interface.is_extended);
-  // std::cout << "The extend flag is: " << planning_status->plan_control_interface.is_extended << std::endl;
+  MSD_LOG(ERROR, "The extend flag is %d",
+          planning_status->plan_control_interface.is_extended);
+  // std::cout << "The extend flag is: " <<
+  // planning_status->plan_control_interface.is_extended << std::endl;
 
   planning_result.gear_changing = !fsm_->isActive<Follow::Reverse>() &&
                                   !fsm_->isActive<Follow::Drive>() &&
@@ -565,7 +606,8 @@ bool PathSampler::calculate_sop() {
     planning_result.traj_relative_time.push_back(iter->relative_time);
     planning_result.traj_relative_s.push_back(iter->path_point.s);
   }
-  for (auto iter = second_result_traj.begin(); iter != second_result_traj.end(); ++iter) {
+  for (auto iter = second_result_traj.begin(); iter != second_result_traj.end();
+       ++iter) {
     // std::cout << "the direction is:" << iter->direction << std::endl;
     MSD_LOG(DEBUG,
             "published traj point:[x: %4.2f, y: %4.2f, theta: %4.2f, "
@@ -593,26 +635,23 @@ bool PathSampler::calculate_sop() {
   if (planning_result.pre_segment_index + 1 == current_segment_2) {
     // std::cout << "Finish Switch to next trajectory" << std::endl;
     MSD_LOG(ERROR, "Finish Switch to next trajectory");
-    planning_status->plan_control_interface.is_extended
-      = true;
+    planning_status->plan_control_interface.is_extended = true;
     double second_traj_remain_s = planning_math::getRemainDistance(
-        planning_result.traj_pose_array,
-        planning_result.traj_vel_array,
+        planning_result.traj_pose_array, planning_result.traj_vel_array,
         world_model_->get_ego_state().ego_pose);
     planning_result.is_finish_switch_next_traj_flag = true;
     second_traj_remain_s = second_traj_remain_s + 0.1;
 
     if (second_traj_remain_s > 0.6) {
-      planning_result.second_traj_not_replan_scope
-          = std::make_pair(second_traj_remain_s - 0.4 - 0.1,
-          second_traj_remain_s);
+      planning_result.second_traj_not_replan_scope = std::make_pair(
+          second_traj_remain_s - 0.4 - 0.1, second_traj_remain_s);
     }
   }
   planning_result.pre_segment_index = current_segment_2;
-  planning_status->plan_control_interface.gear_change_index
-      = result_traj.size();
-  planning_status->plan_control_interface.first_gear 
-      = int(planning_result.gear);
+  planning_status->plan_control_interface.gear_change_index =
+      result_traj.size();
+  planning_status->plan_control_interface.first_gear =
+      int(planning_result.gear);
   if (planning_result.gear == GearState::DRIVE) {
     planning_status->plan_control_interface.first_gear = 4;
   }
@@ -627,12 +666,13 @@ bool PathSampler::calculate_sop() {
   }
   unsigned int second_gear = 0;
   const bool is_at_last_segment_temp = is_at_last_segment();
-  PlanningContext::Instance()->mutable_longitudinal_behavior_planner_output()->is_at_last_segment = is_at_last_segment_temp;
+  PlanningContext::Instance()
+      ->mutable_longitudinal_behavior_planner_output()
+      ->is_at_last_segment = is_at_last_segment_temp;
 
   if (is_at_last_segment_temp) {
     second_gear = int(GearState::PARK);
-        planning_status->plan_control_interface.is_extended
-          = false;
+    planning_status->plan_control_interface.is_extended = false;
     MSD_LOG(ERROR, "is last traj not allow extend");
   } else {
     if (planning_result.gear == GearState::DRIVE) {
@@ -642,8 +682,7 @@ bool PathSampler::calculate_sop() {
       second_gear = int(GearState::DRIVE);
     }
   }
-  planning_status->plan_control_interface.second_gear 
-      = second_gear;
+  planning_status->plan_control_interface.second_gear = second_gear;
   if (second_gear == 3) {
     planning_status->plan_control_interface.second_gear = 4;
   }
@@ -656,7 +695,8 @@ bool PathSampler::calculate_sop() {
   if (second_gear == 5) {
     planning_status->plan_control_interface.second_gear = 0;
   }
-  auto getTrajLength = [](std::vector<DirTrajectoryPoint> traj, bool is_first_traj){
+  auto getTrajLength = [](std::vector<DirTrajectoryPoint> traj,
+                          bool is_first_traj) {
     double length = 0.0;
     if (is_first_traj) {
       if (traj.size() < 12) {
@@ -672,16 +712,16 @@ bool PathSampler::calculate_sop() {
     }
     for (int i = 0; i < size; i++) {
       length += std::hypot(traj[i + 1].path_point.x - traj[i].path_point.x,
-                traj[i + 1].path_point.y - traj[i].path_point.y);
+                           traj[i + 1].path_point.y - traj[i].path_point.y);
     }
     return length;
   };
   if (getTrajLength(result_traj, true) < 1.0 ||
       getTrajLength(second_result_traj, false) < 1.0) {
-    planning_status->plan_control_interface.is_extended
-        = false;
-  MSD_LOG(ERROR, "the traj is too short. not extend first %f, second %f",
-          getTrajLength(result_traj, true), getTrajLength(second_result_traj, false));
+    planning_status->plan_control_interface.is_extended = false;
+    MSD_LOG(ERROR, "the traj is too short. not extend first %f, second %f",
+            getTrajLength(result_traj, true),
+            getTrajLength(second_result_traj, false));
   }
   // if (result_traj.size() >= 3) {
   //   for (const auto& obs : world_model_->get_parking_ground_line_fusion()) {

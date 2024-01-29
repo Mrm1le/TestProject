@@ -11,8 +11,7 @@ namespace msquare {
 
 QpSplineReferenceLineSmoother::QpSplineReferenceLineSmoother(
     const ReferenceLineSmootherConfig &config)
-    : ReferenceLineSmoother(config) {
-}
+    : ReferenceLineSmoother(config) {}
 
 void QpSplineReferenceLineSmoother::Clear() { t_knots_.clear(); }
 
@@ -102,9 +101,7 @@ bool QpSplineReferenceLineSmoother::AddConstraint() {
   return true;
 }
 
-bool QpSplineReferenceLineSmoother::AddKernel() {
-  return true;
-}
+bool QpSplineReferenceLineSmoother::AddKernel() { return true; }
 
 bool QpSplineReferenceLineSmoother::Solve() { return true; }
 

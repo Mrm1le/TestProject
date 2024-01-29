@@ -299,8 +299,8 @@ bool MSDStateMachine::update() {
         enable_lc && world_model_->get_enable_recommend_alc();
 
     const auto &request_manager_input = lc_req_mgr_->update_input(
-        enable_ilc, enable_alc, enable_recommend_alc, world_model_, *virtual_lane_mgr_,
-        *lane_tracks_mgr_, fsm_context_.state);
+        enable_ilc, enable_alc, enable_recommend_alc, world_model_,
+        *virtual_lane_mgr_, *lane_tracks_mgr_, fsm_context_.state);
     lc_req_mgr_->update(request_manager_input);
     auto request_manager_output =
         PlanningContext::Instance()->mutable_request_manager_outut();
@@ -1050,8 +1050,9 @@ bool MSDStateMachine::check_lc_body_valid(int direction) {
   is_steer_over_limit_ = false;
 
   double KLimitedRad = ConfigurationContext::Instance()
-          ->planner_config()
-          .lateral_behavior_planner_config.angle_lc_limit / 180.0 * M_PI;
+                           ->planner_config()
+                           .lateral_behavior_planner_config.angle_lc_limit /
+                       180.0 * M_PI;
   auto ego_steer_manager = world_model_->get_cart_ego_state_manager();
   auto cart_ego = ego_steer_manager.get_cart_ego_state();
   if (std::fabs(cart_ego.ego_steer_angle) > KLimitedRad) {

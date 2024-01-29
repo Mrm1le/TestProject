@@ -44,7 +44,8 @@ public:
   DeciderResult
   strategy_blocked_and_reached(bool vehicle_reached_with_wheelstop);
 
-  DeciderResult strategy_tiny_perpendicular_and_oblique_slot(bool is_at_last_segment);
+  DeciderResult
+  strategy_tiny_perpendicular_and_oblique_slot(bool is_at_last_segment);
 
   DeciderResult
   strategy_dynamic_plan_adjust_tail(bool need_dynamic_plan_adjust_tail);
@@ -73,13 +74,14 @@ public:
   DeciderResult strategy_assumed_blocked();
 
   void reset_mpc_collide_timeout();
-  
+
   DeciderResult strategy_during_pause(
       const bool is_pause_status, const double trajectory_length,
       const bool is_at_last_segment, const bool vehicle_reached_with_wheelstop,
       const bool has_moved, const bool need_pause,
       const LongitudinalBehaviorPlannerOutput::RemainDistInfo
-          &remain_distance_info, std::string* ptr_debug_string);
+          &remain_distance_info,
+      std::string *ptr_debug_string);
 
 private:
   struct StateParkingConfig {

@@ -2,10 +2,10 @@
 #ifndef HMI_MANAGER_H
 #define HMI_MANAGER_H
 
-#include <vector>
-#include <unordered_map>
-#include <string>
 #include <memory>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 #include "common/config_context.h"
 #include "common/time_state_machine/time_state_machine.h"

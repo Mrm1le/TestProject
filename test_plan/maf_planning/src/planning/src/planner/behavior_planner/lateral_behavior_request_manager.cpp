@@ -812,10 +812,9 @@ LaneChangeDirection LCRequestManager::cal_lane_change_direction(
   return lane_chane_direction;
 }
 
-const RequestManagerInput &
-LCRequestManager::update_input(bool enable_ilc, bool enable_alc,
-                               bool enable_recommend_alc,
-                               std::shared_ptr<WorldModel> world_model,
+const RequestManagerInput &LCRequestManager::update_input(
+    bool enable_ilc, bool enable_alc, bool enable_recommend_alc,
+    std::shared_ptr<WorldModel> world_model,
     VirtualLaneManager &virtual_lane_mgr, LaneTracksManager &lane_tracks_mgr,
     int lc_status) {
   if (need_clear_ilc_ego_blinker()) {
@@ -1033,8 +1032,9 @@ void LCRequestManager::update(
         request_manager_output_->alc_recommend_dir = LaneChangeDirection::NONE;
       } else {
         request_manager_output_->alc_recommend_dir =
-            (act_request_->request() == LEFT_CHANGE) ? LaneChangeDirection::LEFT
-                                                    : LaneChangeDirection::RIGHT;
+            (act_request_->request() == LEFT_CHANGE)
+                ? LaneChangeDirection::LEFT
+                : LaneChangeDirection::RIGHT;
       }
     }
   }

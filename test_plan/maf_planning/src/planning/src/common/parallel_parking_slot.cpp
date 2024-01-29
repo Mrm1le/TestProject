@@ -32,16 +32,13 @@ Pose2D ParallelParkingSlot::getParkingInPose(double front_edge_to_rear,
   lot_back_pose.x = (corners_[1].x + corners_[0].x) / 2;
   lot_back_pose.y = (corners_[1].y + corners_[0].y) / 2;
 
-  MSD_LOG(ERROR,
-          "getParkingInPose is_relative_left_=%d",
-          is_relative_left_);
+  MSD_LOG(ERROR, "getParkingInPose is_relative_left_=%d", is_relative_left_);
 
   if (is_relative_left_) {
     std::swap(lot_front_pose, lot_back_pose);
   }
 
-  MSD_LOG(ERROR,
-          "getParkingInPose enable_get_heading_with_front_corners_=%d",
+  MSD_LOG(ERROR, "getParkingInPose enable_get_heading_with_front_corners_=%d",
           enable_get_heading_with_front_corners_);
 
   if (enable_get_heading_with_front_corners_) {
@@ -62,15 +59,16 @@ Pose2D ParallelParkingSlot::getParkingInPose(double front_edge_to_rear,
   Pose2D target_in_lot_front_frame;
   target_in_lot_front_frame.x = -(lot_length - target2back);
 
-  MSD_LOG(ERROR, "getParkingInPose target_in_lot_front_frame.x=%f", target_in_lot_front_frame.x);
+  MSD_LOG(ERROR, "getParkingInPose target_in_lot_front_frame.x=%f",
+          target_in_lot_front_frame.x);
 
   return planning_math::tf2d_inv(lot_front_pose, target_in_lot_front_frame);
 }
 
 std::vector<planning_math::LineSegment2d>
-  ParallelParkingSlot::genLotWalls(double vehicle_width){
-    return {};
-  }
+ParallelParkingSlot::genLotWalls(double vehicle_width) {
+  return {};
+}
 
 planning_math::LineSegment2d ParallelParkingSlot::genBottomWall() {
   LineSegment2d bottom_wall_raw = BaseParkingSlot::genBottomWall();
@@ -83,7 +81,7 @@ planning_math::LineSegment2d ParallelParkingSlot::genBottomWall() {
   bottom_vec.Normalize();
 
   return LineSegment2d(bottom_wall_raw.start() - extend_vec + bottom_vec * 1.0,
-                       bottom_wall_raw.end() + extend_vec  + bottom_vec * 1.0);
+                       bottom_wall_raw.end() + extend_vec + bottom_vec * 1.0);
 }
 
 std::vector<planning_math::LineSegment2d>
@@ -157,9 +155,11 @@ bool ParallelParkingSlot::isVehicleReached(
       vehicle_param->front_edge_to_center, vehicle_param->back_edge_to_center,
       vehicle_param->brake_distance_buffer, pose, wheel_stop_depth);
   const double lon_ending_thres_parallel =
-      CarParams::GetInstance()->car_config.ending_check_config.lon_ending_thres_parallel;
+      CarParams::GetInstance()
+          ->car_config.ending_check_config.lon_ending_thres_parallel;
   const double lat_ending_thres_parallel =
-      CarParams::GetInstance()->car_config.ending_check_config.lat_ending_thres_parallel;
+      CarParams::GetInstance()
+          ->car_config.ending_check_config.lat_ending_thres_parallel;
   const double angle_ending_thres_parallel =
       CarParams::GetInstance()
           ->car_config.ending_check_config.angle_ending_thres_parallel;
@@ -177,10 +177,12 @@ bool ParallelParkingSlot::isVehicleReached(
   if (is_relative_left_) {
     std::swap(bottom_edge, top_edge);
   }
-  const double MAX_CENTER_OFFSET_FORWARD = CarParams::GetInstance()
+  const double MAX_CENTER_OFFSET_FORWARD =
+      CarParams::GetInstance()
           ->car_config.ending_check_config.max_center_offset_parallel;
-  const double MAX_CENTER_OFFSET_BACKWARD = -CarParams::GetInstance()
-          ->car_config.ending_check_config.max_center_offset_parallel;
+  const double MAX_CENTER_OFFSET_BACKWARD =
+      -CarParams::GetInstance()
+           ->car_config.ending_check_config.max_center_offset_parallel;
   double center_offset = (bottom_edge.DistanceTo(Vec2d(pose.x, pose.y)) -
                           vehicle_param->back_edge_to_center) -
                          (top_edge.DistanceTo(Vec2d(pose.x, pose.y)) -

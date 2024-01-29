@@ -27,12 +27,14 @@ public:
   bool calculate_parkout_target(Pose2D &out_target_pose,
                                 Pose2D &out_error_tolerence);
 
-  uint32_t calculate_available_parkout_directions(const ParkoutSceneType &parkout_scene_res);
+  uint32_t calculate_available_parkout_directions(
+      const ParkoutSceneType &parkout_scene_res);
 
   uint32_t
   calculate_recommended_parkout_direction(uint32_t available_directions);
 
-  ParkoutSceneType calc_parkout_scene_type(const ParkingSlotInfo &parking_slot_info);
+  ParkoutSceneType
+  calc_parkout_scene_type(const ParkingSlotInfo &parking_slot_info);
 
 private:
   bool area_has_obstacle(const planning_math::Box2d &area);

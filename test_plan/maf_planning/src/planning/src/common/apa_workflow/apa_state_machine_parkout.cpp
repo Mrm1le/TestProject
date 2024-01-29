@@ -7,19 +7,17 @@
 #include <mpf/core/parameter/parameter.h>
 #endif
 #include "common/apa_workflow/parking_config_loader.hpp"
-#include "common/parking_slot_factory.h"
 #include "common/context_logger.h"
-
+#include "common/parking_slot_factory.h"
 
 namespace msquare {
 
 namespace parking {
 
-
 void ApaStateMachine::onEntryParkOut() {
 
-//[fenix.refactor.sm] Original ParkingTaskManager::onEntryParkIn()
-  MSD_LOG(INFO,"[onEntryParkOut] onEntryParkOut");
+  //[fenix.refactor.sm] Original ParkingTaskManager::onEntryParkIn()
+  MSD_LOG(INFO, "[onEntryParkOut] onEntryParkOut");
   PlanningContext::Instance()
       ->mutable_parking_behavior_planner_output()
       ->is_finish = false;
@@ -38,10 +36,10 @@ void ApaStateMachine::onEntryParkOut() {
   PlanningContext::Instance()
       ->mutable_parking_behavior_planner_output()
       ->parking_slot_info.is_direction_limit = 0;
-//[fenix.refactor.sm] END Original ParkingTaskManager::onEntryParkIn()
+  //[fenix.refactor.sm] END Original ParkingTaskManager::onEntryParkIn()
 
-//[fenix.refactor.sm] Original ScenarioManager::onEntryApoa()
-  
+  //[fenix.refactor.sm] Original ScenarioManager::onEntryApoa()
+
   auto output =
       PlanningContext::Instance()->mutable_parking_behavior_planner_output();
   output->planner_type = PlannerType::OPENSPACE;
@@ -60,18 +58,18 @@ void ApaStateMachine::onEntryParkOut() {
   }
 
   // get init and target of APOA
-  
+
   TrajectoryPoint &init_traj_point = output->init_traj_point;
   TrajectoryPoint &target_traj_point = output->target_traj_point;
   APAMetaState &apa_meta_state = output->apa_meta_state;
-  
+
   EgoState ego_state = world_model_->get_ego_state();
   init_traj_point.path_point.x = ego_state.ego_pose.x;
   init_traj_point.path_point.y = ego_state.ego_pose.y;
   init_traj_point.path_point.theta = ego_state.ego_pose.theta;
   init_traj_point.steer =
       ego_state.ego_steer_angle / CarParams::GetInstance()->steer_ratio;
-  
+
   apa_meta_state.meta_pose_x = ego_state.ego_pose.x;
   apa_meta_state.meta_pose_y = ego_state.ego_pose.y;
   apa_meta_state.meta_pose_theta = ego_state.ego_pose.theta;
@@ -79,8 +77,8 @@ void ApaStateMachine::onEntryParkOut() {
   apa_meta_state.is_valid = true;
 
   const Pose2D &park_out_point = PlanningContext::Instance()
-                              ->parking_behavior_planner_output()
-                              .parking_slot_info.park_out_point.point;
+                                     ->parking_behavior_planner_output()
+                                     .parking_slot_info.park_out_point.point;
 
   const Pose2D &error_tolerence =
       PlanningContext::Instance()
@@ -90,13 +88,12 @@ void ApaStateMachine::onEntryParkOut() {
   target_traj_point.path_point.x = park_out_point.x;
   target_traj_point.path_point.y = park_out_point.y;
   target_traj_point.path_point.theta = park_out_point.theta;
-  target_traj_point.sigma_x =  error_tolerence.x;
-  target_traj_point.sigma_y =  error_tolerence.y;
-  target_traj_point.sigma_yaw =  error_tolerence.theta;
+  target_traj_point.sigma_x = error_tolerence.x;
+  target_traj_point.sigma_y = error_tolerence.y;
+  target_traj_point.sigma_yaw = error_tolerence.theta;
   target_traj_point.a = 0.0;
   target_traj_point.steer = 0.0;
   target_traj_point.v = 0.0;
-
 
   const auto &parking_slot_info = PlanningContext::Instance()
                                       ->parking_behavior_planner_output()
@@ -180,41 +177,39 @@ void ApaStateMachine::onEntryParkOut() {
       false;
   is_teb_ok_APOA_filter_ = FlagFilter(5);
 
-//[fenix.refactor.sm] END Original ScenarioManager::onEntryApoa()
+  //[fenix.refactor.sm] END Original ScenarioManager::onEntryApoa()
   PlanningContext::Instance()
       ->mutable_parking_behavior_planner_output()
       ->has_ever_been_inside_slot = false;
 
-// resetting outputs
+  // resetting outputs
   PlanningContext::Instance()
       ->mutable_parking_behavior_planner_output()
       ->reached_parkout_takeover_point = false;
-
 }
-
 
 void ApaStateMachine::onUpdateParkOut() {
-//[fenix.refactor.sm] move to ApaStateMachine::onTransitionParkOut();
- 
+  //[fenix.refactor.sm] move to ApaStateMachine::onTransitionParkOut();
 }
-
 
 void ApaStateMachine::onTransitionParkOut(
     hfsm::Machine<Context>::Control &control) {
 
-//[fenix.refactor.sm] Original ParkingTaskManager::onUpdateParkOut()
+  //[fenix.refactor.sm] Original ParkingTaskManager::onUpdateParkOut()
   MSD_LOG(INFO, "[%s] enter", __FUNCTION__);
   PlanningContext::Instance()->mutable_planning_status()->task_status.task =
       StatusType::APOA;
   PlanningContext::Instance()->mutable_planning_status()->task_status.status =
       TaskStatusType::RUNNING;
-//[fenix.refactor.sm] END Original ParkingTaskManager::onUpdateParkOut()
+  //[fenix.refactor.sm] END Original ParkingTaskManager::onUpdateParkOut()
 
-//[fenix.refactor.sm] Original ParkingTaskManager::onTransitionParkOut()
+  //[fenix.refactor.sm] Original ParkingTaskManager::onTransitionParkOut()
   bool is_finish =
       PlanningContext::Instance()->parking_behavior_planner_output().is_finish;
   PlanningRequest planning_request = world_model_->get_planning_request();
-  int plan_cnt = PlanningContext::Instance()->openspace_motion_planner_output().openspace_fallback_cnt;
+  int plan_cnt = PlanningContext::Instance()
+                     ->openspace_motion_planner_output()
+                     .openspace_fallback_cnt;
   const int PLAN_FALLBACK_TH =
       CarParams::GetInstance()->car_config.apoa_config.use_legacy_parkout ? 10
                                                                           : 0;
@@ -232,24 +227,25 @@ void ApaStateMachine::onTransitionParkOut(
         ->task_status.failure_reason = FailureReason::ADJUEST_TOO_MANY;
     MSD_LOG(ERROR, "[%s] failed as ADJUEST_TOO_MANY", __FUNCTION__);
   } else if (plan_cnt > PLAN_FALLBACK_TH) {
+    PlanningContext::Instance()->mutable_planning_status()->task_status.status =
+        TaskStatusType::FAILED;
     PlanningContext::Instance()
-          ->mutable_planning_status()
-          ->task_status.status = TaskStatusType::FAILED;
-      PlanningContext::Instance()
-          ->mutable_planning_status()
-          ->task_status.failure_reason = FailureReason::PLANNING_FAILED;
+        ->mutable_planning_status()
+        ->task_status.failure_reason = FailureReason::PLANNING_FAILED;
     MSD_LOG(ERROR, "[%s] failed as plan too many", __FUNCTION__);
   } else if (PlanningContext::Instance()
-                   ->openspace_motion_planner_output()
-                   .status ==
-               OpenspaceMotionPlannerOutput::PlannerStatus::START_INFEASIBLE || 
-      PlanningContext::Instance()->openspace_motion_planner_output().status ==
-        OpenspaceMotionPlannerOutput::PlannerStatus::END_INFEASIBLE) {
-      PlanningContext::Instance()->mutable_planning_status()->task_status.status =
+                     ->openspace_motion_planner_output()
+                     .status == OpenspaceMotionPlannerOutput::PlannerStatus::
+                                    START_INFEASIBLE ||
+             PlanningContext::Instance()
+                     ->openspace_motion_planner_output()
+                     .status ==
+                 OpenspaceMotionPlannerOutput::PlannerStatus::END_INFEASIBLE) {
+    PlanningContext::Instance()->mutable_planning_status()->task_status.status =
         TaskStatusType::FAILED;
-      PlanningContext::Instance()
-          ->mutable_planning_status()
-          ->task_status.failure_reason = FailureReason::BARRIER_IN_PARKING_SLOT;
+    PlanningContext::Instance()
+        ->mutable_planning_status()
+        ->task_status.failure_reason = FailureReason::BARRIER_IN_PARKING_SLOT;
     MSD_LOG(ERROR, "[%s] failed as START_INFEASIBLE", __FUNCTION__);
   } else if (PlanningContext::Instance()
                  ->mutable_planning_status()
@@ -273,9 +269,9 @@ void ApaStateMachine::onTransitionParkOut(
       MSD_LOG(ERROR, "[%s] change to wait as is_finish", __FUNCTION__);
     }
   }
-//[fenix.refactor.sm] END Original ParkingTaskManager::onTransitionParkOut()
+  //[fenix.refactor.sm] END Original ParkingTaskManager::onTransitionParkOut()
 
-//[fenix.refactor.sm] Original ScenarioManager::onUpdateApoa()
+  //[fenix.refactor.sm] Original ScenarioManager::onUpdateApoa()
   openspace_state_machine_->update();
 
   bool openspace_is_running =
@@ -284,8 +280,9 @@ void ApaStateMachine::onTransitionParkOut(
   bool openspace_is_fallback =
       openspace_state_machine_->getCurrentState() ==
       openspace_state_machine::OpenspaceStateEnum::FALLBACK;
-  bool openspace_is_finish = openspace_state_machine_->getCurrentState() ==
-                             openspace_state_machine::OpenspaceStateEnum::FINISH;
+  bool openspace_is_finish =
+      openspace_state_machine_->getCurrentState() ==
+      openspace_state_machine::OpenspaceStateEnum::FINISH;
 
   PathPoint target_pp = PlanningContext::Instance()
                             ->openspace_decider_output()
@@ -293,10 +290,9 @@ void ApaStateMachine::onTransitionParkOut(
   using planning_math::Vec2d;
   auto &ego_pose = world_model_->get_ego_state().ego_pose;
   auto &parking_slot_info = PlanningContext::Instance()
-                                  ->parking_behavior_planner_output()
-                                  .parking_slot_info;
-  auto park_out_direc =parking_slot_info.park_out_type.value;
-
+                                ->parking_behavior_planner_output()
+                                .parking_slot_info;
+  auto park_out_direc = parking_slot_info.park_out_type.value;
 
   Vec2d ego_pos(ego_pose.x, ego_pose.y);
   Vec2d target_pos(target_pp.x, target_pp.y);
@@ -307,8 +303,10 @@ void ApaStateMachine::onTransitionParkOut(
       abs(planning_math::NormalizeAngle(target_pp.theta - ego_pose.theta));
 
   bool is_likely_to_grab_route =
-      !PlanningContext::Instance()->planning_status().rerouting.need_rerouting
-      && std::abs(world_model_->get_ego_state().ego_frenet.y) < 3.0 &&
+      !PlanningContext::Instance()
+           ->planning_status()
+           .rerouting.need_rerouting &&
+      std::abs(world_model_->get_ego_state().ego_frenet.y) < 3.0 &&
       std::cos(theta_diff) > std::cos(0.5) &&
       std::cos(world_model_->get_frenet_coord()->GetRefCurveHeading(
                    world_model_->get_ego_state().ego_frenet.x) -
@@ -335,8 +333,8 @@ void ApaStateMachine::onTransitionParkOut(
       PlanningContext::Instance()
           ->mutable_parking_behavior_planner_output()
           ->is_finish = true;
-      MSD_LOG(ERROR, "[%s] finish as is_likely_to_grab_route", __FUNCTION__); 
-      return;   
+      MSD_LOG(ERROR, "[%s] finish as is_likely_to_grab_route", __FUNCTION__);
+      return;
     }
   }
 
@@ -350,13 +348,16 @@ void ApaStateMachine::onTransitionParkOut(
       PlanningContext::Instance()
           ->mutable_parking_behavior_planner_output()
           ->is_finish = true;
-      MSD_LOG(ERROR, "[%s] advanced_abandon as get_collide_to_limiter_when_reverse", __FUNCTION__);    
+      MSD_LOG(ERROR,
+              "[%s] advanced_abandon as get_collide_to_limiter_when_reverse",
+              __FUNCTION__);
       return;
     }
   }
 
   auto &apa_meta_state = PlanningContext::Instance()
-                                   ->mutable_parking_behavior_planner_output()->apa_meta_state;
+                             ->mutable_parking_behavior_planner_output()
+                             ->apa_meta_state;
   auto &times_try_parking_in = PlanningContext::Instance()
                                    ->mutable_openspace_motion_planner_output()
                                    ->times_try_parking_in;
@@ -364,14 +365,16 @@ void ApaStateMachine::onTransitionParkOut(
       PlanningContext::Instance()->planning_status().blocked_timeout &&
       PlanningContext::Instance()->planning_status().blocked &&
       openspace_is_running) {
-    MSD_LOG(ERROR, "[%s]blocked times_try_parking_in=%d, has_running_enough_long:%d", 
-      __FUNCTION__, times_try_parking_in,PlanningContext::Instance()
-              ->planning_status()
-              .has_running_enough_long);    
+    MSD_LOG(
+        ERROR,
+        "[%s]blocked times_try_parking_in=%d, has_running_enough_long:%d",
+        __FUNCTION__, times_try_parking_in,
+        PlanningContext::Instance()->planning_status().has_running_enough_long);
     if (times_try_parking_in == 3) {
       LOG_TO_CONTEXT("%s: times_try_parking_in = %d.", __FUNCTION__,
                      times_try_parking_in);
-      MSD_LOG(ERROR, "[%s] advanced_abandon as times_try_parking_in = 3", __FUNCTION__);    
+      MSD_LOG(ERROR, "[%s] advanced_abandon as times_try_parking_in = 3",
+              __FUNCTION__);
       PlanningContext::Instance()
           ->mutable_parking_behavior_planner_output()
           ->is_finish = true;
@@ -380,52 +383,50 @@ void ApaStateMachine::onTransitionParkOut(
       times_try_parking_in = 0;
       return;
     }
-    
+
     // set initial planning direction
     if ((PlanningContext::Instance()
-            ->planning_status()
-            .has_running_enough_long &&
-        PlanningContext::Instance()
-            ->parking_behavior_planner_output()
-            .has_moved) || 
+             ->planning_status()
+             .has_running_enough_long &&
+         PlanningContext::Instance()
+             ->parking_behavior_planner_output()
+             .has_moved) ||
         (PlanningContext::Instance()
-            ->parking_behavior_planner_output()
-            .has_paused)) {
+             ->parking_behavior_planner_output()
+             .has_paused)) {
       times_try_parking_in += 1;
-        apa_meta_state.last_v = 
-            PlanningContext::Instance()
-                        ->planning_status()
-                        .planning_result.gear == GearState::REVERSE
-                ? -1
-                : 1;
+      apa_meta_state.last_v =
+          PlanningContext::Instance()->planning_status().planning_result.gear ==
+                  GearState::REVERSE
+              ? -1
+              : 1;
       LOG_TO_CONTEXT("%s: replan for block, times_try_parking_in = %d.",
-                      __FUNCTION__, times_try_parking_in);
-      MSD_LOG(ERROR, "%s: replan for block, times_try_parking_in = %d. apa_meta_state.last_v = %f",
-                      __FUNCTION__, times_try_parking_in, apa_meta_state.last_v);    
+                     __FUNCTION__, times_try_parking_in);
+      MSD_LOG(ERROR,
+              "%s: replan for block, times_try_parking_in = %d. "
+              "apa_meta_state.last_v = %f",
+              __FUNCTION__, times_try_parking_in, apa_meta_state.last_v);
       openspace_state_machine_->changeToStandby();
       return;
     } else if (PlanningContext::Instance()
-                  ->planning_status()
-                  .has_running_enough_long) {
-      PlanningContext::Instance()
-          ->mutable_planning_status()
-          ->advanced_abandon = true;
+                   ->planning_status()
+                   .has_running_enough_long) {
+      PlanningContext::Instance()->mutable_planning_status()->advanced_abandon =
+          true;
       PlanningContext::Instance()
           ->mutable_parking_behavior_planner_output()
           ->is_finish = true;
       LOG_TO_CONTEXT("%s: finish because of replan but not move.",
-                      __FUNCTION__);
+                     __FUNCTION__);
     }
   }
 
   if (openspace_is_fallback) {
-    MSD_LOG(ERROR, "%s: transition from fallback to standby",
-            __FUNCTION__);
+    MSD_LOG(ERROR, "%s: transition from fallback to standby", __FUNCTION__);
     openspace_state_machine_->changeToStandby();
   }
 
-
-#pragma region calculate_reached_parkout_takeover_point 
+#pragma region calculate_reached_parkout_takeover_point
 
   const bool is_at_last_segment = path_sampler_->is_at_last_segment();
   bool reached_parkout_takeover_point =
@@ -438,32 +439,28 @@ void ApaStateMachine::onTransitionParkOut(
 
 #pragma endregion
 
-//[fenix.refactor.sm] END Original ScenarioManager::onUpdateApoa()
+  //[fenix.refactor.sm] END Original ScenarioManager::onUpdateApoa()
 
-
-//[fenix.refactor.sm] Original ScenarioManager::onTransitionApoa()
+  //[fenix.refactor.sm] Original ScenarioManager::onTransitionApoa()
 
   //    transit state according to ApaStateMachine's statemachine status
   //    no need to re-write here
 
-//[fenix.refactor.sm] END Original ScenarioManager::onTransitionApoa()
-
-
+  //[fenix.refactor.sm] END Original ScenarioManager::onTransitionApoa()
 }
 
-
 void ApaStateMachine::onLeaveParkOut() {
-//[fenix.refactor.sm] Original ParkingTaskManager::onLeaveParkOut()
+  //[fenix.refactor.sm] Original ParkingTaskManager::onLeaveParkOut()
   MSD_LOG(INFO, "[%s] enter", __FUNCTION__);
   (void)parking_slot_manager_.ClearParkingSlotInfo();
   auto &last_parkin_data = PlanningContext::Instance()
-                                ->mutable_parking_behavior_planner_output()
-                                ->last_parkin_data;
+                               ->mutable_parking_behavior_planner_output()
+                               ->last_parkin_data;
   last_parkin_data.is_loaded = false;
   last_parkin_data.is_valid = false;
-//[fenix.refactor.sm] END Original ParkingTaskManager::onLeaveParkOut()
+  //[fenix.refactor.sm] END Original ParkingTaskManager::onLeaveParkOut()
 
-//[fenix.refactor.sm] Original ScenarioManager::onLeaveApoa()
+  //[fenix.refactor.sm] Original ScenarioManager::onLeaveApoa()
   openspace_state_machine_->destroyMachine();
   PlanningContext::Instance()
       ->mutable_openspace_motion_planner_output()
@@ -480,7 +477,7 @@ void ApaStateMachine::onLeaveParkOut() {
       ->apa_meta_state.is_valid = false;
   //[fenix.refactor.sm] END Original ScenarioManager::onLeaveApoa()
 
-// resetting outputs
+  // resetting outputs
   PlanningContext::Instance()
       ->mutable_parking_behavior_planner_output()
       ->reached_parkout_takeover_point = false;
@@ -489,8 +486,6 @@ void ApaStateMachine::onLeaveParkOut() {
       ->mutable_parking_behavior_planner_output()
       ->target_traj_point = TrajectoryPoint();
 }
-
-
 
 } // namespace parking
 

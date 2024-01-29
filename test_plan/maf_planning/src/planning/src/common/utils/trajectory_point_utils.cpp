@@ -409,33 +409,37 @@ double calc_dist_to_stopper(const Pose2D &curr_ego_pose,
     } else {
       if (closest_point == dist_egopose_to_traj.begin() ||
           *(closest_point + 1) < *(closest_point - 1)) {
-        point2 = Pose2D(trajectory.at(index_closest_point + 1).path_point.x,
-                        trajectory.at(index_closest_point + 1).path_point.y,
-                        trajectory.at(index_closest_point + 1).path_point.theta);
+        point2 =
+            Pose2D(trajectory.at(index_closest_point + 1).path_point.x,
+                   trajectory.at(index_closest_point + 1).path_point.y,
+                   trajectory.at(index_closest_point + 1).path_point.theta);
         auto projection_point =
             planning_math::calc_projection_point(point1, point2, curr_ego_pose);
         double dist_proj_to_end = std::hypot(projection_point.x - point2.x,
-                                            projection_point.y - point2.y);
+                                             projection_point.y - point2.y);
         for (int i = index_closest_point + 1;
              i < dist_egopose_to_traj.size() - 1; i++) {
-          dist_proj_to_end +=
-              std::hypot(trajectory.at(i).path_point.x - trajectory.at(i + 1).path_point.x,
-                         trajectory.at(i).path_point.y - trajectory.at(i + 1).path_point.y);
+          dist_proj_to_end += std::hypot(trajectory.at(i).path_point.x -
+                                             trajectory.at(i + 1).path_point.x,
+                                         trajectory.at(i).path_point.y -
+                                             trajectory.at(i + 1).path_point.y);
         }
         dist_to_stopper = dist_proj_to_end + wheel_stop_buffer;
       } else {
-        point2 = Pose2D(trajectory.at(index_closest_point - 1).path_point.x,
-                        trajectory.at(index_closest_point - 1).path_point.y,
-                        trajectory.at(index_closest_point - 1).path_point.theta);
+        point2 =
+            Pose2D(trajectory.at(index_closest_point - 1).path_point.x,
+                   trajectory.at(index_closest_point - 1).path_point.y,
+                   trajectory.at(index_closest_point - 1).path_point.theta);
         auto projection_point =
             planning_math::calc_projection_point(point1, point2, curr_ego_pose);
         double dist_proj_to_end = std::hypot(projection_point.x - point2.x,
-                                            projection_point.y - point2.y);
-        for (int i = index_closest_point;
-             i < dist_egopose_to_traj.size() - 1; i++) {
-          dist_proj_to_end +=
-              std::hypot(trajectory.at(i).path_point.x - trajectory.at(i + 1).path_point.x,
-                         trajectory.at(i).path_point.y - trajectory.at(i + 1).path_point.y);
+                                             projection_point.y - point2.y);
+        for (int i = index_closest_point; i < dist_egopose_to_traj.size() - 1;
+             i++) {
+          dist_proj_to_end += std::hypot(trajectory.at(i).path_point.x -
+                                             trajectory.at(i + 1).path_point.x,
+                                         trajectory.at(i).path_point.y -
+                                             trajectory.at(i + 1).path_point.y);
         }
         dist_to_stopper = dist_proj_to_end + wheel_stop_buffer;
       }

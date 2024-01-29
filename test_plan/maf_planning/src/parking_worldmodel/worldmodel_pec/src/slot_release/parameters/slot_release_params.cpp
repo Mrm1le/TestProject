@@ -9,38 +9,23 @@ namespace worldmodel_pec {
 
 SlotReleaseParams::SlotReleaseParams()
     : compensate_time(0), max_compensate_dist(0), enable_oblique_slot(false),
-      vertical_passage_width(4.6),
-      vertical_passage_width_hys_scope(0.29),
-      vertical_slot_width_hys_scope(0.2),
-      parallel_passage_width(3.7),
-      parallel_passage_width_hys_scope(0.3),
-      parallel_slot_width_hys_scope(0.2),
-      oblique_passage_width(4.1),
-      oblique_passage_width_hys_scope(0.3),
-      oblique_slot_width_hys_scope(0.2),
-      slot_extend_depth_ratio(0.667),
-      slot_in_extend_depth(1.2),
-      ego_side_obstacel_distance_low(1.2), 
-      ego_side_obstacel_distance_high(1.4),
-      ego_side_obs_dis_side_slot_low(1.3),
-      ego_side_obs_dis_side_slot_high(1.8),
-      vertical_slot_width(2.5),
-      min_width_parallel(5.2),
-      min_length_parallel(2.1),
-      min_length_parallel_step_bottom(1.9),
-      parkable_area_x(10),
-      parkable_area_y(3.5),
-      uss_friendly_area_y_min(0.95),
-      uss_friendly_area_y_max(5.5),
-      uss_friendly_area_y_max_parallel(3.35),
-      forward_pass_dist(-1.0),
-      backward_pass_dist(0.0),
-      groundline_save_area_extend_width(0.4),
-      valid_passage_length(2.5),
-      velocity_limit(15.0 / 3.6),
-      pitch_limit(5.0 * M_PI / 180),
-      yaw_limit(10.0 * M_PI / 180.0),
-      space_yam_max_limit(15.0 * M_PI / 180.0) {}
+      vertical_passage_width(4.6), vertical_passage_width_hys_scope(0.29),
+      vertical_slot_width_hys_scope(0.2), parallel_passage_width(3.7),
+      parallel_passage_width_hys_scope(0.3), parallel_slot_width_hys_scope(0.2),
+      oblique_passage_width(4.1), oblique_passage_width_hys_scope(0.3),
+      oblique_slot_width_hys_scope(0.2), slot_extend_depth_ratio(0.667),
+      slot_in_extend_depth(1.2), ego_side_obstacel_distance_low(1.2),
+      ego_side_obstacel_distance_high(1.4), ego_side_obs_dis_side_slot_low(1.3),
+      ego_side_obs_dis_side_slot_high(1.8), vertical_slot_width(2.5),
+      min_width_parallel(5.2), min_length_parallel(2.1),
+      min_length_parallel_step_bottom(1.9), parkable_area_x(10),
+      parkable_area_y(3.5), uss_friendly_area_y_min(0.95),
+      uss_friendly_area_y_max(5.5), uss_friendly_area_y_max_parallel(3.35),
+      forward_pass_dist(-1.0), backward_pass_dist(0.0),
+      groundline_save_area_extend_width(0.4), valid_passage_length(2.5),
+      velocity_limit(15.0 / 3.6), pitch_limit(5.0 * M_PI / 180),
+      yaw_limit(10.0 * M_PI / 180.0), space_yam_max_limit(15.0 * M_PI / 180.0) {
+}
 
 SlotReleaseParams::~SlotReleaseParams() {}
 
@@ -60,27 +45,30 @@ bool CarParams::loadFile(const std::string file_name) {
     YAML::Node spare_tire_node;
     double spare_tire_protrusion_length = 0.0;
     bool exist_spare_tire = false;
-    if(yaml_node_["spare_tire"]){
-        spare_tire_node = yaml_node_["spare_tire"];
+    if (yaml_node_["spare_tire"]) {
+      spare_tire_node = yaml_node_["spare_tire"];
     }
-    if(spare_tire_node["exist_spare_tire"] ){
-        exist_spare_tire = spare_tire_node["exist_spare_tire"].as<bool>(false);
+    if (spare_tire_node["exist_spare_tire"]) {
+      exist_spare_tire = spare_tire_node["exist_spare_tire"].as<bool>(false);
     }
-    if(spare_tire_node["spare_tire_protrusion_length"]){
-        spare_tire_protrusion_length = spare_tire_node["spare_tire_protrusion_length"].as<double>();
+    if (spare_tire_node["spare_tire_protrusion_length"]) {
+      spare_tire_protrusion_length =
+          spare_tire_node["spare_tire_protrusion_length"].as<double>();
     }
 
     vehicle_length_real = yaml_node_["param"]["vehicle_length"].as<double>();
-    if(exist_spare_tire){
-        vehicle_length_real += spare_tire_protrusion_length;
+    if (exist_spare_tire) {
+      vehicle_length_real += spare_tire_protrusion_length;
     }
     vehicle_width_real =
         yaml_node_["param"]["vehicle_width_with_rearview_mirror"].as<double>();
     vehicle_width_wo_rearview_mirror =
         yaml_node_["param"]["vehicle_width"].as<double>();
     vehicle_back_edge_to_center =
-        yaml_node_["param"]["distance_from_rear_bumper_to_rear_axle"].as<double>();
-    vehicle_front_edge_to_rear = vehicle_length_real - vehicle_back_edge_to_center;
+        yaml_node_["param"]["distance_from_rear_bumper_to_rear_axle"]
+            .as<double>();
+    vehicle_front_edge_to_rear =
+        vehicle_length_real - vehicle_back_edge_to_center;
     vehicle_height = yaml_node_["param"]["vehicle_height"].as<float>();
     steer_ratio = yaml_node_["param"]["steering_angle_ratio"].as<float>();
     wheel_base = yaml_node_["param"]["wheel_base_distance"].as<float>();

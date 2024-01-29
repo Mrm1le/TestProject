@@ -31,9 +31,9 @@ void CollisionShapeGenerator::getCollisionShape(
   }
 }
 
-void CollisionShapeGenerator::getOctagonShape(const Pose2D &ego_pose,
-                         std::vector<planning_math::Vec2d> &polygon_points,
-                         double lat, double lon) const{
+void CollisionShapeGenerator::getOctagonShape(
+    const Pose2D &ego_pose, std::vector<planning_math::Vec2d> &polygon_points,
+    double lat, double lon) const {
   double temp_half_width = half_width_ + lat;
   double temp_front_corner_width = para_.front_corner_width + 0.02;
   double temp_front_to_rear = front_to_rear_ + lon;
@@ -61,14 +61,18 @@ void CollisionShapeGenerator::getOctagonShape(const Pose2D &ego_pose,
       x + temp_front_corner_length * cc - temp_half_width * cs,
       y + temp_front_corner_length * cs + temp_half_width * cc);
 
-  polygon_points.emplace_back(x - (real_back_rear-back_light_len) * cc - temp_half_width * cs,
-                              y - (real_back_rear-back_light_len) * cs + temp_half_width * cc);
-  polygon_points.emplace_back(x - temp_back_to_rear * cc - (real_width-back_light_height) * cs,
-                              y - temp_back_to_rear * cs + (real_width-back_light_height) * cc);
-  polygon_points.emplace_back(x - temp_back_to_rear * cc + (real_width-back_light_height) * cs,
-                              y - temp_back_to_rear * cs - (real_width-back_light_height) * cc);
-  polygon_points.emplace_back(x - (real_back_rear-back_light_len) * cc + temp_half_width * cs,
-                              y - (real_back_rear-back_light_len) * cs - temp_half_width * cc);
+  polygon_points.emplace_back(
+      x - (real_back_rear - back_light_len) * cc - temp_half_width * cs,
+      y - (real_back_rear - back_light_len) * cs + temp_half_width * cc);
+  polygon_points.emplace_back(
+      x - temp_back_to_rear * cc - (real_width - back_light_height) * cs,
+      y - temp_back_to_rear * cs + (real_width - back_light_height) * cc);
+  polygon_points.emplace_back(
+      x - temp_back_to_rear * cc + (real_width - back_light_height) * cs,
+      y - temp_back_to_rear * cs - (real_width - back_light_height) * cc);
+  polygon_points.emplace_back(
+      x - (real_back_rear - back_light_len) * cc + temp_half_width * cs,
+      y - (real_back_rear - back_light_len) * cs - temp_half_width * cc);
 
   polygon_points.emplace_back(
       x + temp_front_corner_length * cc + temp_half_width * cs,

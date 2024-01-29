@@ -38,7 +38,7 @@ public:
         settings.level = get_log_level(config_reader);
         settings.endpoint = get_log_endpoint(config_reader);
         if (settings.endpoint != 0) {
-            settings.log_file = get_log_file(config_reader);
+          settings.log_file = get_log_file(config_reader);
           if (!settings.log_file.empty()) {
             settings.file_endpoint_type =
                 get_log_file_endpoint_type(config_reader);

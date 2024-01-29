@@ -11,12 +11,10 @@ namespace msquare {
 
 namespace parking {
 
-
-
 // rpa standby, do something like onEntryWait
 void ApaStateMachine::onEntryRpaStraightStandby() {
 
-//[fenix.refactor.sm] Original ParkingTaskManager::onEntryRpaStraightStandby()
+  //[fenix.refactor.sm] Original ParkingTaskManager::onEntryRpaStraightStandby()
 
   world_model_->feed_pause_status(false); // clear pause status because pause is
                                           // treated as standby for rpa straight
@@ -40,9 +38,10 @@ void ApaStateMachine::onEntryRpaStraightStandby() {
   if (current_task_ != parking_task_list_.end()) {
     current_task_++;
   }
-//[fenix.refactor.sm] END Original ParkingTaskManager::onEntryRpaStraightStandby()
+  //[fenix.refactor.sm] END Original
+  //ParkingTaskManager::onEntryRpaStraightStandby()
 
-//[fenix.refactor.sm] Original ScenarioManager::onEntryRpaStraightStandby()
+  //[fenix.refactor.sm] Original ScenarioManager::onEntryRpaStraightStandby()
   (void)ParkingConfigLoader::load_config(StatusType::RPA_STRAIGHT, 0);
 
   // init collision checker
@@ -64,13 +63,13 @@ void ApaStateMachine::onEntryRpaStraightStandby() {
       0.5 * std::abs(para_.front_to_rear - para_.back_to_rear);
   para_.straight_lat = para_.lat;
   para_.straight_lon = para_.lon;
-  para_.straight_line = 15.0;    // max straight move distance
+  para_.straight_line = 15.0; // max straight move distance
   para_.front_corner_width = 0.595;
   para_.front_corner_length = 3.645;
   csg_ = clothoid::CollisionShapeGenerator(para_);
   clo_checker_ = clothoid::CollisionChecker(csg_);
-//[fenix.refactor.sm] END Original ScenarioManager::onEntryRpaStraightStandby()
-
+  //[fenix.refactor.sm] END Original
+  //ScenarioManager::onEntryRpaStraightStandby()
 }
 
 void ApaStateMachine::onUpdateRpaStraightStandby() {
@@ -79,8 +78,9 @@ void ApaStateMachine::onUpdateRpaStraightStandby() {
 
 void ApaStateMachine::onTransitionRpaStraightStandby(
     hfsm::Machine<Context>::Control &control) {
-//[fenix.refactor.sm] Original ParkingTaskManager::onUpdateRpaStraightStandby()
-PlanningContext::Instance()->mutable_planning_status()->task_status.task =
+  //[fenix.refactor.sm] Original
+  //ParkingTaskManager::onUpdateRpaStraightStandby()
+  PlanningContext::Instance()->mutable_planning_status()->task_status.task =
       StatusType::RPA_STRAIGHT_STANDBY;
 
   PlanningRequest planning_request = world_model_->get_planning_request();
@@ -98,9 +98,11 @@ PlanningContext::Instance()->mutable_planning_status()->task_status.task =
       }
     }
   }
-//[fenix.refactor.sm] END Original ParkingTaskManager::onUpdateRpaStraightStandby()
+  //[fenix.refactor.sm] END Original
+  //ParkingTaskManager::onUpdateRpaStraightStandby()
 
-//[fenix.refactor.sm] Original ParkingTaskManager::onTransitionRpaStraightStandby()
+  //[fenix.refactor.sm] Original
+  //ParkingTaskManager::onTransitionRpaStraightStandby()
   const int kPlanningTimeLimit = 10;
   if (planning_request.cmd.value == ParkingCommand::STOP) {
     plan_times_ = 0;
@@ -143,42 +145,41 @@ PlanningContext::Instance()->mutable_planning_status()->task_status.task =
         ->mutable_planning_status()
         ->task_status.failure_reason = FailureReason::UNKNOW_FAILED;
   }
-//[fenix.refactor.sm] END Original ParkingTaskManager::onTransitionRpaStraightStandby()
+  //[fenix.refactor.sm] END Original
+  //ParkingTaskManager::onTransitionRpaStraightStandby()
 
-
-
-//[fenix.refactor.sm] Original ScenarioManager::onUpdateRpaStraightStandby
-double forward_dis, backward_dis;
+  //[fenix.refactor.sm] Original ScenarioManager::onUpdateRpaStraightStandby
+  double forward_dis, backward_dis;
   getRPARemainDis(forward_dis, backward_dis);
-  auto output = PlanningContext::Instance()->mutable_parking_behavior_planner_output();
+  auto output =
+      PlanningContext::Instance()->mutable_parking_behavior_planner_output();
   output->rpa_forward_dis = forward_dis;
   output->rpa_backward_dis = backward_dis;
-//[fenix.refactor.sm] END Original ScenarioManager::onUpdateRpaStraightStandby
+  //[fenix.refactor.sm] END Original ScenarioManager::onUpdateRpaStraightStandby
 
-//[fenix.refactor.sm] Original ScenarioManager::onTransitionRpaStraightStandby()
+  //[fenix.refactor.sm] Original
+  //ScenarioManager::onTransitionRpaStraightStandby()
 
   //    transit state according to ApaStateMachine's statemachine status
   //    no need to re-write here
 
-//[fenix.refactor.sm] END Original ScenarioManager::onTransitionRpaStraightStandby()
-
-
-
+  //[fenix.refactor.sm] END Original
+  //ScenarioManager::onTransitionRpaStraightStandby()
 }
 
 void ApaStateMachine::onLeaveRpaStraightStandby() {
 
-//[fenix.refactor.sm] Original ScenarioManager::onLeaveRpaStraightStandby()
-    auto output = PlanningContext::Instance()
-      ->mutable_parking_behavior_planner_output();
-    output->rpa_forward_dis = -1.0;
-    output->rpa_backward_dis = -1.0;
-//[fenix.refactor.sm] END Original ScenarioManager::onLeaveRpaStraightStandby()
+  //[fenix.refactor.sm] Original ScenarioManager::onLeaveRpaStraightStandby()
+  auto output =
+      PlanningContext::Instance()->mutable_parking_behavior_planner_output();
+  output->rpa_forward_dis = -1.0;
+  output->rpa_backward_dis = -1.0;
+  //[fenix.refactor.sm] END Original
+  //ScenarioManager::onLeaveRpaStraightStandby()
 }
 
-
 void ApaStateMachine::onEntryRpaStraight() {
-//[fenix.refactor.sm] Original ParkingTaskManager::onEntryRpaStraight()
+  //[fenix.refactor.sm] Original ParkingTaskManager::onEntryRpaStraight()
   PlanningContext::Instance()
       ->mutable_parking_behavior_planner_output()
       ->is_finish = false;
@@ -188,9 +189,9 @@ void ApaStateMachine::onEntryRpaStraight() {
   current_state_ = StatusType::RPA_STRAIGHT;
   status_text = "RPA_STRAIGHT";
   current_task_++;
-//[fenix.refactor.sm] END Original ParkingTaskManager::onEntryRpaStraight()
+  //[fenix.refactor.sm] END Original ParkingTaskManager::onEntryRpaStraight()
 
-//[fenix.refactor.sm] Original ScenarioManager::onEntryRpaStraight()
+  //[fenix.refactor.sm] Original ScenarioManager::onEntryRpaStraight()
 
   PlanningContext::Instance()
       ->mutable_parking_behavior_planner_output()
@@ -214,8 +215,8 @@ void ApaStateMachine::onEntryRpaStraight() {
   init_traj_point.v = 0.0;
   init_traj_point.a = 0.0;
 
-  const double rpa_straight_distance = CarParams::GetInstance()
-          ->car_config.rpa_config.rpa_straight_distance;
+  const double rpa_straight_distance =
+      CarParams::GetInstance()->car_config.rpa_config.rpa_straight_distance;
   double sign = 1.0;
   if (PlanningContext::Instance()
           ->mutable_planning_status()
@@ -241,12 +242,10 @@ void ApaStateMachine::onEntryRpaStraight() {
   PlanningContext::Instance()
       ->mutable_parking_behavior_planner_output()
       ->is_finish = false;
-//[fenix.refactor.sm] END Original ScenarioManager::onEntryRpaStraight()
+  //[fenix.refactor.sm] END Original ScenarioManager::onEntryRpaStraight()
   PlanningContext::Instance()
       ->mutable_parking_behavior_planner_output()
       ->has_ever_been_inside_slot = false;
-
-
 }
 
 void ApaStateMachine::onUpdateRpaStraight() {
@@ -256,15 +255,15 @@ void ApaStateMachine::onUpdateRpaStraight() {
 void ApaStateMachine::onTransitionRpaStraight(
     hfsm::Machine<Context>::Control &control) {
 
-//[fenix.refactor.sm] Original ParkingTaskManager::onUpdateRpaStraight()
+  //[fenix.refactor.sm] Original ParkingTaskManager::onUpdateRpaStraight()
   PlanningContext::Instance()->mutable_planning_status()->task_status.task =
       StatusType::RPA_STRAIGHT;
   PlanningContext::Instance()->mutable_planning_status()->task_status.status =
       TaskStatusType::RUNNING;
 
-//[fenix.refactor.sm] END Original ParkingTaskManager::onUpdateRpaStraight()
+  //[fenix.refactor.sm] END Original ParkingTaskManager::onUpdateRpaStraight()
 
-//[fenix.refactor.sm] Original ParkingTaskManager::onTransitionRpaStraight()
+  //[fenix.refactor.sm] Original ParkingTaskManager::onTransitionRpaStraight()
   bool is_finish =
       PlanningContext::Instance()->parking_behavior_planner_output().is_finish;
   PlanningRequest planning_request = world_model_->get_planning_request();
@@ -325,10 +324,10 @@ void ApaStateMachine::onTransitionRpaStraight(
         ->task_status.failure_reason = FailureReason::UNKNOW_FAILED;
   }
 
-  //[fenix.refactor.sm] END Original ParkingTaskManager::onTransitionRpaStraight()
+  //[fenix.refactor.sm] END Original
+  //ParkingTaskManager::onTransitionRpaStraight()
 
   //[fenix.refactor.sm] Original ScenarioManager::onUpdateRpaStraight()
-
 
   openspace_state_machine_->update();
 
@@ -340,8 +339,9 @@ void ApaStateMachine::onTransitionRpaStraight(
       openspace_state_machine_->getCurrentState() ==
       openspace_state_machine::OpenspaceStateEnum::RUNNING;
 
-  bool openspace_is_finish = openspace_state_machine_->getCurrentState() ==
-                             openspace_state_machine::OpenspaceStateEnum::FINISH;
+  bool openspace_is_finish =
+      openspace_state_machine_->getCurrentState() ==
+      openspace_state_machine::OpenspaceStateEnum::FINISH;
 
   if (openspace_is_fallback) {
     openspace_state_machine_->changeToStandby();
@@ -349,8 +349,8 @@ void ApaStateMachine::onTransitionRpaStraight(
 
   if (openspace_is_finish) {
     PlanningContext::Instance()
-                        ->mutable_parking_behavior_planner_output()
-                        ->is_finish = true;
+        ->mutable_parking_behavior_planner_output()
+        ->is_finish = true;
   }
 
   if (PlanningContext::Instance()->planning_status().planning_result.gear ==
@@ -374,20 +374,18 @@ void ApaStateMachine::onTransitionRpaStraight(
         ->mutable_parking_behavior_planner_output()
         ->is_finish = true;
   }
-//[fenix.refactor.sm] END Original ScenarioManager::onUpdateRpaStraight()
+  //[fenix.refactor.sm] END Original ScenarioManager::onUpdateRpaStraight()
 
-
-//[fenix.refactor.sm] Original ScenarioManager::onTransitionRpaStraight()
+  //[fenix.refactor.sm] Original ScenarioManager::onTransitionRpaStraight()
 
   //    transit state according to ApaStateMachine's statemachine status
   //    no need to re-write here
 
-//[fenix.refactor.sm] END Original ScenarioManager::onTransitionRpaStraight()
-
+  //[fenix.refactor.sm] END Original ScenarioManager::onTransitionRpaStraight()
 }
 
 void ApaStateMachine::onLeaveRpaStraight() {
-//[fenix.refactor.sm] Original ScenarioManager::onLeaveRpaStraight()
+  //[fenix.refactor.sm] Original ScenarioManager::onLeaveRpaStraight()
   openspace_state_machine_.reset(nullptr);
   PlanningContext::Instance()
       ->mutable_openspace_motion_planner_output()
@@ -396,25 +394,19 @@ void ApaStateMachine::onLeaveRpaStraight() {
       maf_vehicle_status::TurnSignalType::NONE;
   PlanningContext::Instance()->mutable_open_space_path()->stash(
       std::vector<TrajectoryPoint>());
-//[fenix.refactor.sm] END Original ScenarioManager::onLeaveRpaStraight()
-
+  //[fenix.refactor.sm] END Original ScenarioManager::onLeaveRpaStraight()
 }
 
-
-
-
-void ApaStateMachine::getRPARemainDis(double &forward_dis, double &backward_dis){
+void ApaStateMachine::getRPARemainDis(double &forward_dis,
+                                      double &backward_dis) {
   std::vector<planning_math::LineSegment2d> obs_lines;
   std::vector<planning_math::Vec2d> obs_pts;
   std::vector<planning_math::LineSegment2d> step_lines_;
   std::vector<planning_math::Vec2d> step_pts;
 
   EgoState ego_state = world_model_->get_ego_state();
-  Pose2D ego_pose(
-    ego_state.ego_pose.x,
-    ego_state.ego_pose.y,
-    ego_state.ego_pose.theta
-  );
+  Pose2D ego_pose(ego_state.ego_pose.x, ego_state.ego_pose.y,
+                  ego_state.ego_pose.theta);
 
   std::vector<planning_math::Vec2d> ego_pts;
   csg_.getRawShape(ego_pose, ego_pts, 0.0, 0.0);
@@ -425,30 +417,31 @@ void ApaStateMachine::getRPARemainDis(double &forward_dis, double &backward_dis)
   double cs = std::cos(ego_pose.theta);
   double ss = std::sin(ego_pose.theta);
 
-  planning_math::Vec2d ego_center(ego_pose.x + para_.rear_to_center * cs, ego_pose.y + para_.rear_to_center * ss);
-  planning_math::Vec2d ego_front(ego_pose.x + para_.front_to_rear * cs, ego_pose.y + para_.front_to_rear * ss);
+  planning_math::Vec2d ego_center(ego_pose.x + para_.rear_to_center * cs,
+                                  ego_pose.y + para_.rear_to_center * ss);
+  planning_math::Vec2d ego_front(ego_pose.x + para_.front_to_rear * cs,
+                                 ego_pose.y + para_.front_to_rear * ss);
   planning_math::Box2d wheel_base_box(
-    planning_math::LineSegment2d(ego_center, ego_front),
-    para_.width
-  );
+      planning_math::LineSegment2d(ego_center, ego_front), para_.width);
 
   double wheel_stopper_forward = para_.straight_line;
   double wheel_stopper_backward = para_.straight_line;
   /* wheel stopper */
   const ParkingMapInfo &parking_map_info = world_model_->get_parking_map_info();
-  for (auto &parking_lot : parking_map_info.parking_lots_detection_fusion_results){
-    if(!parking_lot.wheel_stop.available){
+  for (auto &parking_lot :
+       parking_map_info.parking_lots_detection_fusion_results) {
+    if (!parking_lot.wheel_stop.available) {
       continue;
     }
     planning_math::LineSegment2d stopper_line(
-      Vec2d(parking_lot.wheel_stop.point1.x, parking_lot.wheel_stop.point1.y), 
-      Vec2d(parking_lot.wheel_stop.point2.x, parking_lot.wheel_stop.point2.y)
-    );
-    if(wheel_base_box.HasOverlap(stopper_line)){
+        Vec2d(parking_lot.wheel_stop.point1.x, parking_lot.wheel_stop.point1.y),
+        Vec2d(parking_lot.wheel_stop.point2.x,
+              parking_lot.wheel_stop.point2.y));
+    if (wheel_base_box.HasOverlap(stopper_line)) {
       wheel_stopper_forward = 0.0;
       continue;
     }
-    if(ego_polygon.HasOverlap(stopper_line)){
+    if (ego_polygon.HasOverlap(stopper_line)) {
       wheel_stopper_backward = 0.0;
       continue;
     }
@@ -464,55 +457,52 @@ void ApaStateMachine::getRPARemainDis(double &forward_dis, double &backward_dis)
 
   // uss groundline
   for (auto &obs : world_model_->get_parking_ground_line_fusion()) {
-    if (obs.type == GroundLineType::GROUND_LINE_USS_TYPE_STEP || 
-      obs.type == GroundLineType::GROUND_LINE_TYPE_STEP ||
-      obs.type == GroundLineType::GROUND_LINE_USS_TYPE_SIDE_POINT_STEP 
-    ){
+    if (obs.type == GroundLineType::GROUND_LINE_USS_TYPE_STEP ||
+        obs.type == GroundLineType::GROUND_LINE_TYPE_STEP ||
+        obs.type == GroundLineType::GROUND_LINE_USS_TYPE_SIDE_POINT_STEP) {
       for (int i = 0; i < obs.pts.size(); i++) {
         step_pts.emplace_back(obs.pts[i].x, obs.pts[i].y);
       }
-    }else{
+    } else {
       for (int i = 0; i < obs.pts.size(); i++) {
         obs_pts.emplace_back(obs.pts[i].x, obs.pts[i].y);
       }
     }
-    
+
     if (obs.pts.size() % 2 == 0) {
-      if (obs.type == GroundLineType::GROUND_LINE_USS_TYPE_STEP || 
-      obs.type == GroundLineType::GROUND_LINE_TYPE_STEP ||
-      obs.type == GroundLineType::GROUND_LINE_USS_TYPE_SIDE_POINT_STEP ) {
+      if (obs.type == GroundLineType::GROUND_LINE_USS_TYPE_STEP ||
+          obs.type == GroundLineType::GROUND_LINE_TYPE_STEP ||
+          obs.type == GroundLineType::GROUND_LINE_USS_TYPE_SIDE_POINT_STEP) {
         for (int i = 0; i < obs.pts.size(); i = i + 2) {
-          step_lines_.emplace_back(Vec2d(obs.pts[i].x, obs.pts[i].y), Vec2d(obs.pts[i + 1].x, obs.pts[i + 1].y));
+          step_lines_.emplace_back(Vec2d(obs.pts[i].x, obs.pts[i].y),
+                                   Vec2d(obs.pts[i + 1].x, obs.pts[i + 1].y));
         }
       } else {
         for (int i = 0; i < obs.pts.size(); i = i + 2) {
-          obs_lines.emplace_back(Vec2d(obs.pts[i].x, obs.pts[i].y), Vec2d(obs.pts[i + 1].x, obs.pts[i + 1].y));
+          obs_lines.emplace_back(Vec2d(obs.pts[i].x, obs.pts[i].y),
+                                 Vec2d(obs.pts[i + 1].x, obs.pts[i + 1].y));
         }
       }
     }
   }
 
   for (auto &obj : world_model_->obstacle_manager().get_obstacles().Items()) {
-      auto box_edges =obj->PerceptionBoundingBox().GetAllEdges();
-      obs_lines.insert(obs_lines.end(),box_edges.begin(), box_edges.end());
+    auto box_edges = obj->PerceptionBoundingBox().GetAllEdges();
+    obs_lines.insert(obs_lines.end(), box_edges.begin(), box_edges.end());
   }
 
   clo_checker_.setData(obs_lines, obs_pts, step_lines_, step_pts);
 
   forward_dis = clo_checker_.moveForward(
-    ego_pose, CarParams::GetInstance()->lat_inflation(),
-    CarParams::GetInstance()->lon_inflation(), clothoid::ShapeType::RAW
-  );
+      ego_pose, CarParams::GetInstance()->lat_inflation(),
+      CarParams::GetInstance()->lon_inflation(), clothoid::ShapeType::RAW);
   backward_dis = clo_checker_.moveBackward(
-    ego_pose, CarParams::GetInstance()->lat_inflation(),
-    CarParams::GetInstance()->lon_inflation(), clothoid::ShapeType::RAW
-  );
+      ego_pose, CarParams::GetInstance()->lat_inflation(),
+      CarParams::GetInstance()->lon_inflation(), clothoid::ShapeType::RAW);
 
   forward_dis = std::min(forward_dis, wheel_stopper_forward);
   backward_dis = std::min(backward_dis, wheel_stopper_backward);
-  
 }
-
 
 } // namespace parking
 

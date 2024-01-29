@@ -362,7 +362,7 @@ public:
               break;
             } else if (ty_floor == y &&
                        y != ymin) { //[Key Modification 2] extra fill for
-                                    //horizontal edgs
+                                    // horizontal edgs
 
               int xx1, xx2;
               if (vf[idx0].x > vf[idx].x) {
@@ -387,7 +387,7 @@ public:
                 dy = voroni_center_y - y;
 
                 //[Fenix] ALL grids are compared because edge grids need to be
-                //calculated in all possible polygons
+                // calculated in all possible polygons
                 //   this is a simple implementation that does not care the
                 //   difference between edge grids and body grids, but works
                 //   faster
@@ -441,7 +441,7 @@ public:
           dy = voroni_center_y - y;
 
           //[Fenix] ALL grids are compared because edge grids need to be
-          //calculated in all possible polygons
+          // calculated in all possible polygons
           //   this is a simple implementation that does not care the difference
           //   between edge grids and body grids, but works faster
 
@@ -567,7 +567,7 @@ public:
     int gy = std::round((circle.center_.y() - origin_y_) * inv_res_);
     double radius = circle.radius_;
     if (gx < 0 || gx >= cols_ || gy < 0 || gy >= rows_) {
-      return 78.0;  // TODO(shaw)
+      return 78.0; // TODO(shaw)
     }
     return double(grid_data_u16_[(int)height][gy * cols_ + gx]) *
                grid_data_scale_ -
@@ -605,11 +605,12 @@ public:
   }
 
   double getMinDistance(const Pose2D &path_point,
-                        const std::shared_ptr<grid::MultiCircleFootprintModel>&
-                            mc_footprint_model) {
+                        const std::shared_ptr<grid::MultiCircleFootprintModel>
+                            &mc_footprint_model) {
     double cos_theta = std::cos(path_point.theta);
     double sin_theta = std::sin(path_point.theta);
-    mc_footprint_model->updatePose(path_point.x, path_point.y, cos_theta, sin_theta);
+    mc_footprint_model->updatePose(path_point.x, path_point.y, cos_theta,
+                                   sin_theta);
     MultiModelMinDistances min_dis_result =
         calcMultiModelMinDistance(mc_footprint_model);
 

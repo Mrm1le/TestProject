@@ -9,7 +9,7 @@ void PathPlannerDecider::update_input(const PathPlannerInput &input) {
   half_self_width_ = input.vehicle_param.width / 2.;
   half_self_length_ = input.vehicle_param.length / 2.;
   pre_dodge_info_ = input.dodge_info;
-  
+
   Index<NUM_PATH_CONTROL_POINTS> index;
   while (index.advance()) {
     const auto &map_info = input_.path_segments[index.segment_index]
@@ -68,7 +68,6 @@ void PathPlannerDecider::update_input(const PathPlannerInput &input) {
       ActiveAvoid active_avoid(input_);
       active_avoid.offset_active(decision_info_, active_target_l_,
                                  pre_dodge_info_);
-
     }
 
     update_road_border_bound();

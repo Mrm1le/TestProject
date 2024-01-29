@@ -19,7 +19,7 @@ ObliqueRulePlanner::ObliqueRulePlanner(
   front_corner_length = VehicleParam::Instance()->front_edge_to_center -
                         VehicleParam::Instance()->light_to_front_edge;
 
-                            extractKeyInfo(odo);
+  extractKeyInfo(odo);
   if (!isInnerSideVehicle(odo)) {
     std::reverse(buffer_zigzag_pairs_.begin(), buffer_zigzag_pairs_.end());
   }
@@ -211,7 +211,7 @@ bool ObliqueRulePlanner::planMidway(const Pose2D &mid_pose, bool is_reverse) {
           calcNextPose(obstacles, points_of_obstacles, init_pose, expected_pose,
                        -1, -1, veh_min_r);
       if (next_pose.theta > expected_pose.theta &&
-          expected_pose.theta > turning_pose.theta + 0.1 / veh_min_r&&
+          expected_pose.theta > turning_pose.theta + 0.1 / veh_min_r &&
           limited_expected_pose_back.theta > target_pose.theta) {
         key_points_.push_back(expected_pose);
         double middle_y =
@@ -942,7 +942,7 @@ bool ObliqueRulePlanner::calcCurvePath(const Pose2D &start_pose,
         calcNextPose(obstacles, points_of_obstacles, init_pose, expected_pose,
                      -1, -1, veh_min_r);
     if (turning_pose.theta > expected_pose.theta &&
-        expected_pose.theta > next_pose.theta + 0.1 / veh_min_r&&
+        expected_pose.theta > next_pose.theta + 0.1 / veh_min_r &&
         limited_expected_pose_back.theta > target_pose.theta) {
       key_points_.push_back(expected_pose);
       double middle_y = expected_pose.y - veh_min_r * cos(expected_pose.theta);

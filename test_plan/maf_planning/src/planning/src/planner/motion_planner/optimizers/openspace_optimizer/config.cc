@@ -257,21 +257,22 @@ bool CarParams::loadFile(const std::string file_name) {
     YAML::Node spare_tire_node;
     double spare_tire_protrusion_length = 0.0;
     bool exist_spare_tire = false;
-    if(yaml_node_["spare_tire"]){
-        spare_tire_node = yaml_node_["spare_tire"];
+    if (yaml_node_["spare_tire"]) {
+      spare_tire_node = yaml_node_["spare_tire"];
     }
-    if(spare_tire_node["exist_spare_tire"] ){
-        exist_spare_tire = spare_tire_node["exist_spare_tire"].as<bool>(false);
+    if (spare_tire_node["exist_spare_tire"]) {
+      exist_spare_tire = spare_tire_node["exist_spare_tire"].as<bool>(false);
     }
-    if(spare_tire_node["spare_tire_protrusion_length"]){
-        spare_tire_protrusion_length = spare_tire_node["spare_tire_protrusion_length"].as<double>();
+    if (spare_tire_node["spare_tire_protrusion_length"]) {
+      spare_tire_protrusion_length =
+          spare_tire_node["spare_tire_protrusion_length"].as<double>();
     }
 
     type = yaml_node_["type"].as<std::string>();
 
     vehicle_length_real = yaml_node_["param"]["vehicle_length"].as<double>();
-    if(exist_spare_tire){
-        vehicle_length_real += spare_tire_protrusion_length;
+    if (exist_spare_tire) {
+      vehicle_length_real += spare_tire_protrusion_length;
     }
     vehicle_width_real =
         yaml_node_["param"]["vehicle_width_with_rearview_mirror"].as<double>();
@@ -363,11 +364,11 @@ bool CarParams::setLatInflation(double inflation) {
 }
 
 void CarParams::setLatInflationForce(double inflation, double deta) {
-    lat_inflation_ = inflation;
-    lat_inflation_min += deta;
-    updateDerived();
-    is_inflation_param_adjusted = true;
-    return;
+  lat_inflation_ = inflation;
+  lat_inflation_min += deta;
+  updateDerived();
+  is_inflation_param_adjusted = true;
+  return;
 }
 
 bool CarParams::setLonInflation(double inflation) {
@@ -385,16 +386,16 @@ void CarParams::setLonInflationMin(double inflation) {
 }
 
 void CarParams::setLonInflationForce(double inflation, double deta) {
-    lon_inflation_ = inflation;
-    lon_inflation_min += deta;
-    updateDerived();
-    is_inflation_param_adjusted = true;
-    return;
+  lon_inflation_ = inflation;
+  lon_inflation_min += deta;
+  updateDerived();
+  is_inflation_param_adjusted = true;
+  return;
 }
 
 void CarParams::resetInflationAdjustFlag() {
-    is_inflation_param_adjusted = false;
-    return;
+  is_inflation_param_adjusted = false;
+  return;
 }
 
 void CarParams::setMaxSteer(double max_steer) {
@@ -466,7 +467,6 @@ bool CarParams::loadFile4Car(const std::string config_file_dir) {
                        std::istreambuf_iterator<char>());
   nlohmann::json input_json = nlohmann::json::parse(json_str);
   car_config = input_json;
-
 
   return true;
 }

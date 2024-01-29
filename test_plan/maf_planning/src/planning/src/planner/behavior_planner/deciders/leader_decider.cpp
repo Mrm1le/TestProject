@@ -14,7 +14,7 @@ constexpr double kExceptPathPointS = 0.15;
 constexpr double kMpcDeltaLength = 0.04;
 constexpr double kConsiderMpcLength = 1.5;
 constexpr int kConsiderMpcSize = 32; // 27 + 5. temp solution
-}
+} // namespace
 
 LeaderDecider::LeaderDecider(const std::shared_ptr<WorldModel> &world_model) {
   world_model_ = world_model;
@@ -49,7 +49,8 @@ bool LeaderDecider::execute() {
   }
 
   // double lat_offset = 0.0;
-  if (msquare::CarParams::GetInstance()->car_config.lon_config.use_sop_algorithm) {
+  if (msquare::CarParams::GetInstance()
+          ->car_config.lon_config.use_sop_algorithm) {
     (void)clip_traj_sop();
   } else {
     (void)clip_traj();
@@ -103,8 +104,8 @@ bool LeaderDecider::execute() {
       //     break;
       //   }
       // }
-      bool is_exclusive = !world_model_->is_simulation() &&
-          (dist_to_apa_target_point < 1.0) &&
+      bool is_exclusive =
+          !world_model_->is_simulation() && (dist_to_apa_target_point < 1.0) &&
           exclusive_box.HasOverlap(obstacle->PerceptionBoundingBox());
       if (parking_lot_box_available && is_exclusive) {
         const planning_math::Box2d parking_lot_box =
@@ -208,15 +209,16 @@ bool LeaderDecider::execute() {
     //   continue;
     // }
     bool is_car_and_is_not_static = false;
-    if(!obstacle->IsStatic() && obstacle->Type() == ObjectType::COUPE
-       && VehicleParam::Instance()->car_type == "C03") {
+    if (!obstacle->IsStatic() && obstacle->Type() == ObjectType::COUPE &&
+        VehicleParam::Instance()->car_type == "C03") {
       is_car_and_is_not_static = true;
     }
-    CollisionCheckStatus result = calc_bounding_box_collision_dist(obs_bbox, obstacle);
+    CollisionCheckStatus result =
+        calc_bounding_box_collision_dist(obs_bbox, obstacle);
     if (result.s < 0.5 && result.is_collision &&
-        (status_type == StatusType::APA || status_type == StatusType::APOA)
-        && !is_car_and_is_not_static
-        && obstacle->Type() != ObjectType::PEDESTRIAN) {
+        (status_type == StatusType::APA || status_type == StatusType::APOA) &&
+        !is_car_and_is_not_static &&
+        obstacle->Type() != ObjectType::PEDESTRIAN) {
       world_model_->mutable_obstacle_manager()
           .find_obstacle(obstacle->Id())
           ->SetIsNeedFilletCutting(1);
@@ -226,7 +228,7 @@ bool LeaderDecider::execute() {
       result = calc_polygon_collision_dist(obs_bbox, fillet_cutting_polygon);
     }
     MSD_LOG(ERROR, "the obstacle type is: %d, is static : %d, the result is %d",
-        int(obstacle->Type()), obstacle->IsStatic(), result.is_collision);
+            int(obstacle->Type()), obstacle->IsStatic(), result.is_collision);
     mutable_leader_decision->distance_s = result.s;
     mutable_leader_decision->min_distance = result.min_distance;
     mutable_leader_decision->type = obstacle->Type();
@@ -376,10 +378,12 @@ bool LeaderDecider::clip_traj_sop() {
       PlanningContext::Instance()
           ->mutable_longitudinal_behavior_planner_output()
           ->trajectory;
-  std::vector<double> &curvatures = PlanningContext::Instance()
+  std::vector<double> &curvatures =
+      PlanningContext::Instance()
           ->mutable_longitudinal_behavior_planner_output()
           ->curvatures;
-  std::vector<double> &relative_s = PlanningContext::Instance()
+  std::vector<double> &relative_s =
+      PlanningContext::Instance()
           ->mutable_longitudinal_behavior_planner_output()
           ->relative_s;
   std::vector<Pose2D> &mpc_trajectory =
@@ -447,7 +451,7 @@ bool LeaderDecider::clip_traj_sop() {
   std::vector<Pose2D>::iterator iter = traj_pose_array_.begin();
   std::vector<Pose2D>::iterator iter_min = traj_pose_array_.begin();
   std::vector<float> traj_vel_array_ = planning_result.traj_vel_array;
-  const std::vector<float>& traj_curvature =  planning_result.traj_curvature;
+  const std::vector<float> &traj_curvature = planning_result.traj_curvature;
 
   // std::vector<double> traj_dist_to_ego;
   // std::vector<double> mpc_dist_to_ego;
@@ -491,7 +495,8 @@ bool LeaderDecider::clip_traj_sop() {
         traj_point.y = projection_point.y;
         traj_point.theta = projection_point.theta;
         trajectory.push_back(traj_point);
-        curvatures.push_back(0.5*(traj_curvature[index_min - 1] + traj_curvature[index_min]));
+        curvatures.push_back(
+            0.5 * (traj_curvature[index_min - 1] + traj_curvature[index_min]));
         relative_s.push_back(s);
         // std::cout << projection_point.x << ", "<< projection_point.y << ", "
         // << projection_point.theta << ";" <<  std::endl;
@@ -523,7 +528,8 @@ bool LeaderDecider::clip_traj_sop() {
         traj_point.y = projection_point.y;
         traj_point.theta = projection_point.theta;
         trajectory.push_back(traj_point);
-        curvatures.push_back(0.5*(traj_curvature[index_min + 1] + traj_curvature[index_min]));
+        curvatures.push_back(
+            0.5 * (traj_curvature[index_min + 1] + traj_curvature[index_min]));
         relative_s.push_back(s);
       }
     }
@@ -538,7 +544,8 @@ bool LeaderDecider::clip_traj_sop() {
     traj_point.y = iter->y;
     traj_point.theta = iter->theta;
     trajectory.push_back(traj_point);
-    curvatures.push_back(traj_curvature[(unsigned int )(iter - traj_pose_array_.begin())]);
+    curvatures.push_back(
+        traj_curvature[(unsigned int)(iter - traj_pose_array_.begin())]);
     relative_s.push_back(s);
     iter_min = iter;
     if (std::abs(traj_vel_array_.at(index)) < 0.01 && !reach_end) {
@@ -556,11 +563,8 @@ bool LeaderDecider::clip_traj_sop() {
   // PlanningContext::Instance()
   //     ->mutable_longitudinal_behavior_planner_output()
   //     ->traj_length = traj_length;
-  double remain_s_use_control_way = 
-      planning_math::getRemainDistanceControlWay(traj_pose_array_,
-                                  traj_vel_array_,
-                                  ego_state.ego_pose);
-  
+  double remain_s_use_control_way = planning_math::getRemainDistanceControlWay(
+      traj_pose_array_, traj_vel_array_, ego_state.ego_pose);
 
   // set trajectory's s
   calculatePathS(&trajectory);
@@ -579,21 +583,26 @@ bool LeaderDecider::clip_traj_sop() {
   if (trajectory_const.size() > kExtendPathPointNumber) {
     for (auto iter = trajectory_const.begin();
          iter != trajectory_const.end() - kExtendPathPointNumber; ++iter) {
-      plan_path_output.emplace_back(Pose2D(iter->x, iter->y, iter->theta, iter->s, iter->kappa()));
+      plan_path_output.emplace_back(
+          Pose2D(iter->x, iter->y, iter->theta, iter->s, iter->kappa()));
     }
   } else if (trajectory_const.size() > 0) {
-    for (auto iter = trajectory_const.begin();
-         iter != trajectory_const.end(); ++iter) {
-      if (iter->s > kExceptPathPointS) break;
-      plan_path_output.emplace_back(Pose2D(iter->x, iter->y, iter->theta, iter->s, iter->kappa()));
+    for (auto iter = trajectory_const.begin(); iter != trajectory_const.end();
+         ++iter) {
+      if (iter->s > kExceptPathPointS)
+        break;
+      plan_path_output.emplace_back(
+          Pose2D(iter->x, iter->y, iter->theta, iter->s, iter->kappa()));
     }
   }
 
   PlanningContext::Instance()
       ->mutable_longitudinal_behavior_planner_output()
       ->traj_length = remain_s_use_control_way;
-  MSD_LOG(ERROR, "the planning remaining distance is: %f, the control remaining distance is:%f",
-       traj_length, remain_s_use_control_way);
+  MSD_LOG(ERROR,
+          "the planning remaining distance is: %f, the control remaining "
+          "distance is:%f",
+          traj_length, remain_s_use_control_way);
   // std::cout << "TBDEBUG: " << index << " "
   //           << index_min << " "
   //           << traj_length << " "
@@ -790,7 +799,7 @@ bool LeaderDecider::clip_traj_sop() {
     }
   }
 
-  return true;  
+  return true;
 }
 
 bool LeaderDecider::clip_traj() {
@@ -1001,13 +1010,16 @@ bool LeaderDecider::clip_traj() {
   if (trajectory_const.size() > kExtendPathPointNumber) {
     for (auto iter = trajectory_const.begin();
          iter != trajectory_const.end() - kExtendPathPointNumber; ++iter) {
-      plan_path_output.emplace_back(Pose2D(iter->x, iter->y, iter->theta, iter->s, iter->kappa()));
+      plan_path_output.emplace_back(
+          Pose2D(iter->x, iter->y, iter->theta, iter->s, iter->kappa()));
     }
   } else if (trajectory_const.size() > 0) {
-    for (auto iter = trajectory_const.begin();
-         iter != trajectory_const.end(); ++iter) {
-      if (iter->s > kExceptPathPointS) break;
-      plan_path_output.emplace_back(Pose2D(iter->x, iter->y, iter->theta, iter->s, iter->kappa()));
+    for (auto iter = trajectory_const.begin(); iter != trajectory_const.end();
+         ++iter) {
+      if (iter->s > kExceptPathPointS)
+        break;
+      plan_path_output.emplace_back(
+          Pose2D(iter->x, iter->y, iter->theta, iter->s, iter->kappa()));
     }
   }
 
@@ -1359,7 +1371,7 @@ bool LeaderDecider::clip_traj() {
 // }
 
 CollisionCheckStatus LeaderDecider::calc_bounding_box_collision_dist(
-    const planning_math::Box2d &obstacle_box, const Obstacle *obstacle ) {
+    const planning_math::Box2d &obstacle_box, const Obstacle *obstacle) {
   planning_math::Box2d ego_box;
   std::vector<Pose2D> trajectory = PlanningContext::Instance()
                                        ->longitudinal_behavior_planner_output()
@@ -1410,15 +1422,17 @@ CollisionCheckStatus LeaderDecider::calc_bounding_box_collision_dist(
              VehicleParam::Instance()->width) /
                 2 * 0.5
           : 0.1;
-  if (status_type == StatusType::APA && VehicleParam::Instance()->car_type == "C03" &&
-     (!obstacle->IsStatic() && obstacle->Type() == ObjectType::COUPE)) {
+  if (status_type == StatusType::APA &&
+      VehicleParam::Instance()->car_type == "C03" &&
+      (!obstacle->IsStatic() && obstacle->Type() == ObjectType::COUPE)) {
     collision_threshold = 0.9;
   }
   if (status_type == StatusType::APA &&
-     (obstacle->Type() == ObjectType::PEDESTRIAN)) {
+      (obstacle->Type() == ObjectType::PEDESTRIAN)) {
     collision_threshold = 0.1;
   }
-  //std::cout << "the before collision_thresjold:" << collision_threshold << std::endl;
+  // std::cout << "the before collision_thresjold:" << collision_threshold <<
+  // std::endl;
   collision_threshold = std::max(
       std::min(ego_box.DistanceTo(obstacle_box) - 0.01, collision_threshold),
       0.05);
@@ -1641,8 +1655,7 @@ std::vector<int> LeaderDecider::get_static_obstacle_beside_poi() {
   return static_obstacle_biside_poi_id;
 }
 
-void LeaderDecider::calculatePathS(
-    std::vector<Pose2D> *const points) {
+void LeaderDecider::calculatePathS(std::vector<Pose2D> *const points) {
   if (points->size() == 0)
     return;
   double distance = 0.0;
@@ -1691,9 +1704,8 @@ LeaderDecider::InterpolatePathPoints(const std::vector<Pose2D> &raw_points,
       i++;
       continue;
     }
-    interpolated_path_points.emplace_back(
-        GetInterpolateByLinearApproximation(raw_path_points[i - 1], 
-            raw_path_points[i], cur_s));
+    interpolated_path_points.emplace_back(GetInterpolateByLinearApproximation(
+        raw_path_points[i - 1], raw_path_points[i], cur_s));
     cur_s += interpolated_s;
   }
   interpolated_path_points.emplace_back(

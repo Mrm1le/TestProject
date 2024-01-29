@@ -17,8 +17,8 @@ ParallelOutRulePlanner::ParallelOutRulePlanner(
   initScenario(odo);
 }
 
-void ParallelOutRulePlanner::fillPara(const parking::OpenspaceDeciderOutput &odo,
-                                   clothoid::Parameter &para) {
+void ParallelOutRulePlanner::fillPara(
+    const parking::OpenspaceDeciderOutput &odo, clothoid::Parameter &para) {
   para_.width = VehicleParam::Instance()->width_wo_rearview_mirror;
   para_.length = VehicleParam::Instance()->length;
   para_.width_with_rearview = VehicleParam::Instance()->width;
@@ -34,8 +34,10 @@ void ParallelOutRulePlanner::fillPara(const parking::OpenspaceDeciderOutput &odo
   para_.steering_speed = 270;
   para_.steering_angle_ratio = CarParams::GetInstance()->steer_ratio;
   para_.init_steer_angle = std::min(300.0, para_.max_steering_angle);
-  para_.back_light_len = CarParams::GetInstance()->car_config.car_only_config.back_light_len;
-  para_.back_light_height = CarParams::GetInstance()->car_config.car_only_config.back_light_height;
+  para_.back_light_len =
+      CarParams::GetInstance()->car_config.car_only_config.back_light_len;
+  para_.back_light_height =
+      CarParams::GetInstance()->car_config.car_only_config.back_light_height;
   radiu_used_ = para_.min_radius;
   para_.front_corner_width = VehicleParam::Instance()->bumper_length / 2.0;
   para_.front_corner_length = VehicleParam::Instance()->front_edge_to_center -
@@ -62,7 +64,8 @@ void ParallelOutRulePlanner::fillPara(const parking::OpenspaceDeciderOutput &odo
   para_.invalid_lat_offset = 0.6;
 
   impl_.half_width = 0.5 * para_.width;
-  impl_.last_v = odo.apa_meta_state.is_valid ? odo.apa_meta_state.last_v: odo.target_state.v;
+  impl_.last_v = odo.apa_meta_state.is_valid ? odo.apa_meta_state.last_v
+                                             : odo.target_state.v;
   impl_.block_direc =
       std::abs(impl_.last_v) > 1e-6 ? (0 < impl_.last_v ? 1 : -1) : 0;
   impl_.safe_radius =
@@ -78,42 +81,53 @@ void ParallelOutRulePlanner::fillPara(const parking::OpenspaceDeciderOutput &odo
             para_.lat, para_.lon, para_.front_to_rear, para_.back_to_rear,
             para_.rear_to_center);
 
-
   csg_.getRawShape(Pose2D(0.0, 0.0, 0.0), impl_.zero_6_corners, 0.0, 0.0);
-  impl_.c4_add_theta = std::atan2(impl_.zero_6_corners.at(4).x(), para_.min_radius - impl_.zero_6_corners.at(4).y());
-  impl_.c4_to_center = std::hypot(impl_.zero_6_corners.at(4).x(), para_.min_radius - impl_.zero_6_corners.at(4).y());
-  LOCAL_LOG(LOCAL_INFO, "c4_add_theta:%.3f, c4_to_center:%.3f",impl_.c4_add_theta, impl_.c4_to_center);
+  impl_.c4_add_theta =
+      std::atan2(impl_.zero_6_corners.at(4).x(),
+                 para_.min_radius - impl_.zero_6_corners.at(4).y());
+  impl_.c4_to_center =
+      std::hypot(impl_.zero_6_corners.at(4).x(),
+                 para_.min_radius - impl_.zero_6_corners.at(4).y());
+  LOCAL_LOG(LOCAL_INFO, "c4_add_theta:%.3f, c4_to_center:%.3f",
+            impl_.c4_add_theta, impl_.c4_to_center);
 }
 
 void ParallelOutRulePlanner::initScenario(
     const parking::OpenspaceDeciderOutput &input) {
-  const parking::APAMetaState& apa_meta_state = input.apa_meta_state;
-  LOCAL_LOG(LOCAL_INFO, "apa_meta_state.is_valid = %d",apa_meta_state.is_valid);
+  const parking::APAMetaState &apa_meta_state = input.apa_meta_state;
+  LOCAL_LOG(LOCAL_INFO, "apa_meta_state.is_valid = %d",
+            apa_meta_state.is_valid);
 
   // get local frame
-  local_frame_pose_ = apa_meta_state.is_valid ?
-      Pose2D(apa_meta_state.meta_pose_x, apa_meta_state.meta_pose_y,apa_meta_state.meta_pose_theta) :
-      Pose2D(input.init_state.path_point.x, input.init_state.path_point.y,
-             input.init_state.path_point.theta);
+  local_frame_pose_ =
+      apa_meta_state.is_valid
+          ? Pose2D(apa_meta_state.meta_pose_x, apa_meta_state.meta_pose_y,
+                   apa_meta_state.meta_pose_theta)
+          : Pose2D(input.init_state.path_point.x, input.init_state.path_point.y,
+                   input.init_state.path_point.theta);
 
   // get local poses
   init_pose_ = planning_math::tf2d(local_frame_pose_,
-                                  Pose2D(input.target_state.path_point.x,
-                                         input.target_state.path_point.y,
-                                         input.target_state.path_point.theta));
+                                   Pose2D(input.target_state.path_point.x,
+                                          input.target_state.path_point.y,
+                                          input.target_state.path_point.theta));
   target_pose_ = planning_math::tf2d(local_frame_pose_,
-                                    Pose2D(input.init_state.path_point.x,
-                                           input.init_state.path_point.y,
-                                           input.init_state.path_point.theta));
-  LOCAL_LOG(LOCAL_INFO, "target_pose_ x:%.6f, y:%.6f, z:%.6f",target_pose_.x, target_pose_.y, target_pose_.theta);
-  LOCAL_LOG(LOCAL_INFO, "init_pose_ x:%.6f, y:%.6f, z:%.6f",init_pose_.x, init_pose_.y, init_pose_.theta);
-  LOCAL_LOG(LOCAL_INFO, "local_frame_pose_ x:%.6f, y:%.6f, z:%.6f",local_frame_pose_.x, local_frame_pose_.y, local_frame_pose_.theta);
-  
+                                     Pose2D(input.init_state.path_point.x,
+                                            input.init_state.path_point.y,
+                                            input.init_state.path_point.theta));
+  LOCAL_LOG(LOCAL_INFO, "target_pose_ x:%.6f, y:%.6f, z:%.6f", target_pose_.x,
+            target_pose_.y, target_pose_.theta);
+  LOCAL_LOG(LOCAL_INFO, "init_pose_ x:%.6f, y:%.6f, z:%.6f", init_pose_.x,
+            init_pose_.y, init_pose_.theta);
+  LOCAL_LOG(LOCAL_INFO, "local_frame_pose_ x:%.6f, y:%.6f, z:%.6f",
+            local_frame_pose_.x, local_frame_pose_.y, local_frame_pose_.theta);
 
   msquare::planning_math::Vec2d local_center = msquare::planning_math::tf2d(
       local_frame_pose_, input.map_boundary.center());
   impl_.is_on_left = (local_center.y() < 0.0 ? true : false);
-  double parallel_direc = apa_meta_state.is_valid ? apa_meta_state.parallel_direc : input.target_state.steer;
+  double parallel_direc = apa_meta_state.is_valid
+                              ? apa_meta_state.parallel_direc
+                              : input.target_state.steer;
   if (std::abs(parallel_direc - 1.0) < 1e-6) {
     park_half_ = true;
     impl_.is_on_left = false;
@@ -124,7 +138,8 @@ void ParallelOutRulePlanner::initScenario(
     park_half_ = false;
   }
 
-  LOCAL_LOG(LOCAL_INFO, "is_on_left:%d, park_half_:%d", impl_.is_on_left, park_half_);
+  LOCAL_LOG(LOCAL_INFO, "is_on_left:%d, park_half_:%d", impl_.is_on_left,
+            park_half_);
 
   auto local_slot_left_bound = planning_math::tf2d(
       local_frame_pose_, input.T_lines.road_lower_left_bound);
@@ -145,13 +160,12 @@ void ParallelOutRulePlanner::initScenario(
     impl_.left_corner = localMirrorX(local_slot_right_bound.end());
     impl_.right_corner = localMirrorX(local_slot_left_bound.end());
 
-
     for (auto line : input.obstacle_lines) {
       auto local_line = planning_math::tf2d(local_frame_pose_, line);
       obs_lines_.push_back(localMirrorX(local_line));
     }
 
-     // get points
+    // get points
     for (auto line : obs_lines_) {
       obs_pts_.push_back(line.start());
       obs_pts_.push_back(line.end());
@@ -171,8 +185,7 @@ void ParallelOutRulePlanner::initScenario(
     }
     for (auto point : input.step_points) {
       step_pts_.emplace_back(
-        localMirrorX(planning_math::tf2d(local_frame_pose_, point))
-      );
+          localMirrorX(planning_math::tf2d(local_frame_pose_, point)));
     }
   } else {
     impl_.left_corner = local_slot_left_bound.end();
@@ -206,16 +219,16 @@ void ParallelOutRulePlanner::initScenario(
   }
   // add virtual bottom line
   planning_math::LineSegment2d bottom_line = planning_math::LineSegment2d(
-    planning_math::Vec2d(impl_.left_corner.x(), -impl_.half_width-1.0), 
-    planning_math::Vec2d(impl_.right_corner.x(), -impl_.half_width-1.0)
-  );
+      planning_math::Vec2d(impl_.left_corner.x(), -impl_.half_width - 1.0),
+      planning_math::Vec2d(impl_.right_corner.x(), -impl_.half_width - 1.0));
   obs_lines_.push_back(bottom_line);
 
   refactorRightCorner(obs_pts_, step_pts_);
-  impl_.slot_height = std::max(-impl_.half_width,impl_.right_corner.y());
+  impl_.slot_height = std::max(-impl_.half_width, impl_.right_corner.y());
   impl_.is_tline_lower = impl_.slot_height < impl_.tline_height_thres;
 
-  LOCAL_LOG(LOCAL_INFO, "is left:%d, slot_height: %.3f", impl_.is_on_left, impl_.slot_height);
+  LOCAL_LOG(LOCAL_INFO, "is left:%d, slot_height: %.3f", impl_.is_on_left,
+            impl_.slot_height);
   auto local_upper_line =
       planning_math::tf2d(local_frame_pose_, input.T_lines.road_upper_bound);
   impl_.upper_height = local_upper_line.min_y();
@@ -227,7 +240,7 @@ void ParallelOutRulePlanner::initScenario(
 bool ParallelOutRulePlanner::Plan(const std::vector<SbpObstaclePtr> &obs_ptrs,
                                   parking::SearchProcessDebug *sp_debug) {
   // park_half_ = true;
-  if(!park_half_){
+  if (!park_half_) {
     LOCAL_LOG(LOCAL_INFO, "failed as not in park half");
     return false;
   }
@@ -239,7 +252,8 @@ bool ParallelOutRulePlanner::Plan(const std::vector<SbpObstaclePtr> &obs_ptrs,
   InSlotPathSegemnts path_segments;
 
   if (!planParkoutHalf(path_segments)) {
-    std::vector<std::pair<double, std::vector<double>>> backdis_radius_kvs = getBackdisRadiusKv();
+    std::vector<std::pair<double, std::vector<double>>> backdis_radius_kvs =
+        getBackdisRadiusKv();
     bool is_plan_diff_radius_success = false;
     for (auto p : backdis_radius_kvs) {
       if (planDiffRadius(p.first, p.second, path_segments)) {
@@ -252,35 +266,44 @@ bool ParallelOutRulePlanner::Plan(const std::vector<SbpObstaclePtr> &obs_ptrs,
       return false;
     }
   }
-  if(path_segments.key_pose.size() < 2){
-    LOCAL_LOG(LOCAL_INFO, "return as key pose size:%lu, which is smaller than 2", path_segments.key_pose.size());
+  if (path_segments.key_pose.size() < 2) {
+    LOCAL_LOG(LOCAL_INFO,
+              "return as key pose size:%lu, which is smaller than 2",
+              path_segments.key_pose.size());
   }
   generatePath(radiu_used_, path_segments);
   return true;
 }
-bool ParallelOutRulePlanner::isEscapableForLowerTline(const Pose2D& key_pose, Pose2D& escape_pose, bool &valid, const bool is_init){
+bool ParallelOutRulePlanner::isEscapableForLowerTline(const Pose2D &key_pose,
+                                                      Pose2D &escape_pose,
+                                                      bool &valid,
+                                                      const bool is_init) {
   // quadrant limit
   if (!inQuadrant1Out(key_pose.theta)) {
     LOCAL_LOG(LOCAL_INFO, "not in quadrant 1");
     valid = false;
     return false;
   }
-  if (!isParkoutForLowerTline(key_pose, para_.min_radius, is_init, escape_pose, valid)) {
+  if (!isParkoutForLowerTline(key_pose, para_.min_radius, is_init, escape_pose,
+                              valid)) {
     return false;
   }
   LOCAL_LOG(LOCAL_INFO, "isEscapable !");
   return true;
 }
-bool ParallelOutRulePlanner::isEscapableStraight(const Pose2D& key_pose, Pose2D& escape_pose, bool &valid,const bool is_init){
+bool ParallelOutRulePlanner::isEscapableStraight(const Pose2D &key_pose,
+                                                 Pose2D &escape_pose,
+                                                 bool &valid,
+                                                 const bool is_init) {
   // quadrant limit
   if (!inQuadrant1Out(key_pose.theta)) {
     LOCAL_LOG(LOCAL_INFO, "not in quadrant 1");
     valid = false;
     return false;
   }
-  if(key_pose.theta < 0.1){
+  if (key_pose.theta < 0.1) {
     LOCAL_LOG(LOCAL_INFO, "keypose theta is too small");
-    valid =false;
+    valid = false;
     return false;
   }
 
@@ -288,47 +311,51 @@ bool ParallelOutRulePlanner::isEscapableStraight(const Pose2D& key_pose, Pose2D&
                                             clothoid::ShapeType::OCTAGON);
   LOCAL_LOG(LOCAL_INFO, "forward dis:%.3f", forward_dis);
 
- if(forward_dis < para_.min_block_len){
-  LOCAL_LOG(LOCAL_INFO, "straight path is tiny");
-  valid = false;
-  return false;
- } 
+  if (forward_dis < para_.min_block_len) {
+    LOCAL_LOG(LOCAL_INFO, "straight path is tiny");
+    valid = false;
+    return false;
+  }
 
- std::vector<planning_math::Vec2d> polygon_points;
- csg_.getRawShape(key_pose, polygon_points, 0.0, 0.0);
- double diff_height = impl_.slot_height - polygon_points[4].y();
- LOCAL_LOG(LOCAL_INFO, "diff_height:%.3f", diff_height);
- if(diff_height <0){
-  LOCAL_LOG(LOCAL_INFO, "diff_height < 0");
-  valid = false;
-  return false;
- }
+  std::vector<planning_math::Vec2d> polygon_points;
+  csg_.getRawShape(key_pose, polygon_points, 0.0, 0.0);
+  double diff_height = impl_.slot_height - polygon_points[4].y();
+  LOCAL_LOG(LOCAL_INFO, "diff_height:%.3f", diff_height);
+  if (diff_height < 0) {
+    LOCAL_LOG(LOCAL_INFO, "diff_height < 0");
+    valid = false;
+    return false;
+  }
 
   double needed_dis = diff_height / std::sin(key_pose.theta);
   LOCAL_LOG(LOCAL_INFO, "needed_dis:%.3f", needed_dis);
 
-  if(needed_dis > forward_dis){
+  if (needed_dis > forward_dis) {
     LOCAL_LOG(LOCAL_INFO, "needed_dis > forward_dis");
     valid = false;
     return false;
   }
 
-  if(needed_dis < para_.min_block_len && forward_dis < para_.min_block_len){
+  if (needed_dis < para_.min_block_len && forward_dis < para_.min_block_len) {
     valid = false;
-    LOCAL_LOG(LOCAL_INFO, "return as needed_dis is smaller than min_block_len %.3f", para_.min_block_len);
+    LOCAL_LOG(LOCAL_INFO,
+              "return as needed_dis is smaller than min_block_len %.3f",
+              para_.min_block_len);
     return false;
   }
 
-  if(needed_dis < para_.min_block_len && forward_dis > para_.min_block_len-1e-6){
+  if (needed_dis < para_.min_block_len &&
+      forward_dis > para_.min_block_len - 1e-6) {
     needed_dis = forward_dis;
-
   }
-  if(needed_dis < para_.min_block_len && forward_dis > 2 * para_.min_block_len){
+  if (needed_dis < para_.min_block_len &&
+      forward_dis > 2 * para_.min_block_len) {
     needed_dis = 2 * para_.min_block_len;
   }
 
-  if(needed_dis > 3.0){
-    LOCAL_LOG(LOCAL_INFO, "finally needed_dis:%.3f is larger than 3 m", needed_dis);
+  if (needed_dis > 3.0) {
+    LOCAL_LOG(LOCAL_INFO, "finally needed_dis:%.3f is larger than 3 m",
+              needed_dis);
     valid = false;
     return false;
   }
@@ -341,19 +368,23 @@ bool ParallelOutRulePlanner::isEscapableStraight(const Pose2D& key_pose, Pose2D&
   return true;
 }
 
-bool ParallelOutRulePlanner::isEscapable(const Pose2D& key_pose, Pose2D& escape_pose, bool &valid,const bool is_init) {
+bool ParallelOutRulePlanner::isEscapable(const Pose2D &key_pose,
+                                         Pose2D &escape_pose, bool &valid,
+                                         const bool is_init) {
   LOCAL_LOG(LOCAL_INFO, "is_init:%d", is_init);
-  if(impl_.is_tline_lower){
+  if (impl_.is_tline_lower) {
     return isEscapableForLowerTline(key_pose, escape_pose, valid, is_init);
   }
   // quadrant limit
   if (!inQuadrant1Out(key_pose.theta)) {
-    LOCAL_LOG(LOCAL_DEBUG, "not in quadrant 1, key_pose.theta = %f", key_pose.theta);
+    LOCAL_LOG(LOCAL_DEBUG, "not in quadrant 1, key_pose.theta = %f",
+              key_pose.theta);
     valid = false;
     return false;
   }
-  
-  if (!isParkoutSuccess(key_pose, para_.min_radius, is_init, escape_pose, valid)) {
+
+  if (!isParkoutSuccess(key_pose, para_.min_radius, is_init, escape_pose,
+                        valid)) {
     return false;
   }
   LOCAL_LOG(LOCAL_INFO, "isEscapable !");
@@ -392,7 +423,8 @@ bool ParallelOutRulePlanner::planParkoutHalf(
   }
 
   if (impl_.block_direc > 1e-6 && !has_backed) {
-    if (!getRightBackwardPose(target_pose_, para_.min_radius, is_init, turning_pose)) {
+    if (!getRightBackwardPose(target_pose_, para_.min_radius, is_init,
+                              turning_pose)) {
       LOCAL_LOG(LOCAL_DEBUG, "forward block and cant move back");
       return false;
     } else {
@@ -409,7 +441,8 @@ bool ParallelOutRulePlanner::planParkoutHalf(
       !isEscapable(turning_pose, temp_pose, valid, i == 0 ? is_init : false) &&
       valid && i++ < 5) {
     Pose2D next_pose;
-    if (!getLeftForwardPose(turning_pose, para_.min_radius, is_init, next_pose)) {
+    if (!getLeftForwardPose(turning_pose, para_.min_radius, is_init,
+                            next_pose)) {
       LOCAL_LOG(LOCAL_INFO, "getLeftForwardPose rotate theta is too small");
       valid = false;
       break;
@@ -440,8 +473,9 @@ bool ParallelOutRulePlanner::planParkoutHalf(
   return true;
 }
 
-bool ParallelOutRulePlanner::planDiffRadius(const double backward_max, const std::vector<double>& radiu_list, 
-                                            InSlotPathSegemnts &path_segments) {
+bool ParallelOutRulePlanner::planDiffRadius(
+    const double backward_max, const std::vector<double> &radiu_list,
+    InSlotPathSegemnts &path_segments) {
   auto &key_pose_list = path_segments.key_pose;
   key_pose_list.clear();
   key_pose_list.push_back(target_pose_);
@@ -451,7 +485,7 @@ bool ParallelOutRulePlanner::planDiffRadius(const double backward_max, const std
   double back_real = std::max(0.0, real_back_max - 1e-3);
   double back_max = std::min(back_real, backward_max);
   if (impl_.block_direc < -1e-6) { // block_direc, 0: 前后都能走, 1: 前面不能走,
-    back_max = 0.0;            // -1: 后面不能走, 只限制第一把
+    back_max = 0.0;                // -1: 后面不能走, 只限制第一把
   }
   double sin_ego = std::sin(target_pose_.theta);
   double cos_ego = std::cos(target_pose_.theta);
@@ -471,11 +505,12 @@ bool ParallelOutRulePlanner::planDiffRadius(const double backward_max, const std
     return false;
   }
 
-  for (int i = 0;i < radiu_list.size();i++) {
+  for (int i = 0; i < radiu_list.size(); i++) {
     Pose2D next_pose;
     double min_block_theta = para_.min_block_len / radiu_list[i];
     if (impl_.is_tline_lower) {
-      if (isParkoutForLowerTline(turning_pose, radiu_list[i], is_init, next_pose, valid)) {
+      if (isParkoutForLowerTline(turning_pose, radiu_list[i], is_init,
+                                 next_pose, valid)) {
         if (std::abs(next_pose.theta - turning_pose.theta) >= min_block_theta) {
           key_pose_list.push_back(next_pose);
           radiu_used_ = radiu_list[i];
@@ -483,7 +518,8 @@ bool ParallelOutRulePlanner::planDiffRadius(const double backward_max, const std
         }
       }
     }
-    if (isParkoutSuccess(turning_pose, radiu_list[i], is_init, next_pose, valid)) {
+    if (isParkoutSuccess(turning_pose, radiu_list[i], is_init, next_pose,
+                         valid)) {
       if (std::abs(next_pose.theta - turning_pose.theta) >= min_block_theta) {
         key_pose_list.push_back(next_pose);
         radiu_used_ = radiu_list[i];
@@ -494,17 +530,23 @@ bool ParallelOutRulePlanner::planDiffRadius(const double backward_max, const std
   return false;
 }
 
-bool ParallelOutRulePlanner::isParkoutSuccess(const Pose2D &start_pose, const double radiu_rotate,
-                                              const bool is_init, Pose2D &escape_pose, bool &valid) {
+bool ParallelOutRulePlanner::isParkoutSuccess(const Pose2D &start_pose,
+                                              const double radiu_rotate,
+                                              const bool is_init,
+                                              Pose2D &escape_pose,
+                                              bool &valid) {
   Pose2D next_pose;
-  next_pose = checker_.rotateMaxPose(start_pose, 1, 1, clothoid::ShapeType::OCTAGON,
-                                     radiu_rotate, is_init, para_.lat, para_.lon);
+  next_pose =
+      checker_.rotateMaxPose(start_pose, 1, 1, clothoid::ShapeType::OCTAGON,
+                             radiu_rotate, is_init, para_.lat, para_.lon);
 
   // cal some params
-  double c4_add_theta = std::atan2(impl_.zero_6_corners.at(4).x(),
-                                   radiu_rotate - impl_.zero_6_corners.at(4).y());
-  double c4_to_center = std::hypot(impl_.zero_6_corners.at(4).x(),
-                                   radiu_rotate - impl_.zero_6_corners.at(4).y());
+  double c4_add_theta =
+      std::atan2(impl_.zero_6_corners.at(4).x(),
+                 radiu_rotate - impl_.zero_6_corners.at(4).y());
+  double c4_to_center =
+      std::hypot(impl_.zero_6_corners.at(4).x(),
+                 radiu_rotate - impl_.zero_6_corners.at(4).y());
   double min_block_theta = para_.min_block_len / radiu_rotate;
 
   //  right corner point
@@ -553,7 +595,8 @@ bool ParallelOutRulePlanner::isParkoutSuccess(const Pose2D &start_pose, const do
   }
 
   double right_corner_theta = std::atan2(rx - c1x, c1y - ry);
-  double needed_theta = right_corner_theta - c4_add_theta - start_pose.theta; // parkout needed theta
+  double needed_theta = right_corner_theta - c4_add_theta -
+                        start_pose.theta; // parkout needed theta
   // double right_to_center = std::hypot(rx - c1x, ry - c1y);
   double right_to_center = dis_to_key;
   LOCAL_LOG(LOCAL_INFO,
@@ -565,13 +608,13 @@ bool ParallelOutRulePlanner::isParkoutSuccess(const Pose2D &start_pose, const do
             right_to_center, c4_to_center);
   if (needed_theta < 0.0) {
     LOCAL_LOG(LOCAL_INFO, "return as theta is negative");
-    valid =false;
+    valid = false;
     return false;
   }
 
-  if(max_theta < needed_theta){
+  if (max_theta < needed_theta) {
     escape_pose = next_pose;
-    valid =true;
+    valid = true;
     LOCAL_LOG(LOCAL_INFO, "return as theta is not enough");
     return false;
   }
@@ -589,8 +632,7 @@ bool ParallelOutRulePlanner::isParkoutSuccess(const Pose2D &start_pose, const do
     return false;
   }
 
-  if (needed_theta < min_block_theta &&
-      max_theta < min_block_theta) {
+  if (needed_theta < min_block_theta && max_theta < min_block_theta) {
     valid = false;
     LOCAL_LOG(LOCAL_INFO,
               "return as needed_theta is smaller than min_block_theta %.3f",
@@ -598,18 +640,16 @@ bool ParallelOutRulePlanner::isParkoutSuccess(const Pose2D &start_pose, const do
     return false;
   }
 
-  if (needed_theta < min_block_theta &&
-      max_theta > 2 * min_block_theta) {
+  if (needed_theta < min_block_theta && max_theta > 2 * min_block_theta) {
     LOCAL_LOG(LOCAL_INFO, "use min_block_theta*2");
     needed_theta = 2 * min_block_theta;
   }
 
-  if (needed_theta < min_block_theta &&
-      max_theta > min_block_theta - 1e-6) {
+  if (needed_theta < min_block_theta && max_theta > min_block_theta - 1e-6) {
     LOCAL_LOG(LOCAL_INFO, "use min_block_theta");
     needed_theta = min_block_theta;
   }
-  
+
   valid = true;
   double t_theta = start_pose.theta + needed_theta;
   escape_pose.theta = t_theta;
@@ -619,19 +659,25 @@ bool ParallelOutRulePlanner::isParkoutSuccess(const Pose2D &start_pose, const do
   return true;
 }
 
-bool ParallelOutRulePlanner::isParkoutForLowerTline(const Pose2D &start_pose, const double radiu_rotate,
-                                                    const bool is_init, Pose2D &escape_pose, bool &valid) {
+bool ParallelOutRulePlanner::isParkoutForLowerTline(const Pose2D &start_pose,
+                                                    const double radiu_rotate,
+                                                    const bool is_init,
+                                                    Pose2D &escape_pose,
+                                                    bool &valid) {
   Pose2D next_pose;
-  next_pose = checker_.rotateMaxPose(start_pose, 1, 1, clothoid::ShapeType::OCTAGON,
-                                     radiu_rotate, is_init, para_.lat, para_.lon);
+  next_pose =
+      checker_.rotateMaxPose(start_pose, 1, 1, clothoid::ShapeType::OCTAGON,
+                             radiu_rotate, is_init, para_.lat, para_.lon);
 
   // cal some params
-  double c4_add_theta = std::atan2(impl_.zero_6_corners.at(4).x(),
-                                   radiu_rotate - impl_.zero_6_corners.at(4).y());
-  double c4_to_center = std::hypot(impl_.zero_6_corners.at(4).x(),
-                                   radiu_rotate - impl_.zero_6_corners.at(4).y());
+  double c4_add_theta =
+      std::atan2(impl_.zero_6_corners.at(4).x(),
+                 radiu_rotate - impl_.zero_6_corners.at(4).y());
+  double c4_to_center =
+      std::hypot(impl_.zero_6_corners.at(4).x(),
+                 radiu_rotate - impl_.zero_6_corners.at(4).y());
   double min_block_theta = para_.min_block_len / radiu_rotate;
-  
+
   //  right corner point
   double ry = impl_.slot_height;
   double rx = impl_.right_corner.x();
@@ -667,8 +713,9 @@ bool ParallelOutRulePlanner::isParkoutForLowerTline(const Pose2D &start_pose, co
 
   double target_c4_theta = std::acos(height_diff / c4_to_center);
   double needed_theta = target_c4_theta - c4_add_theta - start_pose.theta;
-  LOCAL_LOG(LOCAL_INFO, "isParkoutForLowerTline max_theta:%.6f needed_theta:%.6f ", 
-                                                max_theta, needed_theta);
+  LOCAL_LOG(LOCAL_INFO,
+            "isParkoutForLowerTline max_theta:%.6f needed_theta:%.6f ",
+            max_theta, needed_theta);
 
   if (needed_theta < 0.0) {
     LOCAL_LOG(LOCAL_INFO, "return as theta is negative");
@@ -683,8 +730,7 @@ bool ParallelOutRulePlanner::isParkoutForLowerTline(const Pose2D &start_pose, co
     return false;
   }
 
-  if (needed_theta < min_block_theta &&
-      max_theta < min_block_theta) {
+  if (needed_theta < min_block_theta && max_theta < min_block_theta) {
     valid = false;
     LOCAL_LOG(LOCAL_INFO,
               "return as needed_theta is smaller than min_block_theta %.3f",
@@ -692,13 +738,11 @@ bool ParallelOutRulePlanner::isParkoutForLowerTline(const Pose2D &start_pose, co
     return false;
   }
 
-  if (needed_theta < min_block_theta &&
-      max_theta > 2 * min_block_theta) {
+  if (needed_theta < min_block_theta && max_theta > 2 * min_block_theta) {
     LOCAL_LOG(LOCAL_INFO, "use min_block_theta * 2");
     needed_theta = 2 * min_block_theta;
   }
-  if (needed_theta < min_block_theta &&
-      max_theta > min_block_theta - 1e-6) {
+  if (needed_theta < min_block_theta && max_theta > min_block_theta - 1e-6) {
     LOCAL_LOG(LOCAL_INFO, "use min_block_theta");
     needed_theta = min_block_theta;
   }
@@ -711,7 +755,8 @@ bool ParallelOutRulePlanner::isParkoutForLowerTline(const Pose2D &start_pose, co
   return true;
 }
 
-void ParallelOutRulePlanner::generatePath(const double radiu_used, InSlotPathSegemnts &path_segments) {
+void ParallelOutRulePlanner::generatePath(const double radiu_used,
+                                          InSlotPathSegemnts &path_segments) {
   LOCAL_LOG(LOCAL_INFO, "radiu_used %.3f", radiu_used);
   auto local_rule_path =
       path_segments.interpolatePath(para_.step, para_.step / radiu_used);
@@ -721,11 +766,13 @@ void ParallelOutRulePlanner::generatePath(const double radiu_used, InSlotPathSeg
 
   if (impl_.is_on_left) {
     for (int i = 0; i < path_pose_size; ++i) {
-      global_rule_path.push_back(planning_math::tf2d_inv(local_frame_pose_, localMirrorX(local_rule_path.at(i))));
+      global_rule_path.push_back(planning_math::tf2d_inv(
+          local_frame_pose_, localMirrorX(local_rule_path.at(i))));
     }
-  }else{
+  } else {
     for (int i = 0; i < path_pose_size; ++i) {
-      global_rule_path.push_back(planning_math::tf2d_inv(local_frame_pose_, local_rule_path.at(i)));
+      global_rule_path.push_back(
+          planning_math::tf2d_inv(local_frame_pose_, local_rule_path.at(i)));
     }
   }
 
@@ -736,7 +783,6 @@ void ParallelOutRulePlanner::generatePath(const double radiu_used, InSlotPathSeg
     result_.phi.push_back(pt.theta);
   }
 }
-
 
 bool ParallelOutRulePlanner::isInSlot(const Pose2D &pose) {
   if (pose.y > impl_.slot_height) {
@@ -761,12 +807,11 @@ std::vector<Pose2D> ParallelOutRulePlanner::getSearchPoints() {
   return key_points_;
 }
 
-
 void ParallelOutRulePlanner::refactorRightCorner(
-  std::vector<planning_math::Vec2d> &obs_pts,
-  std::vector<planning_math::Vec2d> &step_pts) {
+    std::vector<planning_math::Vec2d> &obs_pts,
+    std::vector<planning_math::Vec2d> &step_pts) {
   double nx = impl_.right_corner.x() + 1.0;
-  double ny =  std::max(impl_.right_corner.y() - para_.width, -impl_.half_width);
+  double ny = std::max(impl_.right_corner.y() - para_.width, -impl_.half_width);
   LOCAL_LOG(LOCAL_INFO, "before refactor right corner x: %.3f y: %.3f", nx, ny);
 
   double min_y = 0.0;
@@ -775,29 +820,29 @@ void ParallelOutRulePlanner::refactorRightCorner(
   double max_x = std::max(nx + 1.0, para_.front_to_rear + 3.0);
 
   double px, py;
-  for(auto& p: obs_pts){
+  for (auto &p : obs_pts) {
     px = p.x();
     py = p.y();
-    if(px < min_x || px > max_x || py < min_y || py > max_y){
+    if (px < min_x || px > max_x || py < min_y || py > max_y) {
       continue;
     }
-    if(px < nx){
+    if (px < nx) {
       nx = px;
     }
-    if(py > ny){
+    if (py > ny) {
       ny = py;
     }
   }
-  for(auto& p: step_pts){
+  for (auto &p : step_pts) {
     px = p.x();
     py = p.y();
-    if(px < min_x || px > max_x || py < min_y || py > max_y){
+    if (px < min_x || px > max_x || py < min_y || py > max_y) {
       continue;
     }
-    if(px < nx){
+    if (px < nx) {
       nx = px;
     }
-    if(py > ny){
+    if (py > ny) {
       ny = py;
     }
   }
@@ -806,7 +851,6 @@ void ParallelOutRulePlanner::refactorRightCorner(
   impl_.right_corner.set_y(ny);
   LOCAL_LOG(LOCAL_INFO, "after refactor right corner x: %.3f y: %.3f", nx, ny);
 }
-
 
 bool ParallelOutRulePlanner::checkStartPose() {
   if (!checker_.checkTerminalPose(target_pose_)) {
@@ -818,16 +862,20 @@ bool ParallelOutRulePlanner::checkStartPose() {
   return true;
 }
 
-bool ParallelOutRulePlanner::getLeftForwardPose(const Pose2D &start_pose, const double radiu_rotate,
-                                                const bool is_init, Pose2D &next_pose) {
+bool ParallelOutRulePlanner::getLeftForwardPose(const Pose2D &start_pose,
+                                                const double radiu_rotate,
+                                                const bool is_init,
+                                                Pose2D &next_pose) {
   double theta_epsilon = para_.min_block_len / radiu_rotate - 1e-6;
-  next_pose = checker_.rotateMaxPose(start_pose, 1, 1, clothoid::ShapeType::OCTAGON, 
-                                     radiu_rotate, false, para_.lat, para_.lon);
+  next_pose =
+      checker_.rotateMaxPose(start_pose, 1, 1, clothoid::ShapeType::OCTAGON,
+                             radiu_rotate, false, para_.lat, para_.lon);
   if (!getRealRotatePose(start_pose, radiu_rotate, next_pose)) {
     return false;
   }
-  Pose2D end_pose = checker_.rotateMaxPose(next_pose, -1, -1, clothoid::ShapeType::OCTAGON, 
-                                           radiu_rotate, false, para_.lat, para_.lon);
+  Pose2D end_pose =
+      checker_.rotateMaxPose(next_pose, -1, -1, clothoid::ShapeType::OCTAGON,
+                             radiu_rotate, false, para_.lat, para_.lon);
   double deta_theta = std::abs(next_pose.theta - start_pose.theta);
   if (deta_theta < theta_epsilon) {
     return false;
@@ -845,8 +893,9 @@ bool ParallelOutRulePlanner::getLeftForwardPose(const Pose2D &start_pose, const 
       next_pose.x = start_pose_center_x + radiu_rotate * std::sin(alpha);
       next_pose.y = start_pose_center_y - radiu_rotate * std::cos(alpha);
       next_pose.theta = alpha;
-      end_pose = checker_.rotateMaxPose(next_pose, -1, -1, clothoid::ShapeType::OCTAGON, 
-                                        radiu_rotate, false, para_.lat, para_.lon);
+      end_pose = checker_.rotateMaxPose(
+          next_pose, -1, -1, clothoid::ShapeType::OCTAGON, radiu_rotate, false,
+          para_.lat, para_.lon);
       if (std::abs(end_pose.theta - next_pose.theta) > theta_epsilon) {
         return true;
       }
@@ -861,7 +910,8 @@ bool ParallelOutRulePlanner::getLeftForwardPose(const Pose2D &start_pose, const 
   return true;
 }
 
-bool ParallelOutRulePlanner::getRealRotatePose(const Pose2D &start_pose, const double radiu_rotate,
+bool ParallelOutRulePlanner::getRealRotatePose(const Pose2D &start_pose,
+                                               const double radiu_rotate,
                                                Pose2D &next_pose) {
   double theta_epsilon = para_.min_block_len / radiu_rotate - 1e-6;
   double rot_center_x =
@@ -913,13 +963,17 @@ bool ParallelOutRulePlanner::getRealRotatePose(const Pose2D &start_pose, const d
   return true;
 }
 
-bool ParallelOutRulePlanner::getRightBackwardPose(const Pose2D &start_pose, const double radiu_rotate, 
-                                                  const bool is_init, Pose2D &next_pose) {
+bool ParallelOutRulePlanner::getRightBackwardPose(const Pose2D &start_pose,
+                                                  const double radiu_rotate,
+                                                  const bool is_init,
+                                                  Pose2D &next_pose) {
   double theta_epsilon = para_.min_block_len / radiu_rotate - 1e-6;
-  next_pose = checker_.rotateMaxPose(start_pose, -1, -1, clothoid::ShapeType::OCTAGON, 
-                                            radiu_rotate, false, para_.lat, para_.lon);
-  Pose2D end_pose = checker_.rotateMaxPose(next_pose, 1, 1, clothoid::ShapeType::OCTAGON, 
-                                           radiu_rotate, false, para_.lat, para_.lon);
+  next_pose =
+      checker_.rotateMaxPose(start_pose, -1, -1, clothoid::ShapeType::OCTAGON,
+                             radiu_rotate, false, para_.lat, para_.lon);
+  Pose2D end_pose =
+      checker_.rotateMaxPose(next_pose, 1, 1, clothoid::ShapeType::OCTAGON,
+                             radiu_rotate, false, para_.lat, para_.lon);
   double deta_theta = std::abs(next_pose.theta - start_pose.theta);
   if (deta_theta < theta_epsilon) {
     return false;
@@ -937,8 +991,9 @@ bool ParallelOutRulePlanner::getRightBackwardPose(const Pose2D &start_pose, cons
       next_pose.x = start_pose_center_x - radiu_rotate * std::sin(alpha);
       next_pose.y = start_pose_center_y + radiu_rotate * std::cos(alpha);
       next_pose.theta = alpha;
-      end_pose = checker_.rotateMaxPose(next_pose, 1, 1, clothoid::ShapeType::OCTAGON, 
-                                        radiu_rotate, false, para_.lat, para_.lon);
+      end_pose =
+          checker_.rotateMaxPose(next_pose, 1, 1, clothoid::ShapeType::OCTAGON,
+                                 radiu_rotate, false, para_.lat, para_.lon);
       if (end_pose.theta - next_pose.theta > theta_epsilon) {
         return true;
       }
@@ -953,12 +1008,14 @@ bool ParallelOutRulePlanner::getRightBackwardPose(const Pose2D &start_pose, cons
   return true;
 }
 
-bool ParallelOutRulePlanner::getBackwardPose(const Pose2D &start_pose, const double radiu_rotate,
+bool ParallelOutRulePlanner::getBackwardPose(const Pose2D &start_pose,
+                                             const double radiu_rotate,
                                              const double lat, const double lon,
-                                             const bool is_init, Pose2D &next_pose) {
+                                             const bool is_init,
+                                             Pose2D &next_pose) {
   double theta_epsilon = para_.min_block_len / radiu_rotate - 1e-6;
-  double real_back_max = checker_.moveBackward(
-      start_pose, lat, lon, clothoid::ShapeType::OCTAGON);
+  double real_back_max =
+      checker_.moveBackward(start_pose, lat, lon, clothoid::ShapeType::OCTAGON);
   double back_real = std::max(0.0, real_back_max - 1e-3);
   double back_max = std::min(back_real, 3.0);
   if (back_max < para_.min_block_len) {
@@ -969,8 +1026,9 @@ bool ParallelOutRulePlanner::getBackwardPose(const Pose2D &start_pose, const dou
   next_pose.x = start_pose.x - back_max * cos_ego;
   next_pose.y = start_pose.y - back_max * sin_ego;
   next_pose.theta = start_pose.theta;
-  Pose2D end_pose = checker_.rotateMaxPose(next_pose, 1, 1, clothoid::ShapeType::OCTAGON, 
-                                           radiu_rotate, false, para_.lat, para_.lon);
+  Pose2D end_pose =
+      checker_.rotateMaxPose(next_pose, 1, 1, clothoid::ShapeType::OCTAGON,
+                             radiu_rotate, false, para_.lat, para_.lon);
   double rotate_theta = end_pose.theta - next_pose.theta;
   if (rotate_theta < theta_epsilon) {
     int i = 1;
@@ -982,8 +1040,9 @@ bool ParallelOutRulePlanner::getBackwardPose(const Pose2D &start_pose, const dou
       next_pose.x = start_pose.x - len * cos_ego;
       next_pose.y = start_pose.y - len * sin_ego;
       next_pose.theta = start_pose.theta;
-      end_pose = checker_.rotateMaxPose(next_pose, 1, 1, clothoid::ShapeType::OCTAGON, 
-                                        radiu_rotate, false, para_.lat, para_.lon);
+      end_pose =
+          checker_.rotateMaxPose(next_pose, 1, 1, clothoid::ShapeType::OCTAGON,
+                                 radiu_rotate, false, para_.lat, para_.lon);
       if (end_pose.theta - next_pose.theta > theta_epsilon) {
         return true;
       }
@@ -994,16 +1053,18 @@ bool ParallelOutRulePlanner::getBackwardPose(const Pose2D &start_pose, const dou
   return true;
 }
 
-std::vector<std::pair<double, std::vector<double>>> 
+std::vector<std::pair<double, std::vector<double>>>
 ParallelOutRulePlanner::getBackdisRadiusKv() {
   double back_max_1 = 3.0;
-  std::vector<double> radiu_list_1 = {2.0 * para_.min_radius, 3.0 * para_.min_radius, 
-                                      4.0 * para_.min_radius, 5.0 * para_.min_radius};
+  std::vector<double> radiu_list_1 = {
+      2.0 * para_.min_radius, 3.0 * para_.min_radius, 4.0 * para_.min_radius,
+      5.0 * para_.min_radius};
   std::pair<double, std::vector<double>> p1(back_max_1, radiu_list_1);
 
   double back_max_2 = 5.0;
-  std::vector<double> radiu_list_2 = {5.0 * para_.min_radius, 6.0 * para_.min_radius, 
-                                      8.0 * para_.min_radius, 10.0 * para_.min_radius};
+  std::vector<double> radiu_list_2 = {
+      5.0 * para_.min_radius, 6.0 * para_.min_radius, 8.0 * para_.min_radius,
+      10.0 * para_.min_radius};
   std::pair<double, std::vector<double>> p2(back_max_2, radiu_list_2);
 
   std::vector<std::pair<double, std::vector<double>>> backdis_radius_kvs;

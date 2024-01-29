@@ -1,14 +1,14 @@
 #include "slot_release_manager.h"
+#include "../parameters/slot_release_params.h"
 #include "localization_utils/loc_utils.hpp"
+#include "planning/common/logging.h"
 #include "pnc/define/parking_vision_info.h"
 #include "slot_release_algorithm_operator.h"
-#include "planning/common/logging.h"
+#include "slot_release_config.h"
 #include "utils/math/math_helper.hpp"
 #include "utils/math/polygon.hpp"
 #include <fstream>
 #include <mlog_core/mlog.h>
-#include "../parameters/slot_release_params.h"
-#include "slot_release_config.h"
 
 namespace worldmodel_pec {
 
@@ -40,7 +40,7 @@ bool SlotReleaseManager::isInited() const { return inited_; }
 
 bool SlotReleaseManager::init(const SlotReleaseParams &params) {
   // params_ = params;
-  //其实什么事情也不干，只是重置了一下各变量
+  // 其实什么事情也不干，只是重置了一下各变量
   ego_parking_slot_map_id_ = -1;
   ego_parking_slot_track_id_ = -1;
   loc_valid_ = false;
@@ -63,34 +63,33 @@ bool SlotReleaseManager::init(const SlotReleaseParams &params) {
   ego_car_info_.yaw_ = 0.0;
   ego_car_info_.gear_ = 0;
   is_apa_mode_ = true;
-  auto config_file_dir = 
-    SlotReleaseContext::Instance()->get_config_file_dir() + 
-    "/scenario_configs_json";
+  auto config_file_dir = SlotReleaseContext::Instance()->get_config_file_dir() +
+                         "/scenario_configs_json";
   char *calib_dir_env = std::getenv("CALIB_DIR");
 
   std::string vehicle_param_file;
   if (calib_dir_env == nullptr) {
-    vehicle_param_file =
-        config_file_dir + "/parking/vehicle_param.yaml";
+    vehicle_param_file = config_file_dir + "/parking/vehicle_param.yaml";
   } else {
     std::string calib_dir(calib_dir_env);
     std::string vehicle_param_path = calib_dir + "/vehicle.yaml";
     MLOG_ERROR("VehicleParam: CALIB_DIR %s yaml dir %s.\n", calib_dir.c_str(),
-            vehicle_param_path.c_str());
+               vehicle_param_path.c_str());
     if (access(vehicle_param_path.c_str(), F_OK) == -1) {
       MLOG_ERROR("VehicleParam: vehicle.yaml not exist!\n");
-      vehicle_param_file =
-          config_file_dir + "/parking/vehicle_param.yaml";
+      vehicle_param_file = config_file_dir + "/parking/vehicle_param.yaml";
     } else {
       vehicle_param_file = vehicle_param_path;
     }
   }
   if (!CarParams::GetInstance()->loadFile(vehicle_param_file)) {
-    MLOG_ERROR("std::logic_error: CarParams load from vehicle_param_file failed!\n");
+    MLOG_ERROR(
+        "std::logic_error: CarParams load from vehicle_param_file failed!\n");
   }
 
   if (!CarParams::GetInstance()->loadFileSlotRelease(config_file_dir)) {
-    MLOG_ERROR("std::logic_error: CarParams load from vehicle_param_file failed!\n");
+    MLOG_ERROR(
+        "std::logic_error: CarParams load from vehicle_param_file failed!\n");
   }
 
   params_ = CarParams::GetInstance()->slot_release_config_;
@@ -100,12 +99,17 @@ bool SlotReleaseManager::init(const SlotReleaseParams &params) {
         ERROR,
         "std::logic_error: VehicleParam load from vehicle_param_file failed!");
   }
-  MLOG_ERROR("slot release car width is %f car length is %f, and the real car width is %f.\n", 
-    CarParams::GetInstance()->vehicle_width, CarParams::GetInstance()->vehicle_length,
-    CarParams::GetInstance()->vehicle_width_real);
-  MLOG_ERROR("slot release vertical passage width is :%f vertical passage width hys is: %f.\n", 
-    params_.vertical_passage_width, params_.vertical_passage_width_hys_scope);
-  MLOG_ERROR("the car type is: %s\n", (VehicleParam::Instance()->car_type).c_str());
+  MLOG_ERROR("slot release car width is %f car length is %f, and the real car "
+             "width is %f.\n",
+             CarParams::GetInstance()->vehicle_width,
+             CarParams::GetInstance()->vehicle_length,
+             CarParams::GetInstance()->vehicle_width_real);
+  MLOG_ERROR("slot release vertical passage width is :%f vertical passage "
+             "width hys is: %f.\n",
+             params_.vertical_passage_width,
+             params_.vertical_passage_width_hys_scope);
+  MLOG_ERROR("the car type is: %s\n",
+             (VehicleParam::Instance()->car_type).c_str());
   return true;
 }
 
@@ -135,17 +139,17 @@ bool SlotReleaseManager::reset() {
 }
 
 bool SlotReleaseManager::loadWhiteListFromMap(const std::string &map_folder) {
-  //如果map_folder为空，表明是需要清除白名单
+  // 如果map_folder为空，表明是需要清除白名单
   if (map_folder.empty()) {
     white_list_.clear();
     return true;
   }
-  //如果map_folder不为空，则通过地图文件夹加载白名单
+  // 如果map_folder不为空，则通过地图文件夹加载白名单
   white_list_.clear();
   std::string file_name =
       map_folder + "/worldmodel/random_search_parkingslot_list.txt";
   std::ifstream ifs(file_name);
-  //如果文件读取失败，则报错
+  // 如果文件读取失败，则报错
   if (!ifs.is_open()) {
     MLOG_ERROR(
         "[SlotReleaseManager::loadWhiteListFromMap] open file failed: %s",
@@ -165,10 +169,10 @@ bool SlotReleaseManager::loadWhiteListFromMap(const std::string &map_folder) {
 
 bool SlotReleaseManager::feedPerceptionPSDFusion(
     const maf_perception_interface::FusionParkingSlotResult &psd_fusion) {
-  //检查AVAILABLE标志位
+  // 检查AVAILABLE标志位
   last_updated_timestamp_us_ = psd_fusion.meta.sensor_timestamp_us;
 
-  //循环遍历每个感知融合parking_slot，并构建成ParkingSlotElement
+  // 循环遍历每个感知融合parking_slot，并构建成ParkingSlotElement
   std::vector<uint64_t> track_id_list;
   for (unsigned int i = 0; i < psd_fusion.parking_slot.parking_slot_data.size();
        i++) {
@@ -181,7 +185,7 @@ bool SlotReleaseManager::feedPerceptionPSDFusion(
     }
 
     ParkingSlotElement pse{};
-    //从meta字段内的时间戳填充last_updated_timestamp_us_
+    // 从meta字段内的时间戳填充last_updated_timestamp_us_
     pse.last_updated_timestamp_us_ = psd_fusion.meta.sensor_timestamp_us;
     pse.last_updated_timestamp_sec_ =
         1.0e-6 * (double)psd_fusion.meta.sensor_timestamp_us;
@@ -207,7 +211,7 @@ bool SlotReleaseManager::feedPerceptionPSDFusion(
           psd_fusion.parking_slot.reserved_info.size());
     }
 
-    //填充corner，计算center
+    // 填充corner，计算center
     pse.center_.setZero();
     pse.corners_.clear();
     pse.corners_.reserve(4);
@@ -239,7 +243,7 @@ bool SlotReleaseManager::feedPerceptionPSDFusion(
 
   (void)removeSlotsNotObserved(track_id_list);
 
-  //计算自车所在的车位，计算失败的话则输出自车不在车位内。不需要处理失败
+  // 计算自车所在的车位，计算失败的话则输出自车不在车位内。不需要处理失败
   (void)calculateEgoParkingSlotID();
 
   return true;
@@ -288,10 +292,11 @@ void SlotReleaseManager::insertPerceptionSlot(const ParkingSlotElement &slot) {
     union_slot.global_id_ = slot.track_id_;
     union_slot.fusion_slot_ = slot;
 
-    union_slot.passage_width_trigger_.beginTH(triggerType_t::INVERTING,
-                                              params_.vertical_passage_width - 
-                                              params_.vertical_passage_width_hys_scope,
-                                              params_.parallel_passage_width, 1);
+    union_slot.passage_width_trigger_.beginTH(
+        triggerType_t::INVERTING,
+        params_.vertical_passage_width -
+            params_.vertical_passage_width_hys_scope,
+        params_.parallel_passage_width, 1);
     union_slot.ego_side_obstacel_distance_trigger_.beginTH(
         triggerType_t::INVERTING, params_.ego_side_obstacel_distance_low,
         params_.ego_side_obstacel_distance_high, 1);
@@ -301,10 +306,11 @@ void SlotReleaseManager::insertPerceptionSlot(const ParkingSlotElement &slot) {
                                                      0.7, 0.8, 1);
     union_slot.slot_right_open_width_trigger_.beginTH(triggerType_t::INVERTING,
                                                       0.7, 0.8, 1);
-    union_slot.slot_open_length_trigger_.beginTH(triggerType_t::INVERTING,
-                                                 params_.vertical_passage_width - 
-                                                 params_.vertical_passage_width_hys_scope,
-                                                 params_.parallel_passage_width, 1);
+    union_slot.slot_open_length_trigger_.beginTH(
+        triggerType_t::INVERTING,
+        params_.vertical_passage_width -
+            params_.vertical_passage_width_hys_scope,
+        params_.parallel_passage_width, 1);
 
     history_slots_.push_back(union_slot);
   }
@@ -334,7 +340,7 @@ bool SlotReleaseManager::removeSlotsNotObserved(
 
 bool SlotReleaseManager::feedLocalization(
     const maf_mla_localization::MLALocalization &loc) {
-  //保存定位信息，并记录定位是否有效的标志位
+  // 保存定位信息，并记录定位是否有效的标志位
   loc_valid_ = putils::LocUtils::isValid(loc);
   if (loc.velocity.available &
       maf_mla_localization::MLAVelocity::MLA_VEL_LOCAL) {
@@ -415,7 +421,7 @@ bool SlotReleaseManager::feedWirelessChargerReport(
 }
 
 bool SlotReleaseManager::setBlackList(const std::vector<int> &black_list) {
-  //设置blacklist
+  // 设置blacklist
   black_list_.clear();
   for (const auto &id : black_list) {
     black_list_.push_back(id);
@@ -424,21 +430,21 @@ bool SlotReleaseManager::setBlackList(const std::vector<int> &black_list) {
 }
 
 maf_worldmodel::FusionAPA SlotReleaseManager::generateOutput() {
-  //获取当前的系统时间戳
+  // 获取当前的系统时间戳
   auto ts_usec = MTIME()->timestamp().us();
 
   pec_output_ = maf_worldmodel::FusionAPA{};
   pec_output_.header.frame_id = "map";       // to make parking_rviz work
   pec_output_.header.stamp = ts_usec * 1000; // header的时间戳为纳秒
-  pec_output_.meta.timestamp_us = last_updated_timestamp_us_; //此消息的时间戳
+  pec_output_.meta.timestamp_us = last_updated_timestamp_us_; // 此消息的时间戳
   pec_output_.meta.pipeline_start_timestamp_us =
-      0; //并不清楚pipeline开始的时间（因为有几个不同的输入定位/PSD），这里不赋值
+      0; // 并不清楚pipeline开始的时间（因为有几个不同的输入定位/PSD），这里不赋值
 
-  //填充environment_data和environment_data.fusion_apa相关的available位
+  // 填充environment_data和environment_data.fusion_apa相关的available位
   pec_output_.available = 0;
 
   // 填充 EGO_PARKING_SLOT_MAP_ID &  EGO_PARKING_SLOT_TRACK_ID
-  //当且仅当有egopose的时候，这个字段才有意义
+  // 当且仅当有egopose的时候，这个字段才有意义
   if (loc_valid_) {
     pec_output_.available |= maf_worldmodel::FusionAPA::EGO_PARKING_SLOT_MAP_ID;
     pec_output_.available |=
@@ -447,11 +453,11 @@ maf_worldmodel::FusionAPA SlotReleaseManager::generateOutput() {
   pec_output_.ego_parking_slot_map_id = ego_parking_slot_map_id_;
   pec_output_.ego_parking_slot_track_id = ego_parking_slot_track_id_;
 
-  //填充fusion_apa.parking_slots
+  // 填充fusion_apa.parking_slots
   pec_output_.available |= maf_worldmodel::FusionAPA::PARKING_SLOTS;
   pec_output_.available |= maf_worldmodel::FusionAPA::RESERVED_INFO;
   for (const auto &union_slot : history_slots_) {
-    //限制只输出本车附近的车位信息
+    // 限制只输出本车附近的车位信息
     if (loc_valid_) {
       const Eigen::Vector3d &slot_center = union_slot.fusion_slot_.center_;
       double xy_dis =
@@ -503,12 +509,12 @@ maf_worldmodel::FusionAPA SlotReleaseManager::generateOutput() {
 bool SlotReleaseManager::constructParkingSlotFusionAPADataFromParkingSlotUnion(
     const worldmodel_pec::SlotReleaseManager::ParkingSlotUnion &union_slot,
     maf_worldmodel::ParkingSlotFusionAPAData &wm_apa_data) const {
-  //填充available字段
+  // 填充available字段
   wm_apa_data.available =
       maf_worldmodel::ParkingSlotFusionAPAData::PARKING_SLOT |
       maf_worldmodel::ParkingSlotFusionAPAData::APA_INFO;
 
-  //填充parking_slot内的属性
+  // 填充parking_slot内的属性
   wm_apa_data.parking_slot.available = 0;
   if (union_slot.fusion_slot_.source_from_vision_) {
     wm_apa_data.parking_slot.available |=
@@ -524,7 +530,8 @@ bool SlotReleaseManager::constructParkingSlotFusionAPADataFromParkingSlotUnion(
                "type error\n");
     return false;
   }
-  wm_apa_data.parking_slot.charge_property = union_slot.fusion_slot_.charge_property_;
+  wm_apa_data.parking_slot.charge_property =
+      union_slot.fusion_slot_.charge_property_;
   wm_apa_data.parking_slot.track_id = union_slot.global_id_;
   wm_apa_data.parking_slot.empty_votes = union_slot.fusion_slot_.empty_votes_;
   wm_apa_data.parking_slot.slot_type.value = union_slot.fusion_slot_.slot_type_;
@@ -562,7 +569,7 @@ bool SlotReleaseManager::constructParkingSlotFusionAPADataFromParkingSlotUnion(
         corner.confidence);
     wm_apa_data.parking_slot.points_fusion_type.push_back(type_pt);
 
-    //角点只填充local_points_fusion, points_fusion，不考虑其他字段
+    // 角点只填充local_points_fusion, points_fusion，不考虑其他字段
   }
 
   for (const auto &point : union_slot.fusion_slot_.wheel_stop_points_) {
@@ -573,7 +580,7 @@ bool SlotReleaseManager::constructParkingSlotFusionAPADataFromParkingSlotUnion(
     wm_apa_data.parking_slot.local_wheel_stop_points.push_back(p);
   }
 
-  //填充APA_INFO
+  // 填充APA_INFO
   wm_apa_data.apa_info.map_id = union_slot.failure_reason_; // no map id in APA
   wm_apa_data.apa_info.last_update_timestamp = last_updated_timestamp_us_;
 
@@ -582,7 +589,7 @@ bool SlotReleaseManager::constructParkingSlotFusionAPADataFromParkingSlotUnion(
   //           << "the failure reason: " << union_slot.failure_reason_ <<
   //           std::endl;
 
-  //基于empty_votes_ 填充车位状态
+  // 基于empty_votes_ 填充车位状态
   if (union_slot.fusion_slot_.empty_votes_ > 0) {
     wm_apa_data.apa_info.status = maf_worldmodel::APAInfo::VACANT;
   } else if (union_slot.fusion_slot_.empty_votes_ < 0) {
@@ -595,13 +602,13 @@ bool SlotReleaseManager::constructParkingSlotFusionAPADataFromParkingSlotUnion(
 }
 
 bool SlotReleaseManager::calculateEgoParkingSlotID() {
-  //虽然外部条件应当控制了没有定位的数据不会进入处理流程中
-  //但还是做了异常处理，仅处理有定位的情况
+  // 虽然外部条件应当控制了没有定位的数据不会进入处理流程中
+  // 但还是做了异常处理，仅处理有定位的情况
   ego_parking_slot_map_id_ = -1;
   ego_parking_slot_track_id_ = -1;
   if (loc_valid_) {
-    //使用自车定位（后轴中心）位置查找所在的车位
-    // bool found = false;
+    // 使用自车定位（后轴中心）位置查找所在的车位
+    //  bool found = false;
     for (const auto &union_slot : history_slots_) {
       const auto &slot = union_slot.fusion_slot_;
       if (slot.pointInParkingSlot(loc_rear_pose_.translation())) {
@@ -611,7 +618,7 @@ bool SlotReleaseManager::calculateEgoParkingSlotID() {
       }
     }
     return true;
-  } else //无定位的时候，直接赋值不在车位里的数值
+  } else // 无定位的时候，直接赋值不在车位里的数值
   {
     ego_parking_slot_map_id_ = -2;
     ego_parking_slot_track_id_ = -2;
@@ -632,15 +639,15 @@ bool SlotReleaseManager::calculateSuggestedParkingSlot() {
     return true;
   }
 
-  //虽然外部条件应当控制了没有定位的数据不会进入处理流程中
-  //但还是做了异常处理，仅处理有定位的情况
+  // 虽然外部条件应当控制了没有定位的数据不会进入处理流程中
+  // 但还是做了异常处理，仅处理有定位的情况
   if (!loc_valid_) {
     return false;
   }
 
   // 1. 筛选符合规则的车位：空车位 + 地图车位 + 白名单车位 + 不在黑名单里
   for (const auto &union_slot : history_slots_) {
-    //必须为空车位
+    // 必须为空车位
     if (union_slot.fusion_slot_.empty_votes_ <= 0) {
       continue;
     }
@@ -674,19 +681,19 @@ bool SlotReleaseManager::calculateSuggestedWirelessChargerParkingSlot() {
   double min_distance = 1e20;
   int min_distance_psd_id = -1;
 
-  //虽然外部条件应当控制了没有定位的数据不会进入处理流程中
-  //但还是做了异常处理，仅处理有定位的情况
+  // 虽然外部条件应当控制了没有定位的数据不会进入处理流程中
+  // 但还是做了异常处理，仅处理有定位的情况
   if (!loc_valid_) {
     return false;
   }
 
   // 1. 筛选符合规则的车位：空车位 + 地图车位 + 白名单车位 + 不在黑名单里
   for (const auto &union_slot : history_slots_) {
-    //必须为空车位
+    // 必须为空车位
     if (union_slot.fusion_slot_.empty_votes_ <= 0) {
       continue;
     }
-    //必须为无线充电车位
+    // 必须为无线充电车位
     if (union_slot.fusion_slot_.charge_property_ != 1) {
       continue;
     }
@@ -745,7 +752,7 @@ maf_worldmodel::FusionAPA SlotReleaseManager::ProcessSlotReleaseAndGetResult() {
   (void)calculateSuggestedWirelessChargerParkingSlot();
   auto ts_usec_end = MTIME()->timestamp().us();
   // std::cout << "spend time is:" << ts_usec_end - ts_usec_start << std::endl;
-  //调用parking_slot_operator_接口，返回输出结果
+  // 调用parking_slot_operator_接口，返回输出结果
   return generateOutput();
 }
 

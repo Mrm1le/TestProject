@@ -49,7 +49,9 @@ public:
   bool GetParkInPoint();
   bool UpdateParkingSlotDistance();
 
-  bool refactorCenterLines(planning_math::LineSegment2d& center_line, ParkingSlotInfo &parking_slot_info,std::vector<double> &slot_dis);
+  bool refactorCenterLines(planning_math::LineSegment2d &center_line,
+                           ParkingSlotInfo &parking_slot_info,
+                           std::vector<double> &slot_dis);
 
 private:
   std::uint8_t GetParkingSlotType(int slot_type);
@@ -63,7 +65,6 @@ private:
       const double left_obstacle_to_origin_slot_center,
       const double right_obstacle_to_origin_slot_center,
       ParkingSlotInfo *const ptr_parking_slot_info);
-
 
   std::shared_ptr<WorldModel> world_model_;
   std::shared_ptr<ApfDecider> apf_decider_;

@@ -6,49 +6,57 @@ namespace parking {
 using namespace Eigen;
 
 PieceWiseJerk::PieceWiseJerk(const size_t num_of_knots, const double delta_s,
-                             const Eigen::Vector3d& x_init) {
+                             const Eigen::Vector3d &x_init) {
   // CHECK_GE(num_of_knots, 2ul);
   num_of_knots_ = num_of_knots;
   x_init_ = x_init;
   delta_s_ = delta_s;
-  x_bounds_.resize(num_of_knots, std::make_pair(std::numeric_limits<double>::lowest(),
-                                                std::numeric_limits<double>::max()));
-  dx_bounds_.resize(num_of_knots, std::make_pair(std::numeric_limits<double>::lowest(),
-                                                 std::numeric_limits<double>::max()));
-  ddx_bounds_.resize(num_of_knots_, std::make_pair(std::numeric_limits<double>::lowest(),
-                                                   std::numeric_limits<double>::max()));
+  x_bounds_.resize(num_of_knots,
+                   std::make_pair(std::numeric_limits<double>::lowest(),
+                                  std::numeric_limits<double>::max()));
+  dx_bounds_.resize(num_of_knots,
+                    std::make_pair(std::numeric_limits<double>::lowest(),
+                                   std::numeric_limits<double>::max()));
+  ddx_bounds_.resize(num_of_knots_,
+                     std::make_pair(std::numeric_limits<double>::lowest(),
+                                    std::numeric_limits<double>::max()));
   // kappa_bounds_.first = -0.19;
   // kappa_bounds_.second = 0.19;
   weight_x_ref_vec_ = std::vector<double>(num_of_knots_, 0.0);
   weight_dx_ref_vec_ = std::vector<double>(num_of_knots_, 0.0);
 }
-void PieceWiseJerk::set_x_bounds(const std::vector<std::pair<double, double>>& x_bounds) {
+void PieceWiseJerk::set_x_bounds(
+    const std::vector<std::pair<double, double>> &x_bounds) {
   // CHECK_EQ(x_bounds.size(), num_of_knots_);
   x_bounds_ = std::move(x_bounds);
 }
-void PieceWiseJerk::set_dx_bounds(const std::vector<std::pair<double, double>>& dx_bounds) {
+void PieceWiseJerk::set_dx_bounds(
+    const std::vector<std::pair<double, double>> &dx_bounds) {
   // CHECK_EQ(dx_bounds.size(), num_of_knots_);
   dx_bounds_ = std::move(dx_bounds);
 }
-void PieceWiseJerk::set_ddx_bounds(const std::vector<std::pair<double, double>>& ddx_bounds) {
+void PieceWiseJerk::set_ddx_bounds(
+    const std::vector<std::pair<double, double>> &ddx_bounds) {
   // CHECK_EQ(ddx_bounds.size(), num_of_knots_);
 
   ddx_bounds_ = std::move(ddx_bounds);
   if (std::fabs(ddx_bounds_.back().first) > 1e6) {
-    //PERROR << "ddx_bounds error";
+    // PERROR << "ddx_bounds error";
   }
 }
-void PieceWiseJerk::set_dddx_bound(const double dddx_lower_bound, const double dddx_upper_bound) {
+void PieceWiseJerk::set_dddx_bound(const double dddx_lower_bound,
+                                   const double dddx_upper_bound) {
   dddx_bounds_.first = dddx_lower_bound;
   dddx_bounds_.second = dddx_upper_bound;
 }
-void PieceWiseJerk::set_kappa_bound(const std::vector<std::pair<double, double>>& kappa_bounds) {
+void PieceWiseJerk::set_kappa_bound(
+    const std::vector<std::pair<double, double>> &kappa_bounds) {
   // kappa_bounds_.first = kappa_lower_bound;
   // kappa_bounds_.second = kappa_upper_bound;
   kappa_bounds_ = std::move(kappa_bounds);
 }
-void PieceWiseJerk::set_x_ref(const std::vector<double>& weight_x_ref_vec,
-                              const std::vector<double>& x_ref) {
+void PieceWiseJerk::set_x_ref(const std::vector<double> &weight_x_ref_vec,
+                              const std::vector<double> &x_ref) {
   // CHECK_EQ(x_ref.size(), num_of_knots_);
   // CHECK_EQ(weight_x_ref_vec.size(), num_of_knots_);
   x_ref_ = std::move(x_ref);
@@ -56,8 +64,8 @@ void PieceWiseJerk::set_x_ref(const std::vector<double>& weight_x_ref_vec,
   has_x_ref_ = true;
 }
 
-void PieceWiseJerk::set_dx_ref(const std::vector<double>& weight_dx_ref_vec,
-                               const std::vector<double>& dx_ref) {
+void PieceWiseJerk::set_dx_ref(const std::vector<double> &weight_dx_ref_vec,
+                               const std::vector<double> &dx_ref) {
   // CHECK_EQ(dx_ref.size(), num_of_knots_);
   // CHECK_EQ(weight_dx_ref_vec.size(), num_of_knots_);
   dx_ref_ = std::move(dx_ref);
@@ -65,7 +73,7 @@ void PieceWiseJerk::set_dx_ref(const std::vector<double>& weight_dx_ref_vec,
   has_dx_ref_ = true;
 }
 
-void PieceWiseJerk::set_kappa_ref(const std::vector<double>& kappa_ref) {
+void PieceWiseJerk::set_kappa_ref(const std::vector<double> &kappa_ref) {
   // CHECK_EQ(kappa_ref.size(), num_of_knots_);
   kappa_ref_ = std::move(kappa_ref);
   has_kappa_ref_ = true;
@@ -76,17 +84,18 @@ void PieceWiseJerk::set_weight_bound_ref(const double weight_bound_ref) {
   has_bound_ref_ = true;
 }
 
-void PieceWiseJerk::set_weight_kappa(const double weight_kappa, const double weight_kappa_epsilon) {
+void PieceWiseJerk::set_weight_kappa(const double weight_kappa,
+                                     const double weight_kappa_epsilon) {
   weight_kappa_ = weight_kappa;
   weight_kappa_epsilon_ = weight_kappa_epsilon;
 }
 
-bool PieceWiseJerk::createQPDefaultSolver(const Eigen::Matrix<double, -1, -1>& H,
-                         const Eigen::Matrix<double, -1, 1>& g,
-                         const Eigen::Matrix<double, -1, -1>& A,
-                         const Eigen::Matrix<double, -1, 1>& l,
-                         const Eigen::Matrix<double, -1, 1>& u) {
-
+bool PieceWiseJerk::createQPDefaultSolver(
+    const Eigen::Matrix<double, -1, -1> &H,
+    const Eigen::Matrix<double, -1, 1> &g,
+    const Eigen::Matrix<double, -1, -1> &A,
+    const Eigen::Matrix<double, -1, 1> &l,
+    const Eigen::Matrix<double, -1, 1> &u) {
 
   // Problem settings
   OSQPSettings *settings =
@@ -141,9 +150,9 @@ bool PieceWiseJerk::createQPDefaultSolver(const Eigen::Matrix<double, -1, -1>& H
   c_int const status = osqp_solve(work);
   // c_int const status = osqp_solve(m_workspace.get());
   if (status == 0) {
-    //PERROR << "OSQP Solve Failed. Solve Status: " << status;
-    c_float* solution = work->solution->x;
-    Eigen::VectorXd optimal_variable = 
+    // PERROR << "OSQP Solve Failed. Solve Status: " << status;
+    c_float *solution = work->solution->x;
+    Eigen::VectorXd optimal_variable =
         Eigen::Map<Eigen::VectorXd>(solution, work->data->n, 1);
     x_.resize(num_of_knots_);
     dx_.resize(num_of_knots_);
@@ -162,17 +171,18 @@ bool PieceWiseJerk::createQPDefaultSolver(const Eigen::Matrix<double, -1, -1>& H
   c_free(data->P);
   c_free(data);
   c_free(settings);
-  if (x_.size() > 0 ) {
+  if (x_.size() > 0) {
     return true;
   }
   return false;
 }
 
-bool PieceWiseJerk::createQPAdaptorSolver(const Eigen::Matrix<double, -1, -1>& H,
-                    const Eigen::Matrix<double, -1, 1>& g,
-                    const Eigen::Matrix<double, -1, -1>& A,
-                    const Eigen::Matrix<double, -1, 1>& l,
-                    const Eigen::Matrix<double, -1, 1>& u) {
+bool PieceWiseJerk::createQPAdaptorSolver(
+    const Eigen::Matrix<double, -1, -1> &H,
+    const Eigen::Matrix<double, -1, 1> &g,
+    const Eigen::Matrix<double, -1, -1> &A,
+    const Eigen::Matrix<double, -1, 1> &l,
+    const Eigen::Matrix<double, -1, 1> &u) {
   OsqpWrapper osqp_wrapper(H, g, A, l, u, true);
   auto workspace = osqp_wrapper.getOSQPWorkspace(H, g, A, l, u);
   size_t max_iter_num = 500;
@@ -222,15 +232,18 @@ MatrixXd PieceWiseJerk::getMatrixH() {
   for (size_t i = 0; i < num_of_knots_; i++) {
     H(3 * i, 3 * i) = weight_x_ + weight_x_ref_vec_[i];
     H(3 * i + 1, 3 * i + 1) = weight_dx_ + weight_dx_ref_vec_[i];
-    H(3 * i + 2, 3 * i + 2) = weight_ddx_ + weight_dddx_ / (delta_s_ * delta_s_);
+    H(3 * i + 2, 3 * i + 2) =
+        weight_ddx_ + weight_dddx_ / (delta_s_ * delta_s_);
 
     if (i > 0 && i < num_of_knots_ - 1) {
       H(3 * i + 2, 3 * i + 2) += weight_dddx_ / (delta_s_ * delta_s_);
     }
 
     if (i < num_of_knots_ - 1) {
-      H(3 * i + 2, 3 * (i + 1) + 2) = -1.0 * weight_dddx_ / (delta_s_ * delta_s_);
-      H(3 * (i + 1) + 2, 3 * i + 2) = -1.0 * weight_dddx_ / (delta_s_ * delta_s_);
+      H(3 * i + 2, 3 * (i + 1) + 2) =
+          -1.0 * weight_dddx_ / (delta_s_ * delta_s_);
+      H(3 * (i + 1) + 2, 3 * i + 2) =
+          -1.0 * weight_dddx_ / (delta_s_ * delta_s_);
     }
   }
   return 2 * H;
@@ -249,8 +262,9 @@ Eigen::VectorXd PieceWiseJerk::getGradientVector() {
   return g;
 }
 
-void PieceWiseJerk::getGradientLbAndUbAndA(Eigen::VectorXd& lb, Eigen::VectorXd& ub,
-                                           Eigen::MatrixXd& A) {
+void PieceWiseJerk::getGradientLbAndUbAndA(Eigen::VectorXd &lb,
+                                           Eigen::VectorXd &ub,
+                                           Eigen::MatrixXd &A) {
   size_t num_constraints = 0;
   for (size_t i = 0; i < num_of_knots_; i++) {
     // for  l
@@ -278,7 +292,7 @@ void PieceWiseJerk::getGradientLbAndUbAndA(Eigen::VectorXd& lb, Eigen::VectorXd&
   }
   num_constraints = num_constraints + (num_of_knots_ - 1);
   for (size_t i = 0; i + 1 < num_of_knots_; i++) {
-    // one order continuous 
+    // one order continuous
     lb(num_constraints + i) = -1e-10;
     ub(num_constraints + i) = 1e-10;
     A(num_constraints + i, 3 * i + 1) = -1;
@@ -311,27 +325,28 @@ void PieceWiseJerk::getGradientLbAndUbAndA(Eigen::VectorXd& lb, Eigen::VectorXd&
 
   // lb(3 * num_of_knots_ - 3 + 1) = -0.1;
   // ub(3 * num_of_knots_ - 3 + 1) = 0.1;
-
 }
 
-void PieceWiseJerk::getInequalityConstraintOfXAndDdx(double* k, double* b, const double kappa_ref,
-                                                     const double kappa_bound, const double x_min,
+void PieceWiseJerk::getInequalityConstraintOfXAndDdx(double *k, double *b,
+                                                     const double kappa_ref,
+                                                     const double kappa_bound,
+                                                     const double x_min,
                                                      const double x_max) {
   if (std::abs(kappa_ref) < 0.001) {
     *k = 0;
     *b = kappa_bound;
-  } else if (kappa_ref * kappa_bound > 0) { //同号
-    double lpp_max =
-        (kappa_bound - kappa_ref / (1 - kappa_ref * x_min)) * std::pow((1 - kappa_ref * x_min), 2);
-    double lpp_min =
-        (kappa_bound - kappa_ref / (1 - kappa_ref * x_max)) * std::pow((1 - kappa_ref * x_max), 2);
+  } else if (kappa_ref * kappa_bound > 0) { // 同号
+    double lpp_max = (kappa_bound - kappa_ref / (1 - kappa_ref * x_min)) *
+                     std::pow((1 - kappa_ref * x_min), 2);
+    double lpp_min = (kappa_bound - kappa_ref / (1 - kappa_ref * x_max)) *
+                     std::pow((1 - kappa_ref * x_max), 2);
     *k = (lpp_max - lpp_min) / (x_min - x_max);
     *b = lpp_max - (*k) * x_min;
   } else {
-    double lpp_max =
-        (kappa_bound - kappa_ref / (1 - kappa_ref * x_max)) * std::pow((1 - kappa_ref * x_max), 2);
-    double lpp_min =
-        (kappa_bound - kappa_ref / (1 - kappa_ref * x_min)) * std::pow((1 - kappa_ref * x_min), 2);
+    double lpp_max = (kappa_bound - kappa_ref / (1 - kappa_ref * x_max)) *
+                     std::pow((1 - kappa_ref * x_max), 2);
+    double lpp_min = (kappa_bound - kappa_ref / (1 - kappa_ref * x_min)) *
+                     std::pow((1 - kappa_ref * x_min), 2);
     *k = (lpp_max - lpp_min) / (x_max - x_min);
     *b = lpp_max - (*k) * x_max;
   }

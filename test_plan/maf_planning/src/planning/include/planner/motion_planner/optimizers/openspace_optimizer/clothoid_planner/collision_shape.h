@@ -8,7 +8,7 @@
 namespace clothoid {
 using namespace msquare;
 
-enum class ShapeType { RAW = 0, WHEEL_BASE, RECT, ROTATE, OCTAGON};
+enum class ShapeType { RAW = 0, WHEEL_BASE, RECT, ROTATE, OCTAGON };
 class CollisionShapeGenerator {
 public:
   CollisionShapeGenerator() : para_(Parameter()) { init(); }
@@ -27,8 +27,8 @@ public:
                          std::vector<planning_math::Vec2d> &polygon_points,
                          double lat, double lon) const;
   void getOctagonShape(const Pose2D &ego_pose,
-                         std::vector<planning_math::Vec2d> &polygon_points,
-                         double lat, double lon) const;
+                       std::vector<planning_math::Vec2d> &polygon_points,
+                       double lat, double lon) const;
   /**
    * @brief Get the Rotate Shape object
    *  8-edges with chamfer

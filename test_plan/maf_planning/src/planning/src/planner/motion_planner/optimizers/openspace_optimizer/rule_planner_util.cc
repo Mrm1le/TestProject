@@ -56,7 +56,7 @@ void getEPCorners(const Pose2D &pose,
   double front_corner_width = VehicleParam::Instance()->bumper_length / 2.0 +
                               CarParams::GetInstance()->lat_inflation();
   double front_corner_length = VehicleParam::Instance()->front_edge_to_center -
-                        VehicleParam::Instance()->light_to_front_edge;
+                               VehicleParam::Instance()->light_to_front_edge;
 
   double back_to_rear = VehicleParam::Instance()->back_edge_to_center +
                         CarParams::GetInstance()->lat_inflation();
@@ -298,7 +298,7 @@ bool checkStraightLine(
   }
   ego_polygon.update(ego_corners);
   for (auto &line_segment : obstacles) {
-    if(start_polygon.HasOverlap(line_segment)) {
+    if (start_polygon.HasOverlap(line_segment)) {
       continue;
     }
     if (ego_polygon.HasOverlap(line_segment)) {
@@ -306,7 +306,7 @@ bool checkStraightLine(
     }
   }
   for (auto &p : points_of_obstacles) {
-    if(start_polygon.IsPointIn(p)) {
+    if (start_polygon.IsPointIn(p)) {
       continue;
     }
     if (ego_polygon.IsPointIn(p)) {

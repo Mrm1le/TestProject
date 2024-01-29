@@ -37,7 +37,7 @@ public:
         planning_control_cmd_request_receiver_(
             planning_control_cmd_request_receiver),
         wireless_charger_report_recv_(wireless_charger_report_recv),
-        planning_request_receiver_(planning_request_receiver){
+        planning_request_receiver_(planning_request_receiver) {
     callback_ = nullptr;
     parkingslot_output_ = std::make_shared<maf_worldmodel::FusionAPA>();
     module_control_cmd_request_.module_control_cmd.value =

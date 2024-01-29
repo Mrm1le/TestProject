@@ -55,4 +55,4 @@ bool VehicleParam::loadFile(std::string file) {
   return true;
 }
 
-}
+} // namespace worldmodel_pec

@@ -1064,17 +1064,15 @@ void WorldModel::update_groundline() {
                   ground_line_id,
                   planning_math::LineSegment2d(
                       planning_math::Vec2d(obs.pts[i].x, obs.pts[i].y),
-                      planning_math::Vec2d(obs.pts[i + 1].x,
-                                           obs.pts[i + 1].y)), 
+                      planning_math::Vec2d(obs.pts[i + 1].x, obs.pts[i + 1].y)),
                   obs.type);
             } else {
-              obs_ptr_->update(
-                  Obstacle(ground_line_id,
-                           planning_math::LineSegment2d(
-                               planning_math::Vec2d(obs.pts[i].x, obs.pts[i].y),
-                               planning_math::Vec2d(obs.pts[i + 1].x,
-                                                    obs.pts[i + 1].y)),
-                           obs.type));
+              obs_ptr_->update(Obstacle(
+                  ground_line_id,
+                  planning_math::LineSegment2d(
+                      planning_math::Vec2d(obs.pts[i].x, obs.pts[i].y),
+                      planning_math::Vec2d(obs.pts[i + 1].x, obs.pts[i + 1].y)),
+                  obs.type));
             }
             auto mutable_obs = obstacle_manager_->add_line(*obs_ptr_);
             ground_line_id++;

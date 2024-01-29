@@ -77,7 +77,7 @@ public:
           processed_map->header.seq = ddmap_out_seq_++;
           processed_map->header.stamp = MTIME()->timestamp().ns();
           processed_map->header.frame_id = "";
-          ddmap_result_publisher_->publish(processed_map); 
+          ddmap_result_publisher_->publish(processed_map);
         }
       }
     }

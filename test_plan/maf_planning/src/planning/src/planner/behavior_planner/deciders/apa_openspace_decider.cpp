@@ -212,8 +212,11 @@ bool ApaOpenspaceDecider::gather_map_info() {
     //   points_.emplace_back(point->PerceptionBoundingBox().center());
     // }
     // uss groundline
-    const auto& slot_info = PlanningContext::Instance()->parking_behavior_planner_output().parking_slot_info;
-    bool not_remove_any_pts = (slot_info.type.value == ParkingSlotType::PARALLEL);
+    const auto &slot_info = PlanningContext::Instance()
+                                ->parking_behavior_planner_output()
+                                .parking_slot_info;
+    bool not_remove_any_pts =
+        (slot_info.type.value == ParkingSlotType::PARALLEL);
     for (auto &obs : world_model_->get_parking_ground_line_fusion()) {
       if (obs.id != PlanningContext::Instance()
                         ->parking_behavior_planner_output()
@@ -237,8 +240,7 @@ bool ApaOpenspaceDecider::gather_map_info() {
           // remove the uss points which in parking lot
           if (!not_remove_any_pts && parking_lot_box_available &&
               (parking_lot_box.IsPointIn(point) ||
-               (slot_info.type.value ==
-                    ParkingSlotType::PERPENDICULAR &&
+               (slot_info.type.value == ParkingSlotType::PERPENDICULAR &&
                 parking_lot_box_bottom.IsPointIn(point)))) {
             if (!parking_lot_box.IsPointOnBoundarySoft(point)) {
               continue;
@@ -463,9 +465,11 @@ void ApaOpenspaceDecider::obstacle_filter() {
   using planning_math::Vec2d;
 
   Box2d ego_car_box = world_model_->get_ego_state().ego_box;
-  const auto& slot_info = PlanningContext::Instance()->parking_behavior_planner_output().parking_slot_info;
+  const auto &slot_info = PlanningContext::Instance()
+                              ->parking_behavior_planner_output()
+                              .parking_slot_info;
   bool not_remove_any_pts = (slot_info.type.value == ParkingSlotType::PARALLEL);
-  if(not_remove_any_pts){
+  if (not_remove_any_pts) {
     return;
   }
 

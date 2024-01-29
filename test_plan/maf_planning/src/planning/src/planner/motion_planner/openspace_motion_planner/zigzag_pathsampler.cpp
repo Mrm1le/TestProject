@@ -1,7 +1,7 @@
 #include "planner/motion_planner/openspace_motion_planner/zigzag_pathsampler.h"
 #include "common/config/vehicle_param.h"
-#include "common/planning_context.h"
 #include "common/math/math_utils.h"
+#include "common/planning_context.h"
 #include "planner/motion_planner/optimizers/openspace_optimizer/config.h"
 
 namespace msquare {
@@ -20,11 +20,12 @@ std::vector<DirTrajectoryPoint> &ZigzagPathSampler::sample(
     stage_idx_ = input_stage_idx;
     update_points(path, iter);
     special_slot_type_ = PlanningContext::Instance()
-                              ->parking_behavior_planner_output()
-                              .parking_slot_info.special_slot_type;
+                             ->parking_behavior_planner_output()
+                             .parking_slot_info.special_slot_type;
     if (PlanningContext::Instance()
-          ->mutable_parking_behavior_planner_output()
-          ->is_narrow_channel || special_slot_type_ >= 1) {
+            ->mutable_parking_behavior_planner_output()
+            ->is_narrow_channel ||
+        special_slot_type_ >= 1) {
       extend_points_curv();
     } else {
       extend_points();
@@ -41,11 +42,12 @@ std::vector<DirTrajectoryPoint> &ZigzagPathSampler::sample_sop(
     stage_idx_ = input_stage_idx;
     update_points(path, iter);
     special_slot_type_ = PlanningContext::Instance()
-                              ->parking_behavior_planner_output()
-                              .parking_slot_info.special_slot_type;
+                             ->parking_behavior_planner_output()
+                             .parking_slot_info.special_slot_type;
     if (PlanningContext::Instance()
-          ->mutable_parking_behavior_planner_output()
-          ->is_narrow_channel || special_slot_type_ == 1) {
+            ->mutable_parking_behavior_planner_output()
+            ->is_narrow_channel ||
+        special_slot_type_ == 1) {
       extend_points_curv();
     } else {
       extend_points(input_stage_idx == 0);
@@ -66,7 +68,7 @@ std::vector<DirTrajectoryPoint> ZigzagPathSampler::get_second_traj(
       std::vector<DirTrajectoryPoint> cur_trajectory =
           std::vector<DirTrajectoryPoint>(path.get_stage_lower(iter),
                                           path.get_stage_upper(iter));
-      if(cur_trajectory.size() <= 1) {
+      if (cur_trajectory.size() <= 1) {
         return trajectory;
       }
       const DirTrajectoryPoint &back_traj_point = cur_trajectory.back();
@@ -89,8 +91,10 @@ std::vector<DirTrajectoryPoint> ZigzagPathSampler::get_second_traj(
         }
         DirTrajectoryPoint new_traj_point(back_traj_point);
         PathPoint &new_path_point = new_traj_point.path_point;
-        new_path_point.x = back_traj_point.path_point.x + s * extend_direction_cos;
-        new_path_point.y = back_traj_point.path_point.y + s * extend_direction_sin;
+        new_path_point.x =
+            back_traj_point.path_point.x + s * extend_direction_cos;
+        new_path_point.y =
+            back_traj_point.path_point.y + s * extend_direction_sin;
         new_path_point.kappa = 0.0;
 
         new_path_point.s = back_traj_point.path_point.s + s;
@@ -99,12 +103,14 @@ std::vector<DirTrajectoryPoint> ZigzagPathSampler::get_second_traj(
         new_traj_point.a = 0;
         new_traj_point.relative_time = back_traj_point.relative_time + t;
         trajectory.emplace_back(new_traj_point);
-        // extended_stage_points_.insert(extended_stage_points_.end(), new_traj_point);
+        // extended_stage_points_.insert(extended_stage_points_.end(),
+        // new_traj_point);
       }
     }
     return trajectory;
   }
-  std::vector<DirTrajectoryPoint> final_path = path.get_segment_traj(input_stage_idx + 1);
+  std::vector<DirTrajectoryPoint> final_path =
+      path.get_segment_traj(input_stage_idx + 1);
   DirTrajectoryPoint &front_traj_point = final_path.front();
   double extend_length = 0.1;
   double assume_v = std::max(std::abs(front_traj_point.v), MIN_VALID_V_);
@@ -173,7 +179,8 @@ void ZigzagPathSampler::extend_points(bool is_first_segment) {
   DirTrajectoryPoint &back_traj_point = stage_points_.back();
   // MSD_LOG(ERROR, "The init trajectory last point is x: %f, y: %f",
   //           back_traj_point.path_point.x, back_traj_point.path_point.x);
-  // std::cout << "The init trajectory last point is x: " << back_traj_point.path_point.x
+  // std::cout << "The init trajectory last point is x: " <<
+  // back_traj_point.path_point.x
   //           << " y: " << back_traj_point.path_point.y << std::endl;
 
   // extend front points
@@ -191,8 +198,10 @@ void ZigzagPathSampler::extend_points(bool is_first_segment) {
       }
       DirTrajectoryPoint new_traj_point(front_traj_point);
       PathPoint &new_path_point = new_traj_point.path_point;
-      new_path_point.x = front_traj_point.path_point.x - s * extend_direction_cos;
-      new_path_point.y = front_traj_point.path_point.y - s * extend_direction_sin;
+      new_path_point.x =
+          front_traj_point.path_point.x - s * extend_direction_cos;
+      new_path_point.y =
+          front_traj_point.path_point.y - s * extend_direction_sin;
       new_path_point.kappa = 0.0;
 
       new_path_point.s = front_traj_point.path_point.s - s;
@@ -315,7 +324,7 @@ void ZigzagPathSampler::extend_points_curv() {
     extended_stage_points_.insert(extended_stage_points_.begin(),
                                   new_traj_point);
   }
-  
+
   // extend back points
   assume_v = std::max(std::abs(back_traj_point.v), MIN_VALID_V_);
   direction_factor = back_traj_point.direction;
@@ -349,9 +358,11 @@ void ZigzagPathSampler::extend_points_curv() {
     double radius = 1.0 / fabs(back_points_curvature);
     int clock_side = back_points_curvature > 0 ? 1 : -1;
     double O_x = back_traj_point.path_point.x -
-                 direction_factor * clock_side * radius * sin(back_traj_point.path_point.theta);
+                 direction_factor * clock_side * radius *
+                     sin(back_traj_point.path_point.theta);
     double O_y = back_traj_point.path_point.y +
-                 direction_factor * clock_side * radius * cos(back_traj_point.path_point.theta);
+                 direction_factor * clock_side * radius *
+                     cos(back_traj_point.path_point.theta);
     for (double t = 0; t < TIME_RANGE_; t += DELTA_T_) {
       double s = t * assume_v;
       if (std::fabs(t) < 1e-5) {
@@ -359,12 +370,13 @@ void ZigzagPathSampler::extend_points_curv() {
       }
       DirTrajectoryPoint new_traj_point(back_traj_point);
       new_traj_point.path_point.theta =
-          back_traj_point.path_point.theta +
-          clock_side * s / radius;
+          back_traj_point.path_point.theta + clock_side * s / radius;
       new_traj_point.path_point.x =
-          O_x + direction_factor * clock_side * radius * sin(new_traj_point.path_point.theta);
+          O_x + direction_factor * clock_side * radius *
+                    sin(new_traj_point.path_point.theta);
       new_traj_point.path_point.y =
-          O_y - direction_factor * clock_side * radius * cos(new_traj_point.path_point.theta);
+          O_y - direction_factor * clock_side * radius *
+                    cos(new_traj_point.path_point.theta);
       new_traj_point.path_point.s = back_traj_point.path_point.s + s;
 
       new_traj_point.v = 0;

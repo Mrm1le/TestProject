@@ -1,10 +1,10 @@
 #include "common/apa_workflow/openspace_state_machine.h"
+#include "common/context_logger.h"
 #include "common/utils/machine_logger.h"
-#include "planner/behavior_planner/deciders/openspace_decider.h"
 #include "planner/behavior_planner/deciders/apa_openspace_decider.h"
 #include "planner/behavior_planner/deciders/apoa_openspace_decider.h"
+#include "planner/behavior_planner/deciders/openspace_decider.h"
 #include "planner/behavior_planner/deciders/rpa_straight_openspace_decider.h"
-#include "common/context_logger.h"
 
 namespace msquare {
 namespace parking {
@@ -24,9 +24,7 @@ OpenspaceStateMachine::OpenspaceStateMachine(
   setupCallbackFunctions();
 }
 
-OpenspaceStateMachine::~OpenspaceStateMachine() {
-  destroyMachine();
-}
+OpenspaceStateMachine::~OpenspaceStateMachine() { destroyMachine(); }
 
 bool OpenspaceStateMachine::update() {
   if (!openspace_state_machine_) {
@@ -36,7 +34,7 @@ bool OpenspaceStateMachine::update() {
 
   openspace_decider_->requestSquareMapping(); // for consistent sbp_request
 
-  openspace_decider_->process();              // for consistent sbp_request
+  openspace_decider_->process(); // for consistent sbp_request
 
   return true;
 }
@@ -52,13 +50,14 @@ bool OpenspaceStateMachine::changeToStandby() {
 bool OpenspaceStateMachine::createMachineParkIn() {
 #ifdef HFSM_ENABLE_LOG_INTERFACE
   openspace_state_machine_ =
-      std::make_unique<hfsm::Machine<openspace_state_machine::Context>::PeerRoot<
-          openspace_state_machine::COMPOSITE>>(openspace_state_machine_ctx_,
-                                              HfsmContextLogger::Instance());
+      std::make_unique<hfsm::Machine<openspace_state_machine::Context>::
+                           PeerRoot<openspace_state_machine::COMPOSITE>>(
+          openspace_state_machine_ctx_, HfsmContextLogger::Instance());
 #else
   openspace_state_machine_ =
-      std::make_unique<hfsm::Machine<openspace_state_machine::Context>::PeerRoot<
-          openspace_state_machine::COMPOSITE>>(openspace_state_machine_ctx_);
+      std::make_unique<hfsm::Machine<openspace_state_machine::Context>::
+                           PeerRoot<openspace_state_machine::COMPOSITE>>(
+          openspace_state_machine_ctx_);
 #endif
 
   openspace_decider_ = std::make_unique<ApaOpenspaceDecider>(world_model_);
@@ -68,13 +67,14 @@ bool OpenspaceStateMachine::createMachineParkIn() {
 bool OpenspaceStateMachine::createMachineParkOut() {
 #ifdef HFSM_ENABLE_LOG_INTERFACE
   openspace_state_machine_ =
-      std::make_unique<hfsm::Machine<openspace_state_machine::Context>::PeerRoot<
-          openspace_state_machine::COMPOSITE>>(openspace_state_machine_ctx_,
-                                              HfsmContextLogger::Instance());
+      std::make_unique<hfsm::Machine<openspace_state_machine::Context>::
+                           PeerRoot<openspace_state_machine::COMPOSITE>>(
+          openspace_state_machine_ctx_, HfsmContextLogger::Instance());
 #else
   openspace_state_machine_ =
-      std::make_unique<hfsm::Machine<openspace_state_machine::Context>::PeerRoot<
-          openspace_state_machine::COMPOSITE>>(openspace_state_machine_ctx_);
+      std::make_unique<hfsm::Machine<openspace_state_machine::Context>::
+                           PeerRoot<openspace_state_machine::COMPOSITE>>(
+          openspace_state_machine_ctx_);
 #endif
 
   openspace_decider_ = std::make_unique<ApoaOpenspaceDecider>(world_model_);
@@ -84,13 +84,14 @@ bool OpenspaceStateMachine::createMachineParkOut() {
 bool OpenspaceStateMachine::createMachineRpaStraight() {
 #ifdef HFSM_ENABLE_LOG_INTERFACE
   openspace_state_machine_ =
-      std::make_unique<hfsm::Machine<openspace_state_machine::Context>::PeerRoot<
-          openspace_state_machine::COMPOSITE>>(openspace_state_machine_ctx_,
-                                              HfsmContextLogger::Instance());
+      std::make_unique<hfsm::Machine<openspace_state_machine::Context>::
+                           PeerRoot<openspace_state_machine::COMPOSITE>>(
+          openspace_state_machine_ctx_, HfsmContextLogger::Instance());
 #else
   openspace_state_machine_ =
-      std::make_unique<hfsm::Machine<openspace_state_machine::Context>::PeerRoot<
-          openspace_state_machine::COMPOSITE>>(openspace_state_machine_ctx_);
+      std::make_unique<hfsm::Machine<openspace_state_machine::Context>::
+                           PeerRoot<openspace_state_machine::COMPOSITE>>(
+          openspace_state_machine_ctx_);
 #endif
 
   openspace_decider_ =
@@ -202,7 +203,6 @@ void OpenspaceStateMachine::setupCallbackFunctions() {
           std::bind(&OpenspaceStateMachine::onLeaveOpenspaceFinish, this));
 }
 
-
 void OpenspaceStateMachine::onEntryOpenspaceStandby() {
   MSD_LOG(INFO, "[%s] enter", __FUNCTION__);
   PlanningContext::Instance()
@@ -211,9 +211,13 @@ void OpenspaceStateMachine::onEntryOpenspaceStandby() {
   PlanningContext::Instance()
       ->mutable_parking_behavior_planner_output()
       ->has_moved = false;
-  
-  PlanningContext::Instance()->mutable_longitudinal_behavior_planner_output()->update_wheel_stop = false;
-  PlanningContext::Instance()->mutable_longitudinal_behavior_planner_output()->is_dynamic_planning = false;
+
+  PlanningContext::Instance()
+      ->mutable_longitudinal_behavior_planner_output()
+      ->update_wheel_stop = false;
+  PlanningContext::Instance()
+      ->mutable_longitudinal_behavior_planner_output()
+      ->is_dynamic_planning = false;
 
   (void)CarParams::GetInstance()->setLatInflation(
       CarParams::GetInstance()->lat_inflation_min);
@@ -247,7 +251,8 @@ void OpenspaceStateMachine::onUpdateOpenspaceStandby() {
   auto &parking_slot_info = PlanningContext::Instance()
                                 ->parking_behavior_planner_output()
                                 .parking_slot_info;
-  if (parking_slot_info.type.value == ParkingSlotType::PERPENDICULAR) { // perpendicular
+  if (parking_slot_info.type.value ==
+      ParkingSlotType::PERPENDICULAR) { // perpendicular
     PlanningContext::Instance()
         ->mutable_parking_behavior_planner_output()
         ->is_narrow_channel = openspace_decider_->isNarrowChannelScenario();
@@ -268,14 +273,16 @@ void OpenspaceStateMachine::onUpdateOpenspaceStandby() {
 
 void OpenspaceStateMachine::onTransitionOpenspaceStandby(
     hfsm::Machine<openspace_state_machine::Context>::Control &control) {
-      MSD_LOG(INFO, "[%s] enter", __FUNCTION__);
+  MSD_LOG(INFO, "[%s] enter", __FUNCTION__);
   bool is_standby_finished = world_model_->get_ego_state().is_static;
   if (PlanningContext::Instance()->planning_status().wlc_info.is_approached) {
-    is_standby_finished = is_standby_finished && wlc_damping_timer_.is_timeout();
+    is_standby_finished =
+        is_standby_finished && wlc_damping_timer_.is_timeout();
     if (is_standby_finished) {
-      const WlcInfo &wlc_info_ref = PlanningContext::Instance()->planning_status().wlc_info;
+      const WlcInfo &wlc_info_ref =
+          PlanningContext::Instance()->planning_status().wlc_info;
       LOG_TO_CONTEXT("%s: planning at wlc offset(%f, %f)", __FUNCTION__,
-        wlc_info_ref.x_offset, wlc_info_ref.y_offset);
+                     wlc_info_ref.x_offset, wlc_info_ref.y_offset);
     }
   }
   if (is_standby_finished) {
@@ -335,9 +342,10 @@ void OpenspaceStateMachine::onUpdateOpenspacePlanning() {
 
 void OpenspaceStateMachine::onTransitionOpenspacePlanning(
     hfsm::Machine<openspace_state_machine::Context>::Control &control) {
-      MSD_LOG(INFO, "[%s] enter", __FUNCTION__);
+  MSD_LOG(INFO, "[%s] enter", __FUNCTION__);
   auto odo = PlanningContext::Instance()->openspace_motion_planner_output();
-  MSD_LOG(INFO, "[%s] odo.is_plan_ready:%d, odo.is_fail:%d",__FUNCTION__, odo.is_plan_ready, odo.is_fail);
+  MSD_LOG(INFO, "[%s] odo.is_plan_ready:%d, odo.is_fail:%d", __FUNCTION__,
+          odo.is_plan_ready, odo.is_fail);
   if (odo.is_plan_ready) {
     PlanningContext::Instance()
         ->mutable_openspace_motion_planner_output()
@@ -358,7 +366,7 @@ void OpenspaceStateMachine::onTransitionOpenspacePlanning(
     if (PlanningContext::Instance()
             ->mutable_openspace_decider_output()
             ->is_active_replan) {
-      MSD_LOG(INFO, "[%s] is_active_replan",__FUNCTION__);
+      MSD_LOG(INFO, "[%s] is_active_replan", __FUNCTION__);
 
       bool is_using_sop =
           (PlanningContext::Instance()
@@ -435,17 +443,18 @@ void OpenspaceStateMachine::onEntryOpenspaceFallback() {
 
 void OpenspaceStateMachine::onTransitionOpenspaceFallback(
     const hfsm::Machine<openspace_state_machine::Context>::Control &control) {
-      MSD_LOG(INFO, "[%s] enter", __FUNCTION__);
+  MSD_LOG(INFO, "[%s] enter", __FUNCTION__);
   // control.changeTo<openspace_state_machine::Standby>();
 }
 
 void OpenspaceStateMachine::onTransitionOpenspaceRunning(
     hfsm::Machine<openspace_state_machine::Context>::Control &control) {
-  if (msquare::CarParams::GetInstance()->car_config.lon_config.use_sop_algorithm) {
+  if (msquare::CarParams::GetInstance()
+          ->car_config.lon_config.use_sop_algorithm) {
     runTransitionOpenspaceRunningSOP(control);
   } else {
     runTransitionOpenspaceRunning(control);
-  }      
+  }
 }
 
 void OpenspaceStateMachine::runTransitionOpenspaceRunning(
@@ -541,11 +550,13 @@ void OpenspaceStateMachine::runTransitionOpenspaceRunning(
                    __FUNCTION__);
     control.changeTo<openspace_state_machine::Standby>();
   }
-  double min_finish_len = CarParams::GetInstance()->car_config.common_config.min_finish_len;
+  double min_finish_len =
+      CarParams::GetInstance()->car_config.common_config.min_finish_len;
   if (path_sampler_->is_at_last_segment() &&
-       PlanningContext::Instance()
-               ->longitudinal_behavior_planner_output()
-               .traj_length < min_finish_len && world_model_->get_ego_state().is_static) {
+      PlanningContext::Instance()
+              ->longitudinal_behavior_planner_output()
+              .traj_length < min_finish_len &&
+      world_model_->get_ego_state().is_static) {
     control.changeTo<openspace_state_machine::Finish>();
   }
   // set is_approached in all is_finish strategy when ego is static in wlc slot
@@ -559,16 +570,17 @@ void OpenspaceStateMachine::runTransitionOpenspaceRunning(
 }
 
 void OpenspaceStateMachine::runTransitionOpenspaceRunningSOP(
-  hfsm::Machine<openspace_state_machine::Context>::Control &control) {
+    hfsm::Machine<openspace_state_machine::Context>::Control &control) {
   PlanningContext::Instance()
       ->mutable_parking_behavior_planner_output()
       ->has_moved = PlanningContext::Instance()
                         ->parking_behavior_planner_output()
                         .has_moved ||
                     abs(world_model_->get_ego_state().ego_vel) > 0.07;
-  MSD_LOG(INFO, " has_moved is: [%d]", __FUNCTION__, PlanningContext::Instance()
-      ->mutable_parking_behavior_planner_output()
-      ->has_moved);
+  MSD_LOG(INFO, " has_moved is: [%d]", __FUNCTION__,
+          PlanningContext::Instance()
+              ->mutable_parking_behavior_planner_output()
+              ->has_moved);
   if (world_model_->get_pause_status()) {
     planning_run_timer_.reset();
   }
@@ -629,32 +641,39 @@ void OpenspaceStateMachine::runTransitionOpenspaceRunningSOP(
     deviated = false;
   }
 
-  double traj_length =  PlanningContext::Instance()
-          ->longitudinal_behavior_planner_output()
-          .traj_length ;
+  double traj_length = PlanningContext::Instance()
+                           ->longitudinal_behavior_planner_output()
+                           .traj_length;
   bool second_traj_not_replan = false;
-  const auto& not_replan_scope =
-      PlanningContext::Instance()->planning_status().
-      planning_result.second_traj_not_replan_scope;
+  const auto &not_replan_scope =
+      PlanningContext::Instance()
+          ->planning_status()
+          .planning_result.second_traj_not_replan_scope;
 
-  if (std::fabs(not_replan_scope.first - not_replan_scope.second) > 0.01
-      && traj_length > not_replan_scope.first
-      && traj_length < not_replan_scope.second) {
-      second_traj_not_replan = true;
+  if (std::fabs(not_replan_scope.first - not_replan_scope.second) > 0.01 &&
+      traj_length > not_replan_scope.first &&
+      traj_length < not_replan_scope.second) {
+    second_traj_not_replan = true;
   }
   // std::cout << "the not_replan_scope.first is:" << not_replan_scope.first
   //           << " not_replan_scope.second is: " << not_replan_scope.second
   //           << "traj length is:" << traj_length
-  //           << " second_traj_not_replan"<< second_traj_not_replan << std::endl;
-  MSD_LOG(ERROR, "the not_replan_scope.first is: %f, not_replan_scope.second is: %f, traj length is: %f, second_traj_not_replan %d, extend flag %d"
-      ,not_replan_scope.first, not_replan_scope.second, traj_length, second_traj_not_replan,
-      PlanningContext::Instance()
-     ->planning_status().plan_control_interface.is_extended);
+  //           << " second_traj_not_replan"<< second_traj_not_replan <<
+  //           std::endl;
+  MSD_LOG(ERROR,
+          "the not_replan_scope.first is: %f, not_replan_scope.second is: %f, "
+          "traj length is: %f, second_traj_not_replan %d, extend flag %d",
+          not_replan_scope.first, not_replan_scope.second, traj_length,
+          second_traj_not_replan,
+          PlanningContext::Instance()
+              ->planning_status()
+              .plan_control_interface.is_extended);
 
   if (deviated && !world_model_->get_pause_status() &&
-     !(PlanningContext::Instance()
-     ->planning_status().plan_control_interface.is_extended
-     && (traj_length < 0.25 || second_traj_not_replan))) {
+      !(PlanningContext::Instance()
+            ->planning_status()
+            .plan_control_interface.is_extended &&
+        (traj_length < 0.25 || second_traj_not_replan))) {
     PlanningContext::Instance()
         ->mutable_parking_behavior_planner_output()
         ->init_traj_point.v =
@@ -667,18 +686,20 @@ void OpenspaceStateMachine::runTransitionOpenspaceRunningSOP(
     control.changeTo<openspace_state_machine::Standby>();
   }
 
-  MSD_LOG(ERROR, "last segment is %d, tra length is:%f, is_static:%d", 
-    path_sampler_->is_at_last_segment(), PlanningContext::Instance()
-               ->longitudinal_behavior_planner_output()
-               .traj_length, world_model_->get_ego_state().is_static);
+  MSD_LOG(ERROR, "last segment is %d, tra length is:%f, is_static:%d",
+          path_sampler_->is_at_last_segment(),
+          PlanningContext::Instance()
+              ->longitudinal_behavior_planner_output()
+              .traj_length,
+          world_model_->get_ego_state().is_static);
   if (path_sampler_->is_at_last_segment() &&
-       PlanningContext::Instance()
-               ->longitudinal_behavior_planner_output()
-               .traj_length < 0.2  
-               && world_model_->get_ego_state().is_static) {
+      PlanningContext::Instance()
+              ->longitudinal_behavior_planner_output()
+              .traj_length < 0.2 &&
+      world_model_->get_ego_state().is_static) {
     MSD_LOG(ERROR, "last segment is finished");
     control.changeTo<openspace_state_machine::Finish>();
-  } 
+  }
 }
 
 void OpenspaceStateMachine::onEntryOpenspaceRunning() {
@@ -690,7 +711,9 @@ void OpenspaceStateMachine::onEntryOpenspaceRunning() {
       ->mutable_parking_behavior_planner_output()
       ->is_move_ready = true;
   // is_teb_ok_APOA_filter_ = FlagFilter(5);
-  PlanningContext::Instance()->mutable_planning_status()->wlc_info.is_approached = false;
+  PlanningContext::Instance()
+      ->mutable_planning_status()
+      ->wlc_info.is_approached = false;
 }
 
 // TODO: only tracking when running
@@ -700,16 +723,16 @@ void OpenspaceStateMachine::onUpdateOpenspaceRunning() {
       ->mutable_planning_status()
       ->has_running_enough_long = planning_run_timer_.is_timeout();
 
-  if(planning_run_timer_.is_timeout() && !world_model_->get_pause_status()) {
+  if (planning_run_timer_.is_timeout() && !world_model_->get_pause_status()) {
     PlanningContext::Instance()
-      ->mutable_parking_behavior_planner_output()
-      ->has_paused = false;
+        ->mutable_parking_behavior_planner_output()
+        ->has_paused = false;
   }
 
-  if(world_model_->get_pause_status()) {
+  if (world_model_->get_pause_status()) {
     PlanningContext::Instance()
-      ->mutable_parking_behavior_planner_output()
-      ->has_paused = true;
+        ->mutable_parking_behavior_planner_output()
+        ->has_paused = true;
   }
 
   // update ego state realtime
@@ -724,7 +747,6 @@ void OpenspaceStateMachine::onUpdateOpenspaceRunning() {
   init_traj_point.path_point.theta = ego_state.ego_pose.theta;
   init_traj_point.steer =
       ego_state.ego_steer_angle / CarParams::GetInstance()->steer_ratio;
-
 }
 
 void OpenspaceStateMachine::onEntryOpenspaceFinish() {
@@ -737,22 +759,22 @@ void OpenspaceStateMachine::onEntryOpenspaceFinish() {
 void OpenspaceStateMachine::onTransitionOpenspaceFinish(
     hfsm::Machine<openspace_state_machine::Context>::Control &control) {
   if (PlanningContext::Instance()->planning_status().wlc_info.is_valid) {
-    PlanningContext::Instance()->mutable_planning_status()->wlc_info.is_approached = true;
     PlanningContext::Instance()
-      ->mutable_parking_behavior_planner_output()
-      ->is_finish = false;
-    LOG_TO_CONTEXT("%s: replan because of wireless charger offset", __FUNCTION__);
+        ->mutable_planning_status()
+        ->wlc_info.is_approached = true;
+    PlanningContext::Instance()
+        ->mutable_parking_behavior_planner_output()
+        ->is_finish = false;
+    LOG_TO_CONTEXT("%s: replan because of wireless charger offset",
+                   __FUNCTION__);
     PlanningContext::Instance()
         ->mutable_parking_behavior_planner_output()
         ->init_traj_point.v = 1;
     PlanningContext::Instance()->mutable_open_space_path()->stash(
-      std::vector<TrajectoryPoint>());
+        std::vector<TrajectoryPoint>());
     control.changeTo<openspace_state_machine::Standby>();
   }
 }
-
-
-
 
 bool OpenspaceStateMachine::can_follow_plan_traj(double dist_threshold,
                                                  bool use_average_diff) {
@@ -767,8 +789,6 @@ bool OpenspaceStateMachine::can_follow_plan_traj(double dist_threshold,
   }
   return follow_error < dist_threshold;
 }
-
-
 
 } // namespace openspace_state_machine
 } // namespace parking

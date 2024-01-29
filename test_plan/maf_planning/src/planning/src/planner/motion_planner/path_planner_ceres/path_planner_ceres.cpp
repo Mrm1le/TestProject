@@ -197,12 +197,13 @@ void PathPlanner::populate_output_info(const PathPlannerInput *input) {
   lc_end_clear_count_ = dodge_info.lc_end_clear_count;
   // populate active avd info
   const size_t avd_frame_threshold = 3;
-  // const auto active_target = path_planner_decider_->get_active_target_offset();
+  // const auto active_target =
+  // path_planner_decider_->get_active_target_offset();
   double max_avd_range = dodge_info.dodge_l;
   int max_avd_object_id = dodge_info.dodge_truck_id;
   if (dodge_info.state == State::Control && max_avd_object_id == -1) {
     max_avd_object_id = last_active_avd_obs_id_;
-  } 
+  }
   last_active_avd_obs_id_ = max_avd_object_id;
 
   if (dodge_info.state == State::Control) {
@@ -257,7 +258,7 @@ void PathPlanner::populate_output_info(const PathPlannerInput *input) {
     last_active_avd_obs_id_ = max_avd_object_id;
     // std::cout << " --- truck avoid ---" << std::endl;
     // std::cout << "truck id = " << max_avd_object_id << std::endl;
-    if(last_active_avd_obs_id_count_ < DLP_deboune_count) {
+    if (last_active_avd_obs_id_count_ < DLP_deboune_count) {
       check_truck_status(max_avd_object_id, input);
     }
   } else if (count_active_avd_ == 0) {
@@ -268,7 +269,7 @@ void PathPlanner::populate_output_info(const PathPlannerInput *input) {
     output_.avd_result_info.ego_faster_truck = false;
     output_.avd_result_info.overlap_lane = false;
   }
-  
+
   populate_avd_aim_info();
 }
 
@@ -509,9 +510,11 @@ void PathPlanner::check_truck_status(int truck_id,
           // std::cout << "max_l = " << max_l << std::endl;
           // std::cout << "min_l = " << min_l << std::endl;
           // std::cout << "sample_info.refline_info.right_lane_border = "
-          //           << sample_info.refline_info.right_lane_border << std::endl;
+          //           << sample_info.refline_info.right_lane_border <<
+          //           std::endl;
           // std::cout << "sample_info.refline_info.left_lane_border = "
-          //           << sample_info.refline_info.left_lane_border << std::endl;
+          //           << sample_info.refline_info.left_lane_border <<
+          //           std::endl;
           if (obs.nudge_side == ObsInfo::NudgeType::LEFT_NUDGE &&
               -sample_info.refline_info.right_lane_border < max_l) {
             output_.avd_result_info.overlap_lane = true;

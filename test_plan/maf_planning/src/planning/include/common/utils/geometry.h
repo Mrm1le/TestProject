@@ -41,14 +41,16 @@ struct Pose2D {
   const double const_y() const { return y; }
   const double const_theta() const { return theta; }
   const double const_s() const { return s; }
-  const double kappa() const {return kappa_; }
+  const double kappa() const { return kappa_; }
 
   void set_kappa(double kappa) { kappa_ = kappa; }
 
   Pose2D() = default;
   Pose2D(double xx, double yy, double tt) : x(xx), y(yy), theta(tt) {}
-  Pose2D(double xx, double yy, double tt, double ss) : x(xx), y(yy), theta(tt), s(ss) {}
-  Pose2D(double xx, double yy, double tt, double ss, double kappa) : x(xx), y(yy), theta(tt), s(ss), kappa_(kappa) {}
+  Pose2D(double xx, double yy, double tt, double ss)
+      : x(xx), y(yy), theta(tt), s(ss) {}
+  Pose2D(double xx, double yy, double tt, double ss, double kappa)
+      : x(xx), y(yy), theta(tt), s(ss), kappa_(kappa) {}
 };
 
 struct Vector3 {

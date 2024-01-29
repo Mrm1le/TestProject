@@ -1,5 +1,3 @@
 
 
-namespace worldmodel_pec {
-
-}
+namespace worldmodel_pec {}

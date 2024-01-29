@@ -482,7 +482,7 @@ private:
       }
     }
   }
-    
+
   void feed_traffic_light_info(
       double time,
       const std::vector<maf_perception_interface::TrafficLightDecision>

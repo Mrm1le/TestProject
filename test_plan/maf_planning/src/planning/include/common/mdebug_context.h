@@ -148,7 +148,7 @@ public:
   }
 
   template <typename T, typename... T_ARGS>
-  void append_raw(T &&e, T_ARGS &&... args) {
+  void append_raw(T &&e, T_ARGS &&...args) {
     append_raw(std::forward<T>(e));
     append_raw(std::forward<T_ARGS>(args)...);
   }

@@ -100,7 +100,7 @@ struct TrackedObject {
   double ncar_count = 0;
   double lat_coeff = 1.0;
   bool oncoming = false;   // 是否为对向车
-  bool stationary = false; //是否为静止
+  bool stationary = false; // 是否为静止
 
   bool is_lead = false;               // 是否为跟车目标
   bool is_temp_lead = false;          // 是否为变道原车道跟车目标

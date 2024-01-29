@@ -11,8 +11,7 @@ namespace msquare {
 
 namespace parking {
 
-ApaStateMachine::ApaStateMachine(
-    const std::shared_ptr<WorldModel> &world_model)
+ApaStateMachine::ApaStateMachine(const std::shared_ptr<WorldModel> &world_model)
     : world_model_(world_model) {
 
   //[fenix.refactor.sm] Original ScenarioMannger construct functions
@@ -54,9 +53,10 @@ ApaStateMachine::ApaStateMachine(
       std::make_unique<ParkingLongitudinalMotionPlanner>(world_model_);
 
   // init lon_behavior_planning
-  PlanningContext::Instance()->lon_mc_footprint_model() = 
-      std::make_shared<grid::MultiCircleFootprintModel>(PlanningContext::Instance()->get_config_file_dir() +
-      "/scenario_configs_json/parking/");
+  PlanningContext::Instance()->lon_mc_footprint_model() =
+      std::make_shared<grid::MultiCircleFootprintModel>(
+          PlanningContext::Instance()->get_config_file_dir() +
+          "/scenario_configs_json/parking/");
 
   leader_decider_ = std::make_unique<LeaderDecider>(world_model_);
   //   freespace_decider_ = std::make_unique<FreespaceDecider>(world_model_);
@@ -81,9 +81,11 @@ ApaStateMachine::ApaStateMachine(
 
   behavior_decider_parkin_ = std::make_unique<APABehaviorDeciderParkIn>(
       world_model, parking_longitudinal_behavior_planner_);
-  behavior_calculator_parkin_ = std::make_unique<APABehaviorCalculatorParkIn>(world_model);
+  behavior_calculator_parkin_ =
+      std::make_unique<APABehaviorCalculatorParkIn>(world_model);
 
-  behavior_calculator_parkout_ = std::make_unique<APABehaviorCalculatorParkOut>(world_model);
+  behavior_calculator_parkout_ =
+      std::make_unique<APABehaviorCalculatorParkOut>(world_model);
 
   init();
 }
@@ -143,9 +145,8 @@ void ApaStateMachine::setupCallbackFunctions() {
   context_.register_transition_callback<RpaStraightStandby>(
       std::bind(&ApaStateMachine::onTransitionRpaStraightStandby, this,
                 std::placeholders::_1));
-  context_.register_transition_callback<RpaStraight>(
-      std::bind(&ApaStateMachine::onTransitionRpaStraight, this,
-                std::placeholders::_1));
+  context_.register_transition_callback<RpaStraight>(std::bind(
+      &ApaStateMachine::onTransitionRpaStraight, this, std::placeholders::_1));
   context_.register_leave_callback<ParkIn>(
       std::bind(&ApaStateMachine::onLeaveParkIn, this));
   context_.register_leave_callback<ParkOut>(
@@ -158,13 +159,12 @@ void ApaStateMachine::setupCallbackFunctions() {
       std::bind(&ApaStateMachine::onLeaveRpaStraight, this));
 }
 
-
 bool ApaStateMachine::is_request_to_ego_slot() {
-  PlanningContext::Instance()->mutable_parking_behavior_planner_output()
+  PlanningContext::Instance()
+      ->mutable_parking_behavior_planner_output()
       ->is_request_to_ego_slot = is_in_parking_slot();
   return true;
 }
-
 
 bool ApaStateMachine::generate_designate_parkin_tasks() {
   PlanningRequest planning_request = world_model_->get_planning_request();
@@ -185,7 +185,7 @@ bool ApaStateMachine::generate_designate_parkin_tasks() {
   task.poi_id = planning_request.id;
   task.poi_type = "PARKING_LOT";
   parking_task_list_.emplace_back(task);
-  
+
   task.task_name = "APA";
   task.task_type = ParkingTaskType::PARKIN;
   task.poi_id = planning_request.id;
@@ -199,8 +199,6 @@ bool ApaStateMachine::generate_designate_parkin_tasks() {
   current_task_ = parking_task_list_.begin();
   return true;
 }
-
-
 
 bool ApaStateMachine::generate_parkout_tasks() {
   PlanningRequest planning_request = world_model_->get_planning_request();
@@ -217,7 +215,7 @@ bool ApaStateMachine::generate_parkout_tasks() {
   task.poi_type = "PARKING_LOT";
   task.park_out_direction.value = planning_request.park_out_direction.value;
   parking_task_list_.emplace_back(task);
-  
+
   task.task_name = "WAIT_FOR_TAKEOVER";
   task.task_type = ParkingTaskType::WAIT;
   task.poi_id = parking_task_config_.done_id;
@@ -246,11 +244,8 @@ bool ApaStateMachine::generate_rpa_straight_tasks() {
   return true;
 }
 
-
-
-
 bool ApaStateMachine::update() {
-//[fenix.refactor.sm] Original ScenarioManager::execute_planning Part1
+  //[fenix.refactor.sm] Original ScenarioManager::execute_planning Part1
 
   MSD_LOG(INFO, "--------------------------------------------------------"
                 "scenario manager.");
@@ -262,10 +257,11 @@ bool ApaStateMachine::update() {
   //   freespace_decider_->execute();
 
   // if (world_model_->is_parking_svp()) {
-  if (msquare::CarParams::GetInstance()->car_config.lon_config.use_sop_algorithm) {
-      (void)path_sampler_->calculate_sop();
+  if (msquare::CarParams::GetInstance()
+          ->car_config.lon_config.use_sop_algorithm) {
+    (void)path_sampler_->calculate_sop();
   } else {
-      (void)path_sampler_->calculate();
+    (void)path_sampler_->calculate();
   }
 
   if (world_model_->get_pause_status()) {
@@ -337,8 +333,7 @@ bool ApaStateMachine::update() {
   planning_status_->scenario.status_type = current_state_;
   planning_status_->scenario.next_status_type = next_state_;
 
-
-//[fenix.refactor.sm] Original ScenarioManager::execute_planning Part2
+  //[fenix.refactor.sm] Original ScenarioManager::execute_planning Part2
   double after_update_msgs4 = MTIME()->timestamp().sec();
 
   auto update_msgs_time4 = after_update_msgs4 - start4;
@@ -346,7 +341,8 @@ bool ApaStateMachine::update() {
   if (world_model_->get_control_test_flag()) {
     //[fenix.refactor.sm] Temp disable control_test TODO:restore this
 
-    // if (PlanningContext::Instance()->planning_status().scenario.status_type ==
+    // if (PlanningContext::Instance()->planning_status().scenario.status_type
+    // ==
     //     StatusType::APA) {
     //   if (!PlanningContext::Instance()
     //     ->parking_behavior_planner_output().parking_lot) {
@@ -364,9 +360,8 @@ bool ApaStateMachine::update() {
     //   onLeaveApa();
     // }
   } else {
-    
   }
-//[fenix.refactor.sm] Original ScenarioManager::execute_planning Part2
+  //[fenix.refactor.sm] Original ScenarioManager::execute_planning Part2
   return true;
 }
 
@@ -390,11 +385,9 @@ bool ApaStateMachine::update_status() {
   PlanningContext::Instance()
       ->mutable_planning_status()
       ->planning_result.is_apa =
-      (current_state_ == StatusType::APA ||
-       current_state_ == StatusType::APOA);
+      (current_state_ == StatusType::APA || current_state_ == StatusType::APOA);
   return true;
 }
-
 
 bool ApaStateMachine::is_in_parking_slot() {
   if (world_model_->is_parking_svp()) {
@@ -415,9 +408,10 @@ bool ApaStateMachine::is_in_parking_slot() {
   return false;
 }
 
-void ApaStateMachine::saveParkinData(){
-  if(PlanningContext::Instance()->mutable_planning_status()->task_status.status !=
-        TaskStatusType::SUCCEEDED){
+void ApaStateMachine::saveParkinData() {
+  if (PlanningContext::Instance()
+          ->mutable_planning_status()
+          ->task_status.status != TaskStatusType::SUCCEEDED) {
     MSD_LOG(INFO, "Wouldn't save parking-in data as failing to park in");
     return;
   }
@@ -430,9 +424,9 @@ void ApaStateMachine::saveParkinData(){
   auto slot_data = mjson::Json(mjson::Json::object());
   auto corner_pts = mjson::Json(mjson::Json::array());
   bool is_valid = false;
-  if(parking_slot_info.corners.size() == 4){
+  if (parking_slot_info.corners.size() == 4) {
     is_valid = true;
-    for(auto& p : parking_slot_info.corners){
+    for (auto &p : parking_slot_info.corners) {
       auto corner_p = mjson::Json(mjson::Json::object());
       corner_p["x"] = mjson::Json(p.x);
       corner_p["y"] = mjson::Json(p.y);
@@ -446,121 +440,129 @@ void ApaStateMachine::saveParkinData(){
   auto parkin_data = mjson::Json(mjson::Json::object());
   parkin_data["slot_data"] = mjson::Json(slot_data);
 
-  std::string config_folder = CarParams::GetInstance()->car_config.apoa_config.parkin_data_folder;
+  std::string config_folder =
+      CarParams::GetInstance()->car_config.apoa_config.parkin_data_folder;
   std::string parkin_data_path = config_folder + "apa_parkin_data.json";
   std::string parkin_data_str = parkin_data.dump();
 
 #ifdef USE_CONFIG_SERVICE
   parameter::Save(parkin_data_path, parkin_data_str);
-  MSD_LOG(INFO, "[saveParkinData] save parkin data: %s", parkin_data_str.c_str());
+  MSD_LOG(INFO, "[saveParkinData] save parkin data: %s",
+          parkin_data_str.c_str());
 
 #else
   std::ofstream ofs(parkin_data_path);
-  if(!ofs.is_open())
-  {
-    MSD_LOG(INFO, "[saveParkinData] fail to open file to save parkin data: %s", parkin_data_path.c_str());
+  if (!ofs.is_open()) {
+    MSD_LOG(INFO, "[saveParkinData] fail to open file to save parkin data: %s",
+            parkin_data_path.c_str());
     return;
   }
   ofs << parkin_data_str;
   ofs.close();
-  MSD_LOG(INFO, "[saveParkinData] save parkin data locally: %s", parkin_data_str.c_str());
+  MSD_LOG(INFO, "[saveParkinData] save parkin data locally: %s",
+          parkin_data_str.c_str());
 #endif
 }
 
-void ApaStateMachine::loadParkinData(){
+void ApaStateMachine::loadParkinData() {
   auto &last_parkin_data = PlanningContext::Instance()
-                                ->mutable_parking_behavior_planner_output()
-                                ->last_parkin_data;
+                               ->mutable_parking_behavior_planner_output()
+                               ->last_parkin_data;
   MSD_LOG(INFO, "[loadParkinData] ...");
   last_parkin_data.corner_pts.clear();
   last_parkin_data.is_valid = false;
   last_parkin_data.is_loaded = true;
   // TODO
-  std::string config_folder = CarParams::GetInstance()->car_config.apoa_config.parkin_data_folder;
+  std::string config_folder =
+      CarParams::GetInstance()->car_config.apoa_config.parkin_data_folder;
   std::string parkin_data_path = config_folder + "apa_parkin_data.json";
   std::string parkin_data_str;
 
 #ifdef USE_CONFIG_SERVICE
-  try
-  {
-      parameter::Load("apa_parkin_data",parkin_data_path);
-      parkin_data_str = parameter::Get<std::string>("apa_parkin_data", "@apa_parkin_data");
-  }
-  catch(const std::exception& e)
-  {
-    MSD_LOG(ERROR, "[loadParkinData] failed to load apa_parkin_data from %s", parkin_data_path.c_str());
+  try {
+    parameter::Load("apa_parkin_data", parkin_data_path);
+    parkin_data_str =
+        parameter::Get<std::string>("apa_parkin_data", "@apa_parkin_data");
+  } catch (const std::exception &e) {
+    MSD_LOG(ERROR, "[loadParkinData] failed to load apa_parkin_data from %s",
+            parkin_data_path.c_str());
     return;
   }
 #else
-    std::ifstream ifs(parkin_data_path);
-		if(!ifs.is_open())
-		{
-      MSD_LOG(ERROR, "[loadParkinData] failed to load apa_parkin_data locally from %s", parkin_data_path.c_str());
-			return;
-		}
-		std::string line;
-		while(getline(ifs, line))
-		{
-			parkin_data_str = parkin_data_str + line + "\n";
-		}
-		ifs.close();
+  std::ifstream ifs(parkin_data_path);
+  if (!ifs.is_open()) {
+    MSD_LOG(ERROR,
+            "[loadParkinData] failed to load apa_parkin_data locally from %s",
+            parkin_data_path.c_str());
+    return;
+  }
+  std::string line;
+  while (getline(ifs, line)) {
+    parkin_data_str = parkin_data_str + line + "\n";
+  }
+  ifs.close();
 #endif
 
-  if(parkin_data_str.empty()){
+  if (parkin_data_str.empty()) {
     MSD_LOG(ERROR, "[loadParkinData] parkin_data_str is empty");
     return;
   }
 
-  MSD_LOG(INFO,"[loadParkinData] begin to parse parkin_data_str: %s", parkin_data_str.c_str());
+  MSD_LOG(INFO, "[loadParkinData] begin to parse parkin_data_str: %s",
+          parkin_data_str.c_str());
 
   std::string err_code;
   auto parkin_data_parser = mjson::Json::parse(parkin_data_str, err_code);
-  if(!err_code.empty()){
-    MSD_LOG(ERROR,"[loadParkinData] failed to parse parkin_data_str with error: %s", err_code.c_str());
+  if (!err_code.empty()) {
+    MSD_LOG(ERROR,
+            "[loadParkinData] failed to parse parkin_data_str with error: %s",
+            err_code.c_str());
     return;
   }
 
-  if(!parkin_data_parser.has_key("slot_data")){
-    MSD_LOG(ERROR,"[loadParkinData] no slot_data in parkin_data_str");
+  if (!parkin_data_parser.has_key("slot_data")) {
+    MSD_LOG(ERROR, "[loadParkinData] no slot_data in parkin_data_str");
     return;
   }
   auto slot_data_json = parkin_data_parser["slot_data"];
 
-  if(!slot_data_json.has_key("is_valid")){
-    MSD_LOG(ERROR,"[loadParkinData] no is_valid in slot_data");
+  if (!slot_data_json.has_key("is_valid")) {
+    MSD_LOG(ERROR, "[loadParkinData] no is_valid in slot_data");
     return;
   }
 
   bool is_valid = slot_data_json["is_valid"].bool_value();
-  if(!is_valid){
+  if (!is_valid) {
     last_parkin_data.is_valid = is_valid;
-    MSD_LOG(ERROR,"[loadParkinData] slot_data.is_valid = false");
+    MSD_LOG(ERROR, "[loadParkinData] slot_data.is_valid = false");
     return;
   }
 
-  if(!slot_data_json.has_key("corner_pts")){
-    MSD_LOG(ERROR,"[loadParkinData] no corner_pts in slot_data");
+  if (!slot_data_json.has_key("corner_pts")) {
+    MSD_LOG(ERROR, "[loadParkinData] no corner_pts in slot_data");
     return;
   }
 
-  if(!slot_data_json.has_key("last_theta")){
-    MSD_LOG(ERROR,"[loadParkinData] no last_theta in slot_data");
+  if (!slot_data_json.has_key("last_theta")) {
+    MSD_LOG(ERROR, "[loadParkinData] no last_theta in slot_data");
     return;
   }
 
   auto corner_pts_json = slot_data_json["corner_pts"].array_value();
-  if(corner_pts_json.size() != 4){
+  if (corner_pts_json.size() != 4) {
     last_parkin_data.is_valid = false;
-    MSD_LOG(ERROR,"[loadParkinData] corner_pts size=%u, which is not 4", corner_pts_json.size());
+    MSD_LOG(ERROR, "[loadParkinData] corner_pts size=%u, which is not 4",
+            corner_pts_json.size());
     return;
   }
 
-  for(unsigned int i=0;i<corner_pts_json.size();i++){
+  for (unsigned int i = 0; i < corner_pts_json.size(); i++) {
     auto corner_p_json = corner_pts_json[i];
     planning_math::Vec2d corner_p;
-    if(!corner_p_json.has_key("x") || !corner_p_json.has_key("y")){
+    if (!corner_p_json.has_key("x") || !corner_p_json.has_key("y")) {
       last_parkin_data.is_valid = false;
-      MSD_LOG(ERROR,"[loadParkinData] corner_p_json has not x or y at index = %u", i);
+      MSD_LOG(ERROR,
+              "[loadParkinData] corner_p_json has not x or y at index = %u", i);
       return;
     }
     corner_p.set_x(corner_p_json["x"].number_value());

@@ -52,42 +52,22 @@ public:
   double yaw_limit;
   double space_yam_max_limit;
 
-  NLOHMANN_DEFINE_TYPE_INTRUSIVE(SlotReleaseParams,
-                                 compensate_time,
-                                 max_compensate_dist, 
-                                 enable_oblique_slot,
-                                 vertical_passage_width,
-                                 vertical_passage_width_hys_scope,
-                                 vertical_slot_width_hys_scope,
-                                 parallel_passage_width,
-                                 parallel_passage_width_hys_scope,
-                                 parallel_slot_width_hys_scope,
-                                 oblique_passage_width,
-                                 oblique_passage_width_hys_scope,
-                                 oblique_slot_width_hys_scope,
-                                 slot_extend_depth_ratio,
-                                 slot_in_extend_depth,
-                                 ego_side_obstacel_distance_low,
-                                 ego_side_obstacel_distance_high,
-                                 ego_side_obs_dis_side_slot_low,
-                                 ego_side_obs_dis_side_slot_high,
-                                 vertical_slot_width,
-                                 min_width_parallel,
-                                 min_length_parallel,
-                                 min_length_parallel_step_bottom,
-                                 parkable_area_x,
-                                 parkable_area_y,
-                                 uss_friendly_area_y_min,
-                                 uss_friendly_area_y_max,
-                                 uss_friendly_area_y_max_parallel,
-                                 forward_pass_dist,
-                                 backward_pass_dist,
-                                 groundline_save_area_extend_width,
-                                 valid_passage_length,
-                                 velocity_limit,
-                                 pitch_limit,
-                                 yaw_limit,
-                                 space_yam_max_limit);
+  NLOHMANN_DEFINE_TYPE_INTRUSIVE(
+      SlotReleaseParams, compensate_time, max_compensate_dist,
+      enable_oblique_slot, vertical_passage_width,
+      vertical_passage_width_hys_scope, vertical_slot_width_hys_scope,
+      parallel_passage_width, parallel_passage_width_hys_scope,
+      parallel_slot_width_hys_scope, oblique_passage_width,
+      oblique_passage_width_hys_scope, oblique_slot_width_hys_scope,
+      slot_extend_depth_ratio, slot_in_extend_depth,
+      ego_side_obstacel_distance_low, ego_side_obstacel_distance_high,
+      ego_side_obs_dis_side_slot_low, ego_side_obs_dis_side_slot_high,
+      vertical_slot_width, min_width_parallel, min_length_parallel,
+      min_length_parallel_step_bottom, parkable_area_x, parkable_area_y,
+      uss_friendly_area_y_min, uss_friendly_area_y_max,
+      uss_friendly_area_y_max_parallel, forward_pass_dist, backward_pass_dist,
+      groundline_save_area_extend_width, valid_passage_length, velocity_limit,
+      pitch_limit, yaw_limit, space_yam_max_limit);
 };
 
 class CarParams {
@@ -159,15 +139,16 @@ public:
   SlotReleaseParams slot_release_config_;
 
   NLOHMANN_DEFINE_TYPE_INTRUSIVE(
-      CarParams, vehicle_length_real, vehicle_width_real,vehicle_front_edge_to_rear,
-      vehicle_back_edge_to_center, vehicle_width_wo_rearview_mirror, vehicle_length, vehicle_width,
+      CarParams, vehicle_length_real, vehicle_width_real,
+      vehicle_front_edge_to_rear, vehicle_back_edge_to_center,
+      vehicle_width_wo_rearview_mirror, vehicle_length, vehicle_width,
       vehicle_height, max_acceleration, min_acceleration, max_steer_angle,
       max_steer_angle_rate, max_steer_angle_rear, max_steer_angle_rate_rear,
       steer_ratio, wheel_base, wheel_rolling_radius, max_abs_speed_when_stopped,
       brake_deadzone, throttle_deadzone, lon_inflation_min, lon_inflation_max,
       lat_inflation_min, lat_inflation_max, inflation_rearview_mirror,
       shrink_ratio_for_lines_, shrink_ratio_for_lines_min_,
-      enable_multiple_steer_modes,slot_release_config_,
+      enable_multiple_steer_modes, slot_release_config_,
 
       max_delta_angle, max_delta_angle_rate, max_delta_angle_rear,
       max_delta_angle_rate_rear, min_turn_radius, lon_inflation_,

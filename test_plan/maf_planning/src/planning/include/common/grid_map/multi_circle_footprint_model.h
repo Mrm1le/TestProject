@@ -12,9 +12,7 @@
 
 #include "planner/motion_planner/optimizers/openspace_optimizer/sbp_obstacle_interface.h"
 
-//#include "common/grid_map/util.h"
-
-
+// #include "common/grid_map/util.h"
 
 #ifdef HASTAR2_HAS_INTERNAL_MODEL
 static std::string CarConfigsMultiCircleFootprintModelLacarYamlContent() {
@@ -130,7 +128,6 @@ static std::string HeuristicOfflineBoundaryCostBinContent() {
 }
 #endif // HASTAR2_HAS_INTERNAL_MODEL
 
-
 namespace msquare {
 namespace grid {
 
@@ -170,109 +167,108 @@ public:
     model_num_ = 0;
     inited_ = false;
 
-  bool load_result = false;
-  if (CarParams::GetInstance()->type == "C03") {
-    if (config_folder == "") {
-      load_result = this->loadFromContent(
-          CarConfigsMultiCircleFootprintModelWlsC03YamlContent());
+    bool load_result = false;
+    if (CarParams::GetInstance()->type == "C03") {
+      if (config_folder == "") {
+        load_result = this->loadFromContent(
+            CarConfigsMultiCircleFootprintModelWlsC03YamlContent());
+      } else {
+        load_result = this->loadFromFile(
+            config_folder +
+            "car_configs/multi_circle_footprint_model_wls_c03.yaml");
+      }
+    } else if (CarParams::GetInstance()->type == "SG") {
+      if (config_folder == "") {
+        load_result = this->loadFromContent(
+            CarConfigsMultiCircleFootprintModelLhsSgYamlContent());
+      } else {
+        load_result = this->loadFromFile(
+            config_folder +
+            "car_configs/multi_circle_footprint_model_lhs_sg.yaml");
+      }
+    } else if (CarParams::GetInstance()->type == "UXE") {
+      if (config_folder == "") {
+        load_result = this->loadFromContent(
+            CarConfigsMultiCircleFootprintModelLhsUxeYamlContent());
+      } else {
+        load_result = this->loadFromFile(
+            config_folder +
+            "car_configs/multi_circle_footprint_model_lhs_uxe.yaml");
+      }
+    } else if (CarParams::GetInstance()->type == "LS7") {
+      if (config_folder == "") {
+        load_result = this->loadFromContent(
+            CarConfigsMultiCircleFootprintModelLbcarYamlContent());
+      } else {
+        load_result = this->loadFromFile(
+            config_folder +
+            "car_configs/multi_circle_footprint_model_lbcar.yaml");
+      }
+    } else if (CarParams::GetInstance()->type == "A02") {
+      if (config_folder == "") {
+        load_result = this->loadFromContent(
+            CarConfigsMultiCircleFootprintModelBysA02YamlContent());
+      } else {
+        load_result = this->loadFromFile(
+            config_folder +
+            "car_configs/multi_circle_footprint_model_bys_a02.yaml");
+      }
+    } else if (CarParams::GetInstance()->type == "S450L") {
+      if (config_folder == "") {
+        load_result = this->loadFromContent(
+            CarConfigsMultiCircleFootprintModelHarzS450LYamlContent());
+      } else {
+        load_result = this->loadFromFile(
+            config_folder +
+            "car_configs/multi_circle_footprint_model_harz_s450l.yaml");
+      }
+    } else if (CarParams::GetInstance()->type == "LYRIQ") {
+      if (config_folder == "") {
+        load_result = this->loadFromContent(
+            CarConfigsMultiCircleFootprintModelRockyLyriqYamlContent());
+      } else {
+        load_result = this->loadFromFile(
+            config_folder +
+            "car_configs/multi_circle_footprint_model_rocky_lyriq.yaml");
+      }
+    } else if (CarParams::GetInstance()->type == "ESEA") {
+      if (config_folder == "") {
+        load_result = this->loadFromContent(
+            CarConfigsMultiCircleFootprintModelLhsEseaYamlContent());
+      } else {
+        load_result = this->loadFromFile(
+            config_folder +
+            "car_configs/multi_circle_footprint_model_lhs_esea.yaml");
+      }
+    } else if (CarParams::GetInstance()->type == "LC6") {
+      if (config_folder == "") {
+        load_result = this->loadFromContent(
+            CarConfigsMultiCircleFootprintModelLccarYamlContent());
+      } else {
+        load_result = this->loadFromFile(
+            config_folder +
+            "car_configs/multi_circle_footprint_model_lccar.yaml");
+      }
     } else {
-      load_result = this->loadFromFile(
-          config_folder +
-          "car_configs/multi_circle_footprint_model_wls_c03.yaml");
+      // TODO: Jinwei: Lacar by default, might be confusing
+      if (config_folder == "") {
+        load_result = this->loadFromContent(
+            CarConfigsMultiCircleFootprintModelLacarYamlContent());
+      } else {
+        load_result = this->loadFromFile(
+            config_folder +
+            "car_configs/multi_circle_footprint_model_lacar.yaml");
+      }
     }
-  } else if (CarParams::GetInstance()->type == "SG") {
-    if (config_folder == "") {
-      load_result = this->loadFromContent(
-          CarConfigsMultiCircleFootprintModelLhsSgYamlContent());
-    } else {
-      load_result = this->loadFromFile(
-          config_folder +
-          "car_configs/multi_circle_footprint_model_lhs_sg.yaml");
-    }
-  } else if (CarParams::GetInstance()->type == "UXE") {
-    if (config_folder == "") {
-      load_result = this->loadFromContent(
-          CarConfigsMultiCircleFootprintModelLhsUxeYamlContent());
-    } else {
-      load_result = this->loadFromFile(
-          config_folder +
-          "car_configs/multi_circle_footprint_model_lhs_uxe.yaml");
-    }
-  } else if (CarParams::GetInstance()->type == "LS7") {
-    if (config_folder == "") {
-      load_result = this->loadFromContent(
-          CarConfigsMultiCircleFootprintModelLbcarYamlContent());
-    } else {
-      load_result = this->loadFromFile(
-          config_folder +
-          "car_configs/multi_circle_footprint_model_lbcar.yaml");
-    }
-  } else if (CarParams::GetInstance()->type == "A02") {
-    if (config_folder == "") {
-      load_result = this->loadFromContent(
-          CarConfigsMultiCircleFootprintModelBysA02YamlContent());
-    } else {
-      load_result = this->loadFromFile(
-          config_folder +
-          "car_configs/multi_circle_footprint_model_bys_a02.yaml");
-    }
-  } else if (CarParams::GetInstance()->type == "S450L") {
-    if (config_folder == "") {
-      load_result = this->loadFromContent(
-          CarConfigsMultiCircleFootprintModelHarzS450LYamlContent());
-    } else {
-      load_result = this->loadFromFile(
-          config_folder +
-          "car_configs/multi_circle_footprint_model_harz_s450l.yaml");
-    }
-  } else if (CarParams::GetInstance()->type == "LYRIQ") {
-    if (config_folder == "") {
-      load_result = this->loadFromContent(
-          CarConfigsMultiCircleFootprintModelRockyLyriqYamlContent());
-    } else {
-      load_result = this->loadFromFile(
-          config_folder +
-          "car_configs/multi_circle_footprint_model_rocky_lyriq.yaml");
-    }
-  } else if (CarParams::GetInstance()->type == "ESEA") {
-    if (config_folder == "") {
-      load_result = this->loadFromContent(
-          CarConfigsMultiCircleFootprintModelLhsEseaYamlContent());
-    } else {
-      load_result = this->loadFromFile(
-          config_folder +
-          "car_configs/multi_circle_footprint_model_lhs_esea.yaml");
-    }
-  } else if (CarParams::GetInstance()->type == "LC6") {
-    if (config_folder == "") {
-      load_result = this->loadFromContent(
-          CarConfigsMultiCircleFootprintModelLccarYamlContent());
-    } else {
-      load_result = this->loadFromFile(
-          config_folder +
-          "car_configs/multi_circle_footprint_model_lccar.yaml");
-    }
-  } else {
-    // TODO: Jinwei: Lacar by default, might be confusing
-    if (config_folder == "") {
-      load_result = this->loadFromContent(
-          CarConfigsMultiCircleFootprintModelLacarYamlContent());
-    } else {
-      load_result = this->loadFromFile(
-          config_folder +
-          "car_configs/multi_circle_footprint_model_lacar.yaml");
-    }
-  }
 
-  // TODO(ckl): do not have 
-  updateConfig();
+    // TODO(ckl): do not have
+    updateConfig();
   }
 
   ~MultiCircleFootprintModel() {}
 
   void updateConfig() {
-    if (this->vehicle_type_ !=
-        VehicleParam::Instance()->car_type) {
+    if (this->vehicle_type_ != VehicleParam::Instance()->car_type) {
     }
   }
 
@@ -319,7 +315,7 @@ public:
     expected_descrption[0] = "low_wheels";
     expected_descrption[1] = "not_allow_close";
     expected_descrption[2] = "full_body";
-    
+
     model_num_ = yaml_config["model_num"].as<int>();
 
     if (model_num_ != EXPECTED_MODEL_NUM) {
@@ -334,43 +330,41 @@ public:
       m.include_model_ =
           yaml_config[model_name]["include_model"].as<std::vector<int>>();
       m.circle_index_ = yaml_config[model_name]["index"].as<std::vector<int>>();
-      
-      if(m.include_model_.size() >1){
+
+      if (m.include_model_.size() > 1) {
         return false;
       }
 
       if (!m.include_model_.empty()) {
         if (m.include_model_[0] >= m.model_index_) {
-          //include model index must be less than model_index
+          // include model index must be less than model_index
           return false;
         }
       }
 
-      if(m.description_ != expected_descrption[i]){
+      if (m.description_ != expected_descrption[i]) {
         return false;
       }
 
-      std::string height_type_str = yaml_config[model_name]["height"].as<std::string>();
+      std::string height_type_str =
+          yaml_config[model_name]["height"].as<std::string>();
 
-      if(height_type_str == "LOW"){
+      if (height_type_str == "LOW") {
         m.height_type_ = ObstacleHeightType::LOW;
-      }
-      else if(height_type_str == "MID"){
+      } else if (height_type_str == "MID") {
         m.height_type_ = ObstacleHeightType::MID;
-      }
-      else if(height_type_str == "HIGH"){
+      } else if (height_type_str == "HIGH") {
         m.height_type_ = ObstacleHeightType::HIGH;
-      }
-      else if(height_type_str == "HANGING_HIGH"){
+      } else if (height_type_str == "HANGING_HIGH") {
         m.height_type_ = ObstacleHeightType::HANGING_HIGH;
-      }    
+      }
       models_.push_back(m);
     }
 
     models_by_heights_.resize((int)ObstacleHeightType::HEIGHT_TYPE_NUM);
-    
+
     for (int i = 0; i < model_num_; i++) {
-      ObstacleHeightType height = models_[i].height_type_; 
+      ObstacleHeightType height = models_[i].height_type_;
       models_by_heights_[(int)height].push_back(models_[i]);
     }
 
@@ -395,9 +389,8 @@ public:
     }
     return true;
   }
-  //a deep clone function is needed because this class contains vectors
-  MultiCircleFootprintModel clone() const
-  {
+  // a deep clone function is needed because this class contains vectors
+  MultiCircleFootprintModel clone() const {
 
     MultiCircleFootprintModel result;
     result.param_version_ = param_version_;
@@ -405,8 +398,7 @@ public:
     result.vehicle_type_ = vehicle_type_;
     result.circles_vehicle_.resize(circle_num_);
     result.circles_local_.resize(circle_num_);
-    for(int i=0; i<circle_num_; i++)
-    {    
+    for (int i = 0; i < circle_num_; i++) {
       result.circles_vehicle_[i] = circles_vehicle_[i];
       result.circles_local_[i] = circles_local_[i];
     }
@@ -417,9 +409,10 @@ public:
     }
     result.models_by_heights_.resize(models_by_heights_.size());
     for (std::size_t i = 0; i < models_by_heights_.size(); i++) {
-      result.models_by_heights_[i].assign(models_by_heights_[i].begin(),models_by_heights_[i].end());
+      result.models_by_heights_[i].assign(models_by_heights_[i].begin(),
+                                          models_by_heights_[i].end());
     }
-    
+
     result.inited_ = true;
     return result;
   }

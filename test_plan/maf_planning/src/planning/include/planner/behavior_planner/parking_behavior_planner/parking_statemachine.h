@@ -99,8 +99,7 @@ namespace apa {
 // forward declare the structure of states
 #define S(s) struct s
 
-using COMPOSITE =
-    hfsm::Machine<Context>::CompositePeers<S(SimpleScene)>;
+using COMPOSITE = hfsm::Machine<Context>::CompositePeers<S(SimpleScene)>;
 
 #undef S
 

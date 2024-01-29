@@ -1,7 +1,7 @@
 #include <cstdint>
 
-#include "common/parking_slot_manager.h"
 #include "common/math/math_utils.h"
+#include "common/parking_slot_manager.h"
 #include "planner/motion_planner/optimizers/openspace_optimizer/config.h"
 #include "planning/common/common.h"
 
@@ -19,7 +19,7 @@ const double kMirrorToPillarDist =
     CarParams::GetInstance()
         ->car_config.target_pose_config
         .oneside_dist_mirror_to_pillar; // client's request. TODO(shaw)
-}
+} // namespace
 
 ParkingSlotManager::ParkingSlotManager() { world_model_ = nullptr; }
 
@@ -35,8 +35,11 @@ ParkingSlotManager::ParkingSlotManager(
                           HybridAstarConfig::GetInstance()->step_size;
   apf_decider_ = std::make_shared<ApfDecider>(world_model_);
   apf_decider_->set_traj_tag("normal");
-  body_tire_offset_ = CarParams::GetInstance()->car_config.car_only_config.body_tire_offset;
-  body_tire_offset_space_slot_ = CarParams::GetInstance()->car_config.car_only_config.body_tire_offset_space_slot;
+  body_tire_offset_ =
+      CarParams::GetInstance()->car_config.car_only_config.body_tire_offset;
+  body_tire_offset_space_slot_ =
+      CarParams::GetInstance()
+          ->car_config.car_only_config.body_tire_offset_space_slot;
 }
 
 bool ParkingSlotManager::UpdateTargetParkingSlotInfo() {
@@ -264,8 +267,10 @@ bool ParkingSlotManager::OptimizeParkingSlotCorners(
   MSD_LOG(ERROR, "[OptimizeParkingSlotCorners] fusion slot type:%d",
           parking_slot_info.virtual_corner.slot_type);
 
-  MSD_LOG(ERROR, "[OptimizeParkingSlotCorners] slot type:%u",parking_slot_info.type.value);
-  MSD_LOG(ERROR, "[OptimizeParkingSlotCorners] fusion slot type:%d",parking_slot_info.virtual_corner.slot_type);
+  MSD_LOG(ERROR, "[OptimizeParkingSlotCorners] slot type:%u",
+          parking_slot_info.type.value);
+  MSD_LOG(ERROR, "[OptimizeParkingSlotCorners] fusion slot type:%d",
+          parking_slot_info.virtual_corner.slot_type);
 
   if (parking_slot_info.type.value != ParkingSlotType::PARALLEL) {
     parking_slot_width = perpendicular_parking_slot_width_;
@@ -412,12 +417,12 @@ bool ParkingSlotManager::OptimizeParkingSlotCorners(
   //     // break;
   //   }
   // }
-  std::pair<SlotClosestSideType, SlotClosestSideType> 
-      slot_two_sides_type{SlotClosestSideType::NONE_OBSTACLE, SlotClosestSideType::NONE_OBSTACLE};
+  std::pair<SlotClosestSideType, SlotClosestSideType> slot_two_sides_type{
+      SlotClosestSideType::NONE_OBSTACLE, SlotClosestSideType::NONE_OBSTACLE};
 
   for (auto &obs : world_model_->get_parking_ground_line_fusion()) {
-    if (obs.type <= GroundLineType::GROUND_LINE_USS_TYPE_POINT || 
-        obs.type > GroundLineType::GROUND_LINE_USS_TYPE_SIDE_POINT_SPECIAL || 
+    if (obs.type <= GroundLineType::GROUND_LINE_USS_TYPE_POINT ||
+        obs.type > GroundLineType::GROUND_LINE_USS_TYPE_SIDE_POINT_SPECIAL ||
         obs.id != parking_slot_info.id) {
       continue;
     }
@@ -431,9 +436,10 @@ bool ParkingSlotManager::OptimizeParkingSlotCorners(
           left_distance = distance_to_obstacle;
           if (obs.type == GroundLineType::GROUND_LINE_USS_TYPE_SIDE_POINT_STEP)
             slot_two_sides_type.first = SlotClosestSideType::SIDE_SLOT;
-          else if (obs.type == GroundLineType::GROUND_LINE_USS_TYPE_SIDE_POINT_VEHICLE)
+          else if (obs.type ==
+                   GroundLineType::GROUND_LINE_USS_TYPE_SIDE_POINT_VEHICLE)
             slot_two_sides_type.first = SlotClosestSideType::SIDE_CAR_OBSTACLE;
-          else 
+          else
             slot_two_sides_type.first = SlotClosestSideType::SIDE_HIGH_OBSTACLE;
         }
       } else if (right_box.IsPointIn(uss_point)) {
@@ -443,10 +449,12 @@ bool ParkingSlotManager::OptimizeParkingSlotCorners(
           right_distance = distance_to_obstacle;
           if (obs.type == GroundLineType::GROUND_LINE_USS_TYPE_SIDE_POINT_STEP)
             slot_two_sides_type.second = SlotClosestSideType::SIDE_SLOT;
-          else if (obs.type == GroundLineType::GROUND_LINE_USS_TYPE_SIDE_POINT_VEHICLE)
+          else if (obs.type ==
+                   GroundLineType::GROUND_LINE_USS_TYPE_SIDE_POINT_VEHICLE)
             slot_two_sides_type.second = SlotClosestSideType::SIDE_CAR_OBSTACLE;
-          else 
-            slot_two_sides_type.second = SlotClosestSideType::SIDE_HIGH_OBSTACLE;
+          else
+            slot_two_sides_type.second =
+                SlotClosestSideType::SIDE_HIGH_OBSTACLE;
         }
       }
     }
@@ -505,8 +513,8 @@ bool ParkingSlotManager::OptimizeParkingSlotCorners(
       continue;
     }
 
-    if(parking_slot_info.type.value == ParkingSlotType::PARALLEL){
-      if(obs.pts.size() % 2 != 0){
+    if (parking_slot_info.type.value == ParkingSlotType::PARALLEL) {
+      if (obs.pts.size() % 2 != 0) {
         continue;
       }
 
@@ -528,8 +536,8 @@ bool ParkingSlotManager::OptimizeParkingSlotCorners(
           parking_slot_bottom_line = std::min(
               front_line.DistanceTo(uss_ground_line.start()) - safety_threshold,
               std::min(front_line.DistanceTo(uss_ground_line.end()) -
-                          safety_threshold,
-                      parking_slot_bottom_line));
+                           safety_threshold,
+                       parking_slot_bottom_line));
         }
       }
     } else if (parking_slot_info.type.value == ParkingSlotType::PERPENDICULAR &&
@@ -552,7 +560,7 @@ bool ParkingSlotManager::OptimizeParkingSlotCorners(
       } // end obs loop
     }   // end except parallel slot
   }
-  if (!enable_deviation ) {
+  if (!enable_deviation) {
     parking_slot_bottom_line = center_line.length();
   }
 
@@ -575,12 +583,17 @@ bool ParkingSlotManager::OptimizeParkingSlotCorners(
             bisector.unit_direction() * rear_distance);
   }
 
-  std::vector<double> slot_dis = {left_distance, right_distance, max_left_distance, max_right_distance};
-  bool is_adjusted = refactorCenterLines(center_line, parking_slot_info,slot_dis);
-  double optimized_slot_width = (is_adjusted && slot_dis.size()==4) ? slot_dis[0]+slot_dis[1] : left_distance + right_distance;
+  std::vector<double> slot_dis = {left_distance, right_distance,
+                                  max_left_distance, max_right_distance};
+  bool is_adjusted =
+      refactorCenterLines(center_line, parking_slot_info, slot_dis);
+  double optimized_slot_width = (is_adjusted && slot_dis.size() == 4)
+                                    ? slot_dis[0] + slot_dis[1]
+                                    : left_distance + right_distance;
   planning_math::Box2d optimized_slot_box{
       center_line,
-      std::min(optimized_slot_width, parking_slot_width / parking_slot_inflation_ratio_)};
+      std::min(optimized_slot_width,
+               parking_slot_width / parking_slot_inflation_ratio_)};
 
   auto optimized_corners = optimized_slot_box.GetAllCorners();
   optimized_corners.emplace_back(optimized_corners.front());
@@ -666,7 +679,7 @@ bool ParkingSlotManager::updateSlotBySingleSideObstacle(
     const planning_math::Line2d &bisector,
     const std::pair<SlotClosestSideType, SlotClosestSideType>
         &slot_two_sides_type,
-    const double left_obstacle_to_origin_slot_center, 
+    const double left_obstacle_to_origin_slot_center,
     const double right_obstacle_to_origin_slot_center,
     ParkingSlotInfo *const ptr_parking_slot_info) {
   // only run one-side su logic in perpendicular slot
@@ -700,13 +713,11 @@ bool ParkingSlotManager::updateSlotBySingleSideObstacle(
           VehicleParam::Instance()->width + kMirrorToObstacleCarDist * 2.0;
     }
     if (ptr_parking_slot_info->left_empty == true &&
-        right_obstacle_to_origin_slot_center <
-            slot_width / 2) {
+        right_obstacle_to_origin_slot_center < slot_width / 2) {
       is_single_side_slot = true;
       planning_math::Vec2d shift_vector =
-          left_shift_vector *
-          max(new_right_step_slot_width,
-              2 * right_obstacle_to_origin_slot_center);
+          left_shift_vector * max(new_right_step_slot_width,
+                                  2 * right_obstacle_to_origin_slot_center);
       ptr_parking_slot_info->corners[0].x =
           ptr_parking_slot_info->corners[3].x + shift_vector.x();
       ptr_parking_slot_info->corners[0].y =
@@ -732,13 +743,11 @@ bool ParkingSlotManager::updateSlotBySingleSideObstacle(
           VehicleParam::Instance()->width + kMirrorToObstacleCarDist * 2.0;
     }
     if (ptr_parking_slot_info->right_empty == true &&
-        left_obstacle_to_origin_slot_center <
-            slot_width / 2) {
+        left_obstacle_to_origin_slot_center < slot_width / 2) {
       is_single_side_slot = true;
       planning_math::Vec2d shift_vector =
-          right_shift_vector *
-          max(new_left_step_slot_width,
-              2 * left_obstacle_to_origin_slot_center);
+          right_shift_vector * max(new_left_step_slot_width,
+                                   2 * left_obstacle_to_origin_slot_center);
       ptr_parking_slot_info->corners[3].x =
           ptr_parking_slot_info->corners[0].x + shift_vector.x();
       ptr_parking_slot_info->corners[3].y =
@@ -756,7 +765,8 @@ bool ParkingSlotManager::updateSlotBySingleSideObstacle(
   return true;
 }
 
-void ParkingSlotManager::checkTwoSidesVehicle(ParkingSlotInfo &parking_slot_info) {
+void ParkingSlotManager::checkTwoSidesVehicle(
+    ParkingSlotInfo &parking_slot_info) {
   auto &corners = parking_slot_info.corners;
   if (corners.size() != 4) {
     return;
@@ -776,24 +786,25 @@ void ParkingSlotManager::checkTwoSidesVehicle(ParkingSlotInfo &parking_slot_info
       std::hypot(corners[0].x - corners[3].x, corners[0].y - corners[3].y);
 
   planning_math::Box2d slot_box = planning_math::Box2d(
-      planning_math::Vec2d(cx, cy),
-      ctheta, lot_length, lot_width);
+      planning_math::Vec2d(cx, cy), ctheta, lot_length, lot_width);
   planning_math::Box2d slot_left(slot_box);
   planning_math::Box2d slot_right(slot_box);
 
-  planning_math::Vec2d left_vector(corners[0].x - corners[3].x, corners[0].y - corners[3].y);
+  planning_math::Vec2d left_vector(corners[0].x - corners[3].x,
+                                   corners[0].y - corners[3].y);
   slot_left.Shift(left_vector);
   slot_right.Shift(-1.0 * left_vector);
   Pose2D slot_center(cx, cy, ctheta - M_PI_2);
   planning_math::Vec2d slot_bottom_middle_point{bx, by};
-  planning_math::Vec2d slot_bottom_middle_point_local = tf2d(slot_center, slot_bottom_middle_point);
+  planning_math::Vec2d slot_bottom_middle_point_local =
+      tf2d(slot_center, slot_bottom_middle_point);
   double obs_bottom_limit = slot_bottom_middle_point_local.y() + 0.2;
 
   double x_max_left = -10000.0;
   double x_min_right = 10000.0;
   for (auto &obs : world_model_->get_parking_ground_line_fusion()) {
-    if ((obs.type < GroundLineType::GROUND_LINE_USS_TYPE_POINT && 
-        obs.type >= GroundLineType::GROUND_LINE_USS_TYPE_UNKNOWN) ||
+    if ((obs.type < GroundLineType::GROUND_LINE_USS_TYPE_POINT &&
+         obs.type >= GroundLineType::GROUND_LINE_USS_TYPE_UNKNOWN) ||
         obs.id != parking_slot_info.id) {
       continue;
     }
@@ -804,18 +815,20 @@ void ParkingSlotManager::checkTwoSidesVehicle(ParkingSlotInfo &parking_slot_info
       planning_math::Vec2d uss_point{obs.pts[i].x, obs.pts[i].y};
       planning_math::Vec2d uss_point_local = tf2d(slot_center, uss_point);
       if (slot_left.IsPointIn(uss_point)) {
-        if (uss_point_local.x() > x_max_left && uss_point_local.y() >= obs_bottom_limit) {
+        if (uss_point_local.x() > x_max_left &&
+            uss_point_local.y() >= obs_bottom_limit) {
           x_max_left = uss_point_local.x();
         }
-      } 
+      }
       if (slot_right.IsPointIn(uss_point)) {
-        if (uss_point_local.x() < x_min_right && uss_point_local.y() >= obs_bottom_limit) {
+        if (uss_point_local.x() < x_min_right &&
+            uss_point_local.y() >= obs_bottom_limit) {
           x_min_right = uss_point_local.x();
         }
       }
     }
   }
-  
+
   double slot_len_limit = VehicleParam::Instance()->length + 2.0;
   double slot_len_limit_1 = VehicleParam::Instance()->length + 1.1;
   double slot_len_limit_2 = VehicleParam::Instance()->length + 0.9;
@@ -833,17 +846,17 @@ void ParkingSlotManager::checkTwoSidesVehicle(ParkingSlotInfo &parking_slot_info
   }
 
   switch (parking_slot_info.slot_length_type) {
-    case 1:
-      parking_slot_info.special_slot_type = 1;
-      break;
-    case 2:
-      parking_slot_info.special_slot_type = 1;
-      break;
-    case 3:
-      parking_slot_info.special_slot_type = 2;
-      break;
-    default:
-      break;
+  case 1:
+    parking_slot_info.special_slot_type = 1;
+    break;
+  case 2:
+    parking_slot_info.special_slot_type = 1;
+    break;
+  case 3:
+    parking_slot_info.special_slot_type = 2;
+    break;
+  default:
+    break;
   }
 
   MSD_LOG(ERROR, "[checkTwoSidesVehicle] slot_length_type:%d",
@@ -853,9 +866,8 @@ void ParkingSlotManager::checkTwoSidesVehicle(ParkingSlotInfo &parking_slot_info
   return;
 }
 
-
-
-void ParkingSlotManager::checkPerpendicularBottomWall(ParkingSlotInfo &parking_slot_info) {
+void ParkingSlotManager::checkPerpendicularBottomWall(
+    ParkingSlotInfo &parking_slot_info) {
   auto &corners = parking_slot_info.corners;
   if (corners.size() != 4) {
     return;
@@ -875,15 +887,14 @@ void ParkingSlotManager::checkPerpendicularBottomWall(ParkingSlotInfo &parking_s
       std::hypot(corners[0].x - corners[3].x, corners[0].y - corners[3].y);
 
   planning_math::Box2d slot_box = planning_math::Box2d(
-      planning_math::Vec2d(cx, cy),
-      ctheta, lot_length, lot_width);
+      planning_math::Vec2d(cx, cy), ctheta, lot_length, lot_width);
   planning_math::Box2d slot_bottom(slot_box);
 
   planning_math::Vec2d down_vector((bx - fx) / 2.0, (by - fy) / 2.0);
   slot_bottom.Shift(down_vector);
   bool is_bottom_wall = false;
   for (auto &obs : world_model_->get_parking_ground_line_fusion()) {
-    if (obs.type < GroundLineType::GROUND_LINE_USS_TYPE_UNKNOWN || 
+    if (obs.type < GroundLineType::GROUND_LINE_USS_TYPE_UNKNOWN ||
         obs.type >= GroundLineType::GROUND_LINE_USS_TYPE_POINT ||
         obs.id != parking_slot_info.id ||
         obs.type == GroundLineType::GROUND_LINE_USS_TYPE_STEP) {
@@ -894,7 +905,7 @@ void ParkingSlotManager::checkPerpendicularBottomWall(ParkingSlotInfo &parking_s
       if (slot_bottom.IsPointIn(uss_point)) {
         is_bottom_wall = true;
         break;
-      } 
+      }
     }
   }
 
@@ -947,24 +958,27 @@ void ParkingSlotManager::updateSlotByVirtualCorner(
   }
 }
 
-bool ParkingSlotManager::refactorCenterLines(planning_math::LineSegment2d& center_line, ParkingSlotInfo &parking_slot_info,std::vector<double> &slot_dis){
-  if(parking_slot_info.type.value != ParkingSlotType::PERPENDICULAR){
+bool ParkingSlotManager::refactorCenterLines(
+    planning_math::LineSegment2d &center_line,
+    ParkingSlotInfo &parking_slot_info, std::vector<double> &slot_dis) {
+  if (parking_slot_info.type.value != ParkingSlotType::PERPENDICULAR) {
     return false;
   }
-  if(!PlanningContext::Instance()->planning_status().wlc_info.is_valid){
+  if (!PlanningContext::Instance()->planning_status().wlc_info.is_valid) {
     return false;
   }
-  if(!world_model_->get_ego_state().is_static){
+  if (!world_model_->get_ego_state().is_static) {
     return false;
   }
-  if(slot_dis.size() != 4){
+  if (slot_dis.size() != 4) {
     return false;
   }
-  
+
   constexpr static double min_safe_dis = 0.22;
   constexpr static double min_wlc_tolerance = 0.01;
-  const static double min_safe_width = VehicleParam::Instance()->width + 2 * min_safe_dis;
-  const static double half_min_safe_width = min_safe_width/2.0;
+  const static double min_safe_width =
+      VehicleParam::Instance()->width + 2 * min_safe_dis;
+  const static double half_min_safe_width = min_safe_width / 2.0;
   const static double half_car_width = VehicleParam::Instance()->width / 2.0;
 
   double left_distance = slot_dis[0];
@@ -973,52 +987,79 @@ bool ParkingSlotManager::refactorCenterLines(planning_math::LineSegment2d& cente
   double max_right_distance = slot_dis[3];
   double current_width = left_distance + right_distance;
   double half_current_width = current_width / 2.0;
-  if(current_width < min_safe_width){
-    MSD_LOG(INFO, "[refactorCenterLines] return as current_width %.6f is smaller than min_safe_width %.6f", current_width, min_safe_width);
+  if (current_width < min_safe_width) {
+    MSD_LOG(INFO,
+            "[refactorCenterLines] return as current_width %.6f is smaller "
+            "than min_safe_width %.6f",
+            current_width, min_safe_width);
     return false;
   }
 
   // distance from ego to center line, + for right, - for left
   Pose2D ego_pose = world_model_->get_ego_state().ego_pose;
-  planning_math::Vec2d end2ego = planning_math::Vec2d(ego_pose.x - center_line.end().x(), ego_pose.y - center_line.end().y());
+  planning_math::Vec2d end2ego = planning_math::Vec2d(
+      ego_pose.x - center_line.end().x(), ego_pose.y - center_line.end().y());
   // end2ego.Normalize();
-  const planning_math::Vec2d& center_direc = center_line.unit_direction();
+  const planning_math::Vec2d &center_direc = center_line.unit_direction();
   double ego_to_center = end2ego.CrossProd(center_direc);
 
   // distance from expected target to center line, + for right, - for left
-  double expected_target_to_ego = PlanningContext::Instance()->planning_status().wlc_info.y_offset;
+  double expected_target_to_ego =
+      PlanningContext::Instance()->planning_status().wlc_info.y_offset;
   double expected_target_to_center = ego_to_center + expected_target_to_ego;
-  MSD_LOG(INFO, "[refactorCenterLines] ego_to_center=%.6f, expected_target_to_ego=%.6f, expected_target_to_center=%.6f", ego_to_center, expected_target_to_ego, expected_target_to_center);
+  MSD_LOG(INFO,
+          "[refactorCenterLines] ego_to_center=%.6f, "
+          "expected_target_to_ego=%.6f, expected_target_to_center=%.6f",
+          ego_to_center, expected_target_to_ego, expected_target_to_center);
 
   double abs_offset = std::abs(expected_target_to_center);
-  if(abs_offset < min_wlc_tolerance){
-    MSD_LOG(INFO, "[refactorCenterLines] abs(%.6f) is smaller than min_wlc_tolerance, which is %.6f", expected_target_to_center, min_wlc_tolerance);
+  if (abs_offset < min_wlc_tolerance) {
+    MSD_LOG(INFO,
+            "[refactorCenterLines] abs(%.6f) is smaller than "
+            "min_wlc_tolerance, which is %.6f",
+            expected_target_to_center, min_wlc_tolerance);
     return false;
   }
 
   bool is_right = expected_target_to_center > 0;
-  double left_remain = std::max(0.0, max_left_distance-left_distance);
-  double right_remain = std::max(0.0, max_right_distance-right_distance);
-  planning_math::Vec2d left_shift_vec = center_line.unit_direction().rotate(M_PI_2);
+  double left_remain = std::max(0.0, max_left_distance - left_distance);
+  double right_remain = std::max(0.0, max_right_distance - right_distance);
+  planning_math::Vec2d left_shift_vec =
+      center_line.unit_direction().rotate(M_PI_2);
 
-  MSD_LOG(INFO, "[refactorCenterLines] is_right=%d, left_remain=%.6f, right_remain=%.6f", is_right, left_remain, right_remain);
-  MSD_LOG(INFO, "[refactorCenterLines] left_distance=%.6f, right_distance=%.6f", left_distance, right_distance);
-  MSD_LOG(INFO, "[refactorCenterLines] old start: x=%.6f y=%.6f old end: x=%.6f y=%.6f",center_line.start().x(), center_line.start().y(), center_line.end().x(), center_line.end().y());
-  MSD_LOG(INFO, "[refactorCenterLines] left_shift_vec (%.6f, %.6f)", left_shift_vec.x(), left_shift_vec.y());
+  MSD_LOG(
+      INFO,
+      "[refactorCenterLines] is_right=%d, left_remain=%.6f, right_remain=%.6f",
+      is_right, left_remain, right_remain);
+  MSD_LOG(INFO, "[refactorCenterLines] left_distance=%.6f, right_distance=%.6f",
+          left_distance, right_distance);
+  MSD_LOG(
+      INFO,
+      "[refactorCenterLines] old start: x=%.6f y=%.6f old end: x=%.6f y=%.6f",
+      center_line.start().x(), center_line.start().y(), center_line.end().x(),
+      center_line.end().y());
+  MSD_LOG(INFO, "[refactorCenterLines] left_shift_vec (%.6f, %.6f)",
+          left_shift_vec.x(), left_shift_vec.y());
 
-  if(is_right && right_remain >abs_offset-1e-6){
-    MSD_LOG(INFO, "[refactorCenterLines] is_right and adjust width is sufficient");
-    planning_math::Vec2d new_start_p = center_line.start() - left_shift_vec * abs_offset;
-    planning_math::Vec2d new_end_p = center_line.end() - left_shift_vec * abs_offset;
+  if (is_right && right_remain > abs_offset - 1e-6) {
+    MSD_LOG(INFO,
+            "[refactorCenterLines] is_right and adjust width is sufficient");
+    planning_math::Vec2d new_start_p =
+        center_line.start() - left_shift_vec * abs_offset;
+    planning_math::Vec2d new_end_p =
+        center_line.end() - left_shift_vec * abs_offset;
     center_line = planning_math::LineSegment2d(new_start_p, new_end_p);
     right_distance += abs_offset;
     left_distance -= abs_offset;
   }
 
-  if(!is_right && left_remain > abs_offset-1e-6){
-    MSD_LOG(INFO, "[refactorCenterLines] is_left and adjust width is sufficient");
-    planning_math::Vec2d new_start_p = center_line.start() + left_shift_vec * abs_offset;
-    planning_math::Vec2d new_end_p = center_line.end() + left_shift_vec * abs_offset;
+  if (!is_right && left_remain > abs_offset - 1e-6) {
+    MSD_LOG(INFO,
+            "[refactorCenterLines] is_left and adjust width is sufficient");
+    planning_math::Vec2d new_start_p =
+        center_line.start() + left_shift_vec * abs_offset;
+    planning_math::Vec2d new_end_p =
+        center_line.end() + left_shift_vec * abs_offset;
     center_line = planning_math::LineSegment2d(new_start_p, new_end_p);
     right_distance -= abs_offset;
     left_distance += abs_offset;
@@ -1027,32 +1068,52 @@ bool ParkingSlotManager::refactorCenterLines(planning_math::LineSegment2d& cente
   double extra_width = half_current_width - half_min_safe_width;
   double right_max_adjust_width = extra_width + right_remain;
   double left_max_adjust_width = extra_width + left_remain;
-  MSD_LOG(INFO, "[refactorCenterLines] extra_width=%.6f, right_max_adjust_width=%.6f, left_max_adjust_width=%.6f", extra_width, right_max_adjust_width, left_max_adjust_width);
-  if(is_right && right_remain <abs_offset){
-    MSD_LOG(INFO, "[refactorCenterLines] is_right and adjust width is insufficient");
-    double adjust_extra_width = right_max_adjust_width < abs_offset ? extra_width : abs_offset - right_remain;
-    double adjust_center_width = adjust_extra_width+ right_remain;
+  MSD_LOG(INFO,
+          "[refactorCenterLines] extra_width=%.6f, "
+          "right_max_adjust_width=%.6f, left_max_adjust_width=%.6f",
+          extra_width, right_max_adjust_width, left_max_adjust_width);
+  if (is_right && right_remain < abs_offset) {
+    MSD_LOG(INFO,
+            "[refactorCenterLines] is_right and adjust width is insufficient");
+    double adjust_extra_width = right_max_adjust_width < abs_offset
+                                    ? extra_width
+                                    : abs_offset - right_remain;
+    double adjust_center_width = adjust_extra_width + right_remain;
     right_distance += right_remain;
     left_distance -= adjust_extra_width + adjust_center_width;
-    planning_math::Vec2d new_start_p = center_line.start() - left_shift_vec * adjust_center_width;
-    planning_math::Vec2d new_end_p = center_line.end() - left_shift_vec * adjust_center_width;
+    planning_math::Vec2d new_start_p =
+        center_line.start() - left_shift_vec * adjust_center_width;
+    planning_math::Vec2d new_end_p =
+        center_line.end() - left_shift_vec * adjust_center_width;
     center_line = planning_math::LineSegment2d(new_start_p, new_end_p);
   }
 
-  if(!is_right && left_remain < abs_offset){
-    MSD_LOG(INFO, "[refactorCenterLines] is_left and adjust width is insufficient");
-    double adjust_extra_width = left_max_adjust_width < abs_offset ? extra_width : abs_offset - left_remain;
-    double adjust_center_width = adjust_extra_width+ left_remain;
+  if (!is_right && left_remain < abs_offset) {
+    MSD_LOG(INFO,
+            "[refactorCenterLines] is_left and adjust width is insufficient");
+    double adjust_extra_width = left_max_adjust_width < abs_offset
+                                    ? extra_width
+                                    : abs_offset - left_remain;
+    double adjust_center_width = adjust_extra_width + left_remain;
     left_distance += left_remain;
     right_distance -= adjust_extra_width + adjust_center_width;
-    planning_math::Vec2d new_start_p = center_line.start() + left_shift_vec * adjust_center_width;
-    planning_math::Vec2d new_end_p = center_line.end() + left_shift_vec * adjust_center_width;
+    planning_math::Vec2d new_start_p =
+        center_line.start() + left_shift_vec * adjust_center_width;
+    planning_math::Vec2d new_end_p =
+        center_line.end() + left_shift_vec * adjust_center_width;
     center_line = planning_math::LineSegment2d(new_start_p, new_end_p);
   }
   slot_dis[0] = left_distance;
   slot_dis[1] = right_distance;
-  MSD_LOG(INFO, "[refactorCenterLines] after refactor left_distance=%.6f, right_distance=%.6f", left_distance, right_distance);
-  MSD_LOG(INFO, "[refactorCenterLines] after refactor new start: x=%.3f y=%.3f new end: x=%.3f y=%.3f",center_line.start().x(), center_line.start().y(), center_line.end().x(), center_line.end().y());
+  MSD_LOG(INFO,
+          "[refactorCenterLines] after refactor left_distance=%.6f, "
+          "right_distance=%.6f",
+          left_distance, right_distance);
+  MSD_LOG(INFO,
+          "[refactorCenterLines] after refactor new start: x=%.3f y=%.3f new "
+          "end: x=%.3f y=%.3f",
+          center_line.start().x(), center_line.start().y(),
+          center_line.end().x(), center_line.end().y());
 
   return true;
 }
@@ -1283,13 +1344,6 @@ bool ParkingSlotManager::UpdateParkingSlotDistance() {
 
   return true;
 }
-
-
-
-
-
-
-
 
 } // namespace parking
 

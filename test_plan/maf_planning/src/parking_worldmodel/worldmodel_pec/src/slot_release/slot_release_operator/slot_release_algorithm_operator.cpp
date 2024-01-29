@@ -1,13 +1,13 @@
 
 
 #include "slot_release_algorithm_operator.h"
+#include "../parameters/slot_release_params.h"
+#include "../parameters/slot_release_vehicle_param.h"
 #include "pnc/define/parking_vision_info.h"
 #include "utils/math/math_helper.hpp"
 #include "utils/math/polygon.hpp"
 #include <fstream>
 #include <mlog_core/mlog.h>
-#include "../parameters/slot_release_params.h"
-#include "../parameters/slot_release_vehicle_param.h"
 
 // #define GROUNDLINE_SAVE_AREA_EXTEND_LENGTH_OUT_PERPENDICULAR (4.3)
 // #define GROUNDLINE_SAVE_AREA_EXTEND_LENGTH_OUT_PARALLEL (3.7)
@@ -17,8 +17,8 @@
 // #define VALID_PASSAGE_WIDTH_PARALLEL 3.7
 // #define VALID_PASSAGE_WIDTH_OBLIQUE 4.3
 // #define HALF_WIDTH (1.0)
-// #define HORIZONTAL_PARKINGSLOT_EXTENDED_AREA_LENGTH (VEHICLE_LENGTH + 2 * 0.3)
-// #define HORIZONTAL_PARKINGSLOT_EXTENDED_AREA_WIDTH (VEHICLE_WIDTH + 3.7)
+// #define HORIZONTAL_PARKINGSLOT_EXTENDED_AREA_LENGTH (VEHICLE_LENGTH + 2 *
+// 0.3) #define HORIZONTAL_PARKINGSLOT_EXTENDED_AREA_WIDTH (VEHICLE_WIDTH + 3.7)
 // #define VERTICAL_PARKINGSLOT_EXTENDED_AREA_LENGTH (VEHICLE_LENGTH + 4.1)
 // #define VERTICAL_PARKINGSLOT_EXTENDED_AREA_WIDTH (VEHICLE_WIDTH + 2 * 0.2)
 // #define VEHICLE_LENGTH (5.098)
@@ -127,8 +127,8 @@ void SlotReleaseHandler::process(
     // }
 
     // 7.
-    if (env_feature_handler.isDeadEndRoad() && common_handler.isParalleSlot()
-        && is_apa_mode) {
+    if (env_feature_handler.isDeadEndRoad() && common_handler.isParalleSlot() &&
+        is_apa_mode) {
       union_slot.fusion_slot_.empty_votes_ = 0;
       union_slot.failure_reason_ = -110;
       continue;
@@ -158,8 +158,8 @@ void SlotReleaseHandler::process(
           union_slot.failure_reason_ = -40;
         }
       } else {
-          union_slot.fusion_slot_.empty_votes_ = 0;
-          union_slot.failure_reason_ = -40;        
+        union_slot.fusion_slot_.empty_votes_ = 0;
+        union_slot.failure_reason_ = -40;
       }
       continue;
     }
@@ -193,7 +193,8 @@ void SlotReleaseHandler::process(
     }
 
     // 14.
-    if (!ego_car_handler.isSlotFullyObservedAccordHisTraj(union_slot) && is_apa_mode) {
+    if (!ego_car_handler.isSlotFullyObservedAccordHisTraj(union_slot) &&
+        is_apa_mode) {
       union_slot.fusion_slot_.empty_votes_ = 0;
       union_slot.failure_reason_ = -61;
       continue;
@@ -272,17 +273,18 @@ bool SlotReleaseHandler::isOccupiedByVehicle(
 bool SlotReleaseHandler::isParkingSafetyAreaOccupiedByObject(
     const SlotReleaseManager::ParkingSlotUnion &parking_slot_union,
     const maf_perception_interface::PerceptionFusionObjectResult
-        &object_detection, CommonHandler *common_handler) {
+        &object_detection,
+    CommonHandler *common_handler) {
   double HORIZONTAL_PARKINGSLOT_EXTENDED_AREA_LENGTH =
-    CarParams::GetInstance()->vehicle_length + 2 * 0.3;
+      CarParams::GetInstance()->vehicle_length + 2 * 0.3;
   double HORIZONTAL_PARKINGSLOT_EXTENDED_AREA_WIDTH =
-    CarParams::GetInstance()->vehicle_width + 
-    common_handler->getParams().parallel_passage_width - 0.2;
-  double VERTICAL_PARKINGSLOT_EXTENDED_AREA_LENGTH = 
-    CarParams::GetInstance()->vehicle_length + 
-    common_handler->getParams().vertical_passage_width - 0.2;
-  double VERTICAL_PARKINGSLOT_EXTENDED_AREA_WIDTH = 
-    CarParams::GetInstance()->vehicle_width + 2 * 0.2;
+      CarParams::GetInstance()->vehicle_width +
+      common_handler->getParams().parallel_passage_width - 0.2;
+  double VERTICAL_PARKINGSLOT_EXTENDED_AREA_LENGTH =
+      CarParams::GetInstance()->vehicle_length +
+      common_handler->getParams().vertical_passage_width - 0.2;
+  double VERTICAL_PARKINGSLOT_EXTENDED_AREA_WIDTH =
+      CarParams::GetInstance()->vehicle_width + 2 * 0.2;
   bool is_occupied = false;
 
   std::vector<ParkingSlotPoint> parking_slot =
@@ -317,27 +319,25 @@ bool SlotReleaseHandler::isParkingSafetyAreaOccupiedByObject(
   parking_slot_lateral_vec.normalize();
   std::vector<Eigen::Vector2d> extended_free_area;
   if (vertical_parking_slot) {
-    Eigen::Vector2d p0 = (-CarParams::GetInstance()->vehicle_length / 2) * 
+    Eigen::Vector2d p0 = (-CarParams::GetInstance()->vehicle_length / 2) *
                              parking_slot_heading_vec +
                          (-VERTICAL_PARKINGSLOT_EXTENDED_AREA_WIDTH / 2) *
                              parking_slot_lateral_vec +
                          parking_slot_center;
-    Eigen::Vector2d p1 =
-        (VERTICAL_PARKINGSLOT_EXTENDED_AREA_LENGTH - 
-            CarParams::GetInstance()->vehicle_length / 2) *
-            parking_slot_heading_vec +
-        (-VERTICAL_PARKINGSLOT_EXTENDED_AREA_WIDTH / 2) *
-            parking_slot_lateral_vec +
-        parking_slot_center;
-    Eigen::Vector2d p2 =
-        (VERTICAL_PARKINGSLOT_EXTENDED_AREA_LENGTH - 
-            CarParams::GetInstance()->vehicle_length / 2) *
-            parking_slot_heading_vec +
-        (VERTICAL_PARKINGSLOT_EXTENDED_AREA_WIDTH / 2) *
-            parking_slot_lateral_vec +
-        parking_slot_center;
-    Eigen::Vector2d p3 = (-CarParams::GetInstance()->vehicle_length / 2) * 
-                         parking_slot_heading_vec +
+    Eigen::Vector2d p1 = (VERTICAL_PARKINGSLOT_EXTENDED_AREA_LENGTH -
+                          CarParams::GetInstance()->vehicle_length / 2) *
+                             parking_slot_heading_vec +
+                         (-VERTICAL_PARKINGSLOT_EXTENDED_AREA_WIDTH / 2) *
+                             parking_slot_lateral_vec +
+                         parking_slot_center;
+    Eigen::Vector2d p2 = (VERTICAL_PARKINGSLOT_EXTENDED_AREA_LENGTH -
+                          CarParams::GetInstance()->vehicle_length / 2) *
+                             parking_slot_heading_vec +
+                         (VERTICAL_PARKINGSLOT_EXTENDED_AREA_WIDTH / 2) *
+                             parking_slot_lateral_vec +
+                         parking_slot_center;
+    Eigen::Vector2d p3 = (-CarParams::GetInstance()->vehicle_length / 2) *
+                             parking_slot_heading_vec +
                          (VERTICAL_PARKINGSLOT_EXTENDED_AREA_WIDTH / 2) *
                              parking_slot_lateral_vec +
                          parking_slot_center;
@@ -346,26 +346,24 @@ bool SlotReleaseHandler::isParkingSafetyAreaOccupiedByObject(
     extended_free_area.push_back(p2);
     extended_free_area.push_back(p3);
   } else {
-    Eigen::Vector2d p0 =
-        (HORIZONTAL_PARKINGSLOT_EXTENDED_AREA_WIDTH - 
-            CarParams::GetInstance()->vehicle_width  / 2) *
-            parking_slot_heading_vec +
-        (-HORIZONTAL_PARKINGSLOT_EXTENDED_AREA_LENGTH / 2) *
-            parking_slot_lateral_vec +
-        parking_slot_center;
-    Eigen::Vector2d p1 =
-        (HORIZONTAL_PARKINGSLOT_EXTENDED_AREA_WIDTH - 
-            CarParams::GetInstance()->vehicle_width  / 2) *
-            parking_slot_heading_vec +
-        (HORIZONTAL_PARKINGSLOT_EXTENDED_AREA_LENGTH / 2) *
-            parking_slot_lateral_vec +
-        parking_slot_center;
-    Eigen::Vector2d p2 = (-CarParams::GetInstance()->vehicle_width  / 2) * 
+    Eigen::Vector2d p0 = (HORIZONTAL_PARKINGSLOT_EXTENDED_AREA_WIDTH -
+                          CarParams::GetInstance()->vehicle_width / 2) *
+                             parking_slot_heading_vec +
+                         (-HORIZONTAL_PARKINGSLOT_EXTENDED_AREA_LENGTH / 2) *
+                             parking_slot_lateral_vec +
+                         parking_slot_center;
+    Eigen::Vector2d p1 = (HORIZONTAL_PARKINGSLOT_EXTENDED_AREA_WIDTH -
+                          CarParams::GetInstance()->vehicle_width / 2) *
                              parking_slot_heading_vec +
                          (HORIZONTAL_PARKINGSLOT_EXTENDED_AREA_LENGTH / 2) *
                              parking_slot_lateral_vec +
                          parking_slot_center;
-    Eigen::Vector2d p3 = (-CarParams::GetInstance()->vehicle_width  / 2) * 
+    Eigen::Vector2d p2 = (-CarParams::GetInstance()->vehicle_width / 2) *
+                             parking_slot_heading_vec +
+                         (HORIZONTAL_PARKINGSLOT_EXTENDED_AREA_LENGTH / 2) *
+                             parking_slot_lateral_vec +
+                         parking_slot_center;
+    Eigen::Vector2d p3 = (-CarParams::GetInstance()->vehicle_width / 2) *
                              parking_slot_heading_vec +
                          (-HORIZONTAL_PARKINGSLOT_EXTENDED_AREA_LENGTH / 2) *
                              parking_slot_lateral_vec +
@@ -476,10 +474,11 @@ bool SlotReleaseHandler::isParkingSafetyAreaOccupiedByObjectFusion(
   bool is_parallel_slot = common_handler->isParalleSlot();
   if (is_parallel_slot) {
     parking_slot_open_width =
-        CarParams::GetInstance()->vehicle_length + 0.2 + 
+        CarParams::GetInstance()->vehicle_length + 0.2 +
         common_handler->getParams().groundline_save_area_extend_width;
   } else {
-    parking_slot_open_width = 1.6 + common_handler->getParams().groundline_save_area_extend_width;
+    parking_slot_open_width =
+        1.6 + common_handler->getParams().groundline_save_area_extend_width;
   }
   double parking_slot_depth =
       std::hypot(parking_slot[0].position.x() - parking_slot[1].position.x(),
@@ -505,23 +504,29 @@ bool SlotReleaseHandler::isParkingSafetyAreaOccupiedByObjectFusion(
   }
   Eigen::Vector2d p0 =
       GROUNDLINE_SAVE_AREA_EXTEND_LENGTH_OUT * parking_slot_heading_vec +
-      (parking_slot_open_width - common_handler->getParams().groundline_save_area_extend_width) / 2 *
-          parking_slot_lateral_vec +
+      (parking_slot_open_width -
+       common_handler->getParams().groundline_save_area_extend_width) /
+          2 * parking_slot_lateral_vec +
       parking_slot_open_center;
   Eigen::Vector2d p1 =
       GROUNDLINE_SAVE_AREA_EXTEND_LENGTH_OUT * parking_slot_heading_vec -
-      (parking_slot_open_width - common_handler->getParams().groundline_save_area_extend_width) / 2 *
-          parking_slot_lateral_vec +
+      (parking_slot_open_width -
+       common_handler->getParams().groundline_save_area_extend_width) /
+          2 * parking_slot_lateral_vec +
       parking_slot_open_center;
   Eigen::Vector2d p2 =
-      -common_handler->getParams().slot_in_extend_depth * parking_slot_heading_vec -
-      (parking_slot_open_width - common_handler->getParams().groundline_save_area_extend_width) / 2 *
-          parking_slot_lateral_vec +
+      -common_handler->getParams().slot_in_extend_depth *
+          parking_slot_heading_vec -
+      (parking_slot_open_width -
+       common_handler->getParams().groundline_save_area_extend_width) /
+          2 * parking_slot_lateral_vec +
       parking_slot_open_center;
   Eigen::Vector2d p3 =
-      -common_handler->getParams().slot_in_extend_depth * parking_slot_heading_vec +
-      (parking_slot_open_width - common_handler->getParams().groundline_save_area_extend_width) / 2 *
-          parking_slot_lateral_vec +
+      -common_handler->getParams().slot_in_extend_depth *
+          parking_slot_heading_vec +
+      (parking_slot_open_width -
+       common_handler->getParams().groundline_save_area_extend_width) /
+          2 * parking_slot_lateral_vec +
       parking_slot_open_center;
   extended_free_area.push_back(p0);
   extended_free_area.push_back(p1);
@@ -569,7 +574,8 @@ void CommonHandler::generateObjFusionToSlotFrame() {
     if ((int)p.track_id == fusion_slot_.track_id_) {
       for (auto &point : p.local_points_fusion) {
         Eigen::Vector3d pos(point.x, point.y, point.z);
-        Eigen::Vector3d pos_in_oblique_slot_frame = oblique_slot_frame_tf_inv_ * pos;
+        Eigen::Vector3d pos_in_oblique_slot_frame =
+            oblique_slot_frame_tf_inv_ * pos;
         Eigen::Vector3d pos_in_passage_frame = slot_frame_tf_inv_ * pos;
         if (p.type.value ==
             (int)msquare::GroundLineType::GROUND_LINE_USS_TYPE_POINT) {
@@ -597,7 +603,8 @@ void CommonHandler::generateObjFusionToSlotFrame() {
           side_obj_fusions_to_slot_frame_.emplace_back(pos_in_passage_frame);
         }
         all_obj_fusions_to_slot_frame_.emplace_back(pos_in_passage_frame);
-        obj_fusions_to_oblique_slot_frame_.emplace_back(pos_in_oblique_slot_frame);
+        obj_fusions_to_oblique_slot_frame_.emplace_back(
+            pos_in_oblique_slot_frame);
         obj_pos_vec_.emplace_back(pos);
       }
     }
@@ -632,8 +639,8 @@ CommonHandler::generateBottomObjFusionToSlotFrame(bool *has_wall) {
             (int)msquare::GroundLineType::GROUND_LINE_USS_TYPE_SPECIAL ||
         p.type.value ==
             (int)msquare::GroundLineType::GROUND_LINE_USS_TYPE_VEHICLE ||
-        p.type.value ==
-            (int)msquare::GroundLineType::GROUND_LINE_USS_TYPE_ONLY_USS_UNKNOWN) {
+        p.type.value == (int)msquare::GroundLineType::
+                            GROUND_LINE_USS_TYPE_ONLY_USS_UNKNOWN) {
       for (auto &point : p.local_points_fusion) {
         Eigen::Vector3d pos(point.x, point.y, 0);
         Eigen::Vector3d pos_in_slot_frame = getSlotFrameTF() * pos;
@@ -757,15 +764,18 @@ void CommonHandler::generateSlotFrame() {
   double slot_frame_y = parking_slot_front_center.y();
   double slot_frame_yaw = std::atan2(parking_slot_front_lateral_vec.y(),
                                      parking_slot_front_lateral_vec.x());
-  double oblique_slot_frame_yaw = std::atan2(parking_slot_side_lateral_vec.y(),
-                                  parking_slot_side_lateral_vec.x()) + M_PI / 2;
+  double oblique_slot_frame_yaw =
+      std::atan2(parking_slot_side_lateral_vec.y(),
+                 parking_slot_side_lateral_vec.x()) +
+      M_PI / 2;
 
   Eigen::Matrix3d rot_max;
   Eigen::Vector3d trans_max(slot_frame_x, slot_frame_y, 0);
   Eigen::Isometry3d slot_frame_tf = Eigen::Isometry3d::Identity();
-  
-  rot_max = (Eigen::AngleAxisd(isObliqueSlot() ? oblique_slot_frame_yaw : slot_frame_yaw,
-                              Eigen::Vector3d::UnitZ()));
+
+  rot_max = (Eigen::AngleAxisd(isObliqueSlot() ? oblique_slot_frame_yaw
+                                               : slot_frame_yaw,
+                               Eigen::Vector3d::UnitZ()));
   slot_frame_tf.rotate(rot_max);
   slot_frame_tf.pretranslate(trans_max);
   oblique_slot_frame_tf_inv_ = slot_frame_tf.inverse();
@@ -859,7 +869,7 @@ void EnvFeatureHandler::extractFeaturSlotLeftAndRightWidth() {
   }
   const auto &slot_width_and_depth = common_handler_->getSlotWidthAndDepth();
   double parking_slot_depth = slot_width_and_depth.second;
-  F_4_slot_open_area_in_length_ = - (2 * parking_slot_depth) / 3;
+  F_4_slot_open_area_in_length_ = -(2 * parking_slot_depth) / 3;
   // F_4_slot_open_area_in_length_ =
   //     -std::fabs(5 - std::fabs(psd_front_center_ego.y()) + HALF_WIDTH);
   // if (common_handler_->isParalleSlot()) {
@@ -867,7 +877,8 @@ void EnvFeatureHandler::extractFeaturSlotLeftAndRightWidth() {
   // }
 
   // if (common_handler_->isObliqueSlot()) {
-  //   F_4_slot_open_area_in_length_ = -common_handler_->getParams().slot_in_extend_depth;
+  //   F_4_slot_open_area_in_length_ =
+  //   -common_handler_->getParams().slot_in_extend_depth;
   // }
 
   double left_side_max_x = -10.0;
@@ -895,9 +906,11 @@ void EnvFeatureHandler::extractFeaturSlotLeftAndRightWidth() {
   F_1_slot_left_width_ = left_side_max_x;
   F_2_slot_right_width_ = right_side_min_x;
   // auto obj_vec = common_handler_->getObjPosVec();
-  // if ((left_side_max_index < obj_vec.size()) && (right_side_min_index < obj_vec.size())) {
-  //   std::cout << "track id: " << common_handler_->getFusionSlot().track_id_ << std::endl;
-  //   std::cout << "left max pos: " << obj_vec[left_side_max_index].x()
+  // if ((left_side_max_index < obj_vec.size()) && (right_side_min_index <
+  // obj_vec.size())) {
+  //   std::cout << "track id: " << common_handler_->getFusionSlot().track_id_
+  //   << std::endl; std::cout << "left max pos: " <<
+  //   obj_vec[left_side_max_index].x()
   //             << ", " << obj_vec[left_side_max_index].y() <<
   //             std::endl;
   //   std::cout << "right min pos: " << obj_vec[right_side_min_index].x()
@@ -960,9 +973,11 @@ void EnvFeatureHandler::extractPassageWidth() {
 
   double half_slot_right_x = common_handler_->getSlotWidthAndDepth().first / 2;
   if (is_drive_along_x_positive) {
-    F_5_passage_extend_length_ = half_slot_right_x + common_handler_->getParams().valid_passage_length;
+    F_5_passage_extend_length_ =
+        half_slot_right_x + common_handler_->getParams().valid_passage_length;
   } else {
-    F_5_passage_extend_length_ = -half_slot_right_x - common_handler_->getParams().valid_passage_length;
+    F_5_passage_extend_length_ =
+        -half_slot_right_x - common_handler_->getParams().valid_passage_length;
   }
   double oppo_y = 10;
   double side_y = 0;
@@ -976,12 +991,16 @@ void EnvFeatureHandler::extractPassageWidth() {
 
   for (const auto &obj_fusion : side_obj_fusions) {
     if (is_drive_along_x_positive) {
-      if (obj_fusion.x() > half_slot_right_x + common_handler_->getParams().valid_passage_length ||
+      if (obj_fusion.x() >
+              half_slot_right_x +
+                  common_handler_->getParams().valid_passage_length ||
           obj_fusion.x() < half_slot_right_x) {
         continue;
       }
     } else {
-      if (obj_fusion.x() < -half_slot_right_x - common_handler_->getParams().valid_passage_length ||
+      if (obj_fusion.x() <
+              -half_slot_right_x -
+                  common_handler_->getParams().valid_passage_length ||
           obj_fusion.x() > -half_slot_right_x) {
         continue;
       }
@@ -991,12 +1010,16 @@ void EnvFeatureHandler::extractPassageWidth() {
 
   for (const auto &obj_fusion : opposite_obj_fusuion) {
     if (is_drive_along_x_positive) {
-      if (obj_fusion.x() > half_slot_right_x + common_handler_->getParams().valid_passage_length ||
+      if (obj_fusion.x() >
+              half_slot_right_x +
+                  common_handler_->getParams().valid_passage_length ||
           obj_fusion.x() < half_slot_right_x) {
         continue;
       }
     } else {
-      if (obj_fusion.x() < -half_slot_right_x - common_handler_->getParams().valid_passage_length ||
+      if (obj_fusion.x() <
+              -half_slot_right_x -
+                  common_handler_->getParams().valid_passage_length ||
           obj_fusion.x() > -half_slot_right_x) {
         continue;
       }
@@ -1047,8 +1070,9 @@ bool EnvFeatureHandler::isSlotOpenAreaWidthEnough(
   if (!common_handler_->isApaMode()) {
     safe_slot_width = 2.3;
   }
-  safe_slot_width = safe_slot_width + 
-    CarParams::GetInstance()->vehicle_width_real - L_7_VEHICLE_WIDTH_REAL;
+  safe_slot_width = safe_slot_width +
+                    CarParams::GetInstance()->vehicle_width_real -
+                    L_7_VEHICLE_WIDTH_REAL;
   if (common_handler_->isObliqueSlot()) {
   } else if (common_handler_->isParalleSlot()) {
     safe_slot_width = CarParams::GetInstance()->vehicle_length + 0.6;
@@ -1096,7 +1120,7 @@ bool EnvFeatureHandler::isSlotOpenAreaWidthEnough(
     }
   }
 
-  double slot_width_diff = 
+  double slot_width_diff =
       common_handler_->getParams().vertical_slot_width_hys_scope;
   double virtual_slot_wdith =
       std::fabs(F_2_slot_right_width_ - F_1_slot_left_width_);
@@ -1159,7 +1183,7 @@ bool EnvFeatureHandler::isSlotOpenAreaLengthEnough(
   //   }
   // }
 
-  double slot_length_diff = 
+  double slot_length_diff =
       common_handler_->getParams().vertical_passage_width_hys_scope;
   union_slot.slot_open_length_trigger_.changeThresholds(
       safe_extend_out_slot_length - slot_length_diff,
@@ -1177,23 +1201,23 @@ bool EnvFeatureHandler::isSlotOpenAreaLengthEnough(
 
 bool EnvFeatureHandler::isPassageWidthEnough(
     SlotReleaseManager::ParkingSlotUnion &union_slot) {
-  double reasonable_passage_width = 
-    common_handler_->getParams().vertical_passage_width;
+  double reasonable_passage_width =
+      common_handler_->getParams().vertical_passage_width;
   if (!common_handler_->isApaMode()) {
     reasonable_passage_width = 4.0;
   }
   if (common_handler_->isParalleSlot()) {
-    reasonable_passage_width = 
-      common_handler_->getParams().parallel_passage_width;
+    reasonable_passage_width =
+        common_handler_->getParams().parallel_passage_width;
   } else if (common_handler_->isObliqueSlot()) {
-    reasonable_passage_width = 
-      common_handler_->getParams().oblique_passage_width;
+    reasonable_passage_width =
+        common_handler_->getParams().oblique_passage_width;
     if (!common_handler_->isApaMode()) {
       reasonable_passage_width = 4.0;
     }
   }
-  double passage_width_diff = 
-    common_handler_->getParams().vertical_passage_width_hys_scope;
+  double passage_width_diff =
+      common_handler_->getParams().vertical_passage_width_hys_scope;
   union_slot.passage_width_trigger_.changeThresholds(
       reasonable_passage_width - passage_width_diff, reasonable_passage_width);
   if (std::fabs(F_6_passage_width_ - union_slot.pre_passage_width_) > 3.0) {
@@ -1277,20 +1301,23 @@ void EgoCarFeatureHandler::extractSlotToHistoryTrajPose() {
       };
 
   auto is_pt_valid = [this](const ParkingSlotElement fusion_slot,
-                        const Eigen::Isometry3d &pose, bool is_parallel) {
+                            const Eigen::Isometry3d &pose, bool is_parallel) {
     if (fusion_slot.corners_.size() == 4) {
       Eigen::Vector3d psd_front_center = (fusion_slot.corners_[0].position +
                                           fusion_slot.corners_[3].position) /
                                          2.0;
       Eigen::Vector3d psd_front_center_ego = pose.inverse() * psd_front_center;
-      double uss_friendly_area_y_max_vertical = common_handler_->getParams().uss_friendly_area_y_max;
+      double uss_friendly_area_y_max_vertical =
+          common_handler_->getParams().uss_friendly_area_y_max;
       if (VehicleParam::Instance()->car_type == "SG") {
         uss_friendly_area_y_max_vertical = 5.65;
       }
-      double uss_frendly_area_y_max = is_parallel
-                                          ? common_handler_->getParams().uss_friendly_area_y_max_parallel
-                                          : uss_friendly_area_y_max_vertical;
-      if (std::abs(psd_front_center_ego.y()) > common_handler_->getParams().uss_friendly_area_y_min &&
+      double uss_frendly_area_y_max =
+          is_parallel
+              ? common_handler_->getParams().uss_friendly_area_y_max_parallel
+              : uss_friendly_area_y_max_vertical;
+      if (std::abs(psd_front_center_ego.y()) >
+              common_handler_->getParams().uss_friendly_area_y_min &&
           std::abs(psd_front_center_ego.y()) < uss_frendly_area_y_max) {
         return true;
       }
@@ -1357,12 +1384,14 @@ bool EgoCarFeatureHandler::isYawReasonable() {
   int slot_type = common_handler_->getFusionSlot().slot_type_;
   // if (common_handler_->isSpaceSlot()) {
   //   if (!common_handler_->getParams().enable_oblique_slot &&
-  //       F_8_ego_to_slot_theta_.x() > std::sin(common_handler_->getParams().space_yam_max_limit)) {
+  //       F_8_ego_to_slot_theta_.x() >
+  //       std::sin(common_handler_->getParams().space_yam_max_limit)) {
   //     return false;
   //   }
   // } else {
   //   if (!common_handler_->getParams().enable_oblique_slot &&
-  //       F_8_ego_to_slot_theta_.x() > std::sin(common_handler_->getParams().yaw_limit)) {
+  //       F_8_ego_to_slot_theta_.x() >
+  //       std::sin(common_handler_->getParams().yaw_limit)) {
   //     return false;
   //   }
   // }
@@ -1393,21 +1422,26 @@ bool EgoCarFeatureHandler::isCarInSlot() {
 }
 
 bool EgoCarFeatureHandler::isSlotCenterToEgoDisReasonable() {
-  if (std::fabs(F_6_ego_to_slot_x_) > common_handler_->getParams().parkable_area_x) {
+  if (std::fabs(F_6_ego_to_slot_x_) >
+      common_handler_->getParams().parkable_area_x) {
     return false;
   }
 
-  double uss_frendly_area_y_min = common_handler_->getParams().uss_friendly_area_y_min;
+  double uss_frendly_area_y_min =
+      common_handler_->getParams().uss_friendly_area_y_min;
   if (common_handler_->isSpaceSlot()) {
-    uss_frendly_area_y_min = common_handler_->getParams().uss_friendly_area_y_min + 0.3;
+    uss_frendly_area_y_min =
+        common_handler_->getParams().uss_friendly_area_y_min + 0.3;
   }
 
-  double uss_friendly_area_max_y = common_handler_->getParams().uss_friendly_area_y_max;
+  double uss_friendly_area_max_y =
+      common_handler_->getParams().uss_friendly_area_y_max;
   if (VehicleParam::Instance()->car_type == "SG") {
     uss_friendly_area_max_y = 5.65;
   }
   if (common_handler_->isParalleSlot()) {
-    uss_friendly_area_max_y = common_handler_->getParams().uss_friendly_area_y_max_parallel;
+    uss_friendly_area_max_y =
+        common_handler_->getParams().uss_friendly_area_y_max_parallel;
   }
   Eigen::Vector3d ego_pose_to_slot_frame =
       common_handler_->getEgoPoseToSlotFrame();
@@ -1420,7 +1454,7 @@ bool EgoCarFeatureHandler::isSlotCenterToEgoDisReasonable() {
 }
 
 bool EgoCarFeatureHandler::isSlotFullyObservedAccordHisTraj(
-  SlotReleaseManager::ParkingSlotUnion &union_slot) {
+    SlotReleaseManager::ParkingSlotUnion &union_slot) {
   bool result = false;
   double cur_v = F_1_velocity_;
   if (union_slot.pre_result_ && cur_v < union_slot.pre_vel_) {
@@ -1433,23 +1467,24 @@ bool EgoCarFeatureHandler::isSlotFullyObservedAccordHisTraj(
   double delay_compensate_dist =
       cur_v * common_handler_->getParams().compensate_time;
   double forward_pass_dist = common_handler_->getParams().forward_pass_dist;
-  if (VehicleParam::Instance()->car_type == "SG" 
-      || VehicleParam::Instance()->car_type == "UXE") {
+  if (VehicleParam::Instance()->car_type == "SG" ||
+      VehicleParam::Instance()->car_type == "UXE") {
     double slot_width = common_handler_->getSlotWidthAndDepth().first;
     forward_pass_dist = -2.0;
     if (!common_handler_->isParalleSlot()) {
-      forward_pass_dist = 
-          forward_pass_dist - CarParams::GetInstance()->vehicle_front_edge_to_rear;
+      forward_pass_dist = forward_pass_dist -
+                          CarParams::GetInstance()->vehicle_front_edge_to_rear;
     }
   }
   delay_compensate_dist = std::min(
       delay_compensate_dist, common_handler_->getParams().max_compensate_dist);
-  double foward_threshold = 
-    -(forward_pass_dist - common_handler_->getSlotWidthAndDepth().first 
-    - delay_compensate_dist);
-  if (F_9_min_trajectory_slot_to_ego_x_ < foward_threshold
-      && F_10_max_trajectory_slot_to_ego_x_ >
-          common_handler_->getParams().backward_pass_dist - delay_compensate_dist) {
+  double foward_threshold =
+      -(forward_pass_dist - common_handler_->getSlotWidthAndDepth().first -
+        delay_compensate_dist);
+  if (F_9_min_trajectory_slot_to_ego_x_ < foward_threshold &&
+      F_10_max_trajectory_slot_to_ego_x_ >
+          common_handler_->getParams().backward_pass_dist -
+              delay_compensate_dist) {
     result = true;
   }
   union_slot.pre_vel_ = cur_v;
@@ -1516,7 +1551,8 @@ void OtherFeatureHandler::extractParallelWidthAndDepth() {
           std::min(min_bottom_line_distance, to_line_dist);
     }
   }
-  double min_parking_slot_depth = common_handler_->getParams().min_length_parallel;
+  double min_parking_slot_depth =
+      common_handler_->getParams().min_length_parallel;
   parking_slot_depth = std::max(parking_slot_depth, min_bottom_line_distance);
   F_5_parallel_slot_bottom_is_wall_ = has_wall;
   F_4_parallel_slot_depth_ = parking_slot_depth;
@@ -1559,18 +1595,21 @@ bool OtherFeatureHandler::isParallelSlotSizeReasonable() {
   if (!common_handler_->isParalleSlot()) {
     return true;
   }
-  if (F_3_parallel_slot_width_ < common_handler_->getParams().min_width_parallel) {
+  if (F_3_parallel_slot_width_ <
+      common_handler_->getParams().min_width_parallel) {
     return false;
   }
   if (F_5_parallel_slot_bottom_is_wall_) {
-    if (F_4_parallel_slot_depth_ < common_handler_->getParams().min_length_parallel) {
+    if (F_4_parallel_slot_depth_ <
+        common_handler_->getParams().min_length_parallel) {
       return false;
     }
   } else {
-    if (F_4_parallel_slot_depth_ < common_handler_->getParams().min_length_parallel_step_bottom) {
+    if (F_4_parallel_slot_depth_ <
+        common_handler_->getParams().min_length_parallel_step_bottom) {
       return false;
     }
   }
   return true;
 }
-}
+} // namespace worldmodel_pec

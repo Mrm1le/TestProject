@@ -13,12 +13,12 @@
 #include "common/timer_task.hpp"
 #include "planner/motion_planner/longitudinal_motion_planner.h"
 #include "pnc/planning_engine_interface.h"
+#include "slot_release_config.h"
 #include "worldmodel/ddmap_generator_interface.hpp"
 #include "worldmodel/ddmap_generator_task.hpp"
 #include "worldmodel/fusion_task.hpp"
 #include "worldmodel/publisher_task.hpp"
 #include "worldmodel_flowchart.h"
-#include "slot_release_config.h"
 
 using namespace msd_planning;
 

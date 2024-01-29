@@ -4,7 +4,7 @@
 namespace msquare {
 
 namespace {
-  constexpr double kMathEpsilonTemp = 1e-6;
+constexpr double kMathEpsilonTemp = 1e-6;
 }
 
 bool CurveJoin(const Pose2D &start, const Pose2D &target, const double r_min,
@@ -58,15 +58,17 @@ bool CurveJoin(const Pose2D &start, const Pose2D &target, const double r_min,
           double y_o2 = target_local.y + sgn * ratio * r_min;
           double delta_y = y_o1 - y_o2;
           if (std::abs(delta_y) < 2 * ratio * r_min) {
-            double theta1 = (std::acos(std::abs(delta_y) / (2 * ratio * r_min))) * sgn;
+            double theta1 =
+                (std::acos(std::abs(delta_y) / (2 * ratio * r_min))) * sgn;
             double x2 = x_o1 - sgn * ratio * r_min * std::sin(theta1) -
                         sgn * ratio * r_min * std::sin(theta1);
             if ((x2 > target_local.x + 1.0) &&
                 (x_o1 - sgn * ratio * r_min * std::sin(theta1) > x2) &&
-                (x_o1 - sgn * ratio * r_min * std::sin(theta1) < start_local.x)) {
-              key_points.emplace_back(
-                  Pose2D{x_o1 - sgn * ratio * r_min * std::sin(theta1),
-                         y_o1 + sgn * ratio * r_min * std::cos(theta1), theta1});
+                (x_o1 - sgn * ratio * r_min * std::sin(theta1) <
+                 start_local.x)) {
+              key_points.emplace_back(Pose2D{
+                  x_o1 - sgn * ratio * r_min * std::sin(theta1),
+                  y_o1 + sgn * ratio * r_min * std::cos(theta1), theta1});
               key_points.emplace_back(
                   Pose2D{x2, target_local.y, target_local.theta});
               key_points.emplace_back(target_local);

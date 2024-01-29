@@ -36,9 +36,9 @@ void ActiveAvoid::select_trucks(std::vector<ObsInfo> &front_trucks,
                   input_.planning_init_state.s - half_self_length_ <=
               100.0) {
         front_trucks.emplace_back(obs);
-      // truck tail <= ego head && truck head > ego tail
+        // truck tail <= ego head && truck head > ego tail
       } else if (obs.polygon_init.polygon_fren.back().x >
-                     input_.planning_init_state.s - half_self_length_) {
+                 input_.planning_init_state.s - half_self_length_) {
         overlap_trucks.emplace_back(obs);
         front_trucks.emplace_back(obs);
       }
@@ -119,7 +119,8 @@ void ActiveAvoid::update_decision_info(DecisionInfo &decision_info,
   }
 }
 
-void ActiveAvoid::update_decision_info_lateral_keeping(DecisionInfo &decision_info) {
+void ActiveAvoid::update_decision_info_lateral_keeping(
+    DecisionInfo &decision_info) {
   Index<NUM_PATH_CONTROL_POINTS> index;
   while (index.advance()) {
     const auto &sample_info = input_.path_segments[index.segment_index]
@@ -185,7 +186,7 @@ bool ActiveAvoid::is_parallel_driving(const ObsInfo &obs) {
 bool ActiveAvoid::front_truck_avd_target(
     const std::vector<ObsInfo> &front_trucks, double &target_s,
     double &target_l, std::string &avd_direction,
-    std::unordered_map<int, double> &active_target_l) { 
+    std::unordered_map<int, double> &active_target_l) {
   for (const auto &near_truck : front_trucks) {
     // lon overlap
     double target_s_tmp = 1.0e6 + 1;
@@ -257,7 +258,7 @@ bool ActiveAvoid::front_truck_avd_target(
         target_l = target_l_tmp;
         active_target_l[near_truck.id] = target_l_tmp;
         break;
-      } else if (target_s > 1.0e6) {       
+      } else if (target_s > 1.0e6) {
         if (target_l_tmp > 1e-6) {
           target_s = target_s_tmp;
           target_l = target_l_tmp;
@@ -302,7 +303,7 @@ bool ActiveAvoid::truck_avd_invalid(const std::vector<ObsInfo> &front_trucks) {
     if (!avd_diff_exist)
       // std::cout << "only one side trucks" << std::endl;
       return false;
-    
+
     if (truck1.nudge_side != truck2.nudge_side) {
       if (!truck1.polygon_init.polygon_fren.empty() &&
           !truck2.polygon_init.polygon_fren.empty()) {
@@ -320,7 +321,7 @@ bool ActiveAvoid::truck_avd_invalid(const std::vector<ObsInfo> &front_trucks) {
       }
     }
   }
-  
+
   return false;
 }
 
@@ -343,7 +344,8 @@ bool ActiveAvoid::truck_avd_should_end(
           ttc2truck =
               (truck2.polygon_init.polygon_fren.front().x -
                (input_.planning_init_state.s + half_self_length_)) /
-              (std::abs(input_.planning_init_state.v - truck2.polygon_init.v) + 1e-6);
+              (std::abs(input_.planning_init_state.v - truck2.polygon_init.v) +
+               1e-6);
           // std::cout << "ttc2truck: " << ttc2truck << std::endl;
           if (ttc2truck < 3.0 && ttc2truck > 0.0) {
             return true;
@@ -372,15 +374,19 @@ bool ActiveAvoid::truck_avd_should_end(
   while (index_avd_ing.advance()) {
     const auto &sample_info = input_.path_segments[index_avd_ing.segment_index]
                                   .quad_point_info[index_avd_ing.quad_index];
-    // if (sample_info.refline_info.right_lane_border - half_self_width_ - AVD_LB_LIMIT <
+    // if (sample_info.refline_info.right_lane_border - half_self_width_ -
+    // AVD_LB_LIMIT <
     //         0. ||
-    //     sample_info.refline_info.left_lane_border - half_self_width_ - AVD_LB_LIMIT <
+    //     sample_info.refline_info.left_lane_border - half_self_width_ -
+    //     AVD_LB_LIMIT <
     //         0.) {
     //   return true;
     // }
-    if (sample_info.refline_info.right_road_border - half_self_width_ - AVD_RB_LIMIT <
+    if (sample_info.refline_info.right_road_border - half_self_width_ -
+                AVD_RB_LIMIT <
             0. ||
-        sample_info.refline_info.left_road_border - half_self_width_ - AVD_RB_LIMIT <
+        sample_info.refline_info.left_road_border - half_self_width_ -
+                AVD_RB_LIMIT <
             0.) {
       return true;
     }
@@ -388,7 +394,7 @@ bool ActiveAvoid::truck_avd_should_end(
 
   // scenario: lat dist > 2.8m
   bool lat_dist_flag = false;
-  for (const ObsInfo &obs: front_trucks) {
+  for (const ObsInfo &obs : front_trucks) {
     double max_l = -10.;
     double min_l = 10.;
     for (const auto p : obs.polygon_init.polygon_fren) {
@@ -400,16 +406,17 @@ bool ActiveAvoid::truck_avd_should_end(
       if (lat_dist > 0.0 && lat_dist < 2.8) {
         lat_dist_flag = true;
         break;
-      }  
+      }
     } else {
       double lat_dist = min_l - input_.planning_init_state.l - half_self_width_;
       if (lat_dist > 0.0 && lat_dist < 2.8) {
         lat_dist_flag = true;
         break;
-      }  
+      }
     }
   }
-  if (!lat_dist_flag && pre_dodge_info.elapsed_count >= CONTROL_TIME) return true;
+  if (!lat_dist_flag && pre_dodge_info.elapsed_count >= CONTROL_TIME)
+    return true;
 
   return false;
 }
@@ -536,12 +543,11 @@ void ActiveAvoid::offset_active(
   double target_s = 1.0e6 + 1;
   double target_l = 0.;
   std::string avd_direction = "none";
-  
+
   size_t elapsed_count = pre_dodge_info.elapsed_count;
   State state = pre_dodge_info.state;
 
-  switch (state)
-  {
+  switch (state) {
   case State::Idle:
     if (truck_avd_should_trigger(front_trucks, pre_dodge_info)) {
       if (front_truck_avd_target(front_trucks, target_s, target_l,
@@ -623,7 +629,7 @@ void ActiveAvoid::offset_active(
           target_l = pre_dodge_info.dodge_l;
           avd_direction = pre_dodge_info.avd_direction;
           update_decision_info(decision_info, target_l, AVD_PLAN_LEN,
-                             avd_direction);
+                               avd_direction);
         } else {
           // turn to CoolingDown
           pre_dodge_info.end_debounce_count = 0;
@@ -638,7 +644,7 @@ void ActiveAvoid::offset_active(
 
   int max_avd_object_id = -1;
   double max_avd_range = 0.0;
-  for (const auto& t: active_target_l) {
+  for (const auto &t : active_target_l) {
     if (std::abs(t.second) > std::abs(max_avd_range)) {
       max_avd_range = t.second;
       max_avd_object_id = t.first;
@@ -670,7 +676,8 @@ bool ActiveAvoid::truck_avd_should_trigger(
   }
   // check cp status
   if (pre_dodge_info.cp_count < CP_TIME) {
-    // std::cout << "not trigger because of cp count: " << pre_dodge_info.cp_count
+    // std::cout << "not trigger because of cp count: " <<
+    // pre_dodge_info.cp_count
     //           << std::endl;
     return false;
   }

@@ -23,7 +23,7 @@ enum class SamplerFsmStateEnum {
   INIT,
   DRIVE,
   REVERSE,
-  DRIVE2REVERSE, 
+  DRIVE2REVERSE,
   REVERSE2DRIVE,
   FINISH,
   STATE_NUM,

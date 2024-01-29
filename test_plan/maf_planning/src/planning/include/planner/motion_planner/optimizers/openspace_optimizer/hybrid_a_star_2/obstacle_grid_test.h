@@ -1,9 +1,7 @@
 #pragma once
 
+#include <opencv2/opencv.hpp>
 #include <vector>
-#include <opencv2/opencv.hpp>
-#include <opencv2/opencv.hpp>
-
 
 #include "../sbp_obstacle_interface.h"
 #include "multi_circle_footprint_model.h"
@@ -22,14 +20,15 @@ public:
   double origin_x_, origin_y_;
 
   // grid_data_gt(x,y) = minimun distance from grid center to closest obstacle
-    cv::Mat grid_data_gt_;
+  cv::Mat grid_data_gt_;
 
-  //This buffer is only used because cv::fillConvexPoly does not fill dynamic "color" (distance-to-center)
-  // so a buffer of voroni-center index is required.  (will be removed in the future)
+  // This buffer is only used because cv::fillConvexPoly does not fill dynamic
+  // "color" (distance-to-center)
+  //  so a buffer of voroni-center index is required.  (will be removed in the
+  //  future)
   cv::Mat voroni_index_gt_;
 
   std::vector<planning_math::Vec2d> test_buffer_obstacle_points_;
-
 
   int rows_;
   int cols_;
@@ -42,7 +41,6 @@ public:
   double debug_max_minus_diff = 0.0;
   int debug_calcdis_function_called_num = 0;
   int debug_obs_point_num = 0;
-
 
   double test_result_max_grid_positive_diff_ = 0.0;
   double test_result_max_grid_negative_diff_ = 0.0;
@@ -72,7 +70,7 @@ public:
     grid_data_gt_.setTo(0);
 
     voroni_index_gt_.create(rows, cols, CV_32S);
-    
+
     origin_x_ = origin_x;
     origin_y_ = origin_y;
     res_ = res;
@@ -84,10 +82,10 @@ public:
     return true;
   }
 
-
-  std::vector<cv::Point2f> convertObstaclePointsToGrid(const std::vector<planning_math::Vec2d>& obs_points) {
+  std::vector<cv::Point2f> convertObstaclePointsToGrid(
+      const std::vector<planning_math::Vec2d> &obs_points) {
     std::vector<cv::Point2f> out_points_in_grid(obs_points.size());
-    for(std::size_t i=0; i<obs_points.size(); i++){
+    for (std::size_t i = 0; i < obs_points.size(); i++) {
       out_points_in_grid[i].x = (obs_points[i].x() - origin_x_) * inv_res_;
       out_points_in_grid[i].y = (obs_points[i].y() - origin_y_) * inv_res_;
     }
@@ -109,13 +107,15 @@ public:
       const std::vector<SbpObstaclePoint> &descrete_obs) {
     test_buffer_obstacle_points_ =
         convertSbpObstacleToObstaclePoints(descrete_obs);
-    return constructGridGTWithoutVoroniFromObstaclePoints(test_buffer_obstacle_points_);
+    return constructGridGTWithoutVoroniFromObstaclePoints(
+        test_buffer_obstacle_points_);
   }
-  //this function generates grid data gt
-  // each grid data gt contains min-distance to nearest obstacle
-  // sbp obstacle are converted to points before use
-  bool constructGridGTWithoutVoroniFromObstaclePoints(const std::vector<planning_math::Vec2d> & points) {
-    float *grid_data_ptr = (float*) grid_data_gt_.data;
+  // this function generates grid data gt
+  //  each grid data gt contains min-distance to nearest obstacle
+  //  sbp obstacle are converted to points before use
+  bool constructGridGTWithoutVoroniFromObstaclePoints(
+      const std::vector<planning_math::Vec2d> &points) {
+    float *grid_data_ptr = (float *)grid_data_gt_.data;
     for (int gy = 0; gy < rows_; gy++) {
       double y = gy * res_ + origin_y_;
       for (int gx = 0; gx < cols_; gx++) {
@@ -127,17 +127,20 @@ public:
           min_square_distance =
               std::min(min_square_distance, dx * dx + dy * dy);
         }
-        grid_data_ptr[gy*cols_+ gx] = std::sqrt(min_square_distance);
+        grid_data_ptr[gy * cols_ + gx] = std::sqrt(min_square_distance);
       }
     }
     return true;
   }
 
-  //this function generates full grid_data && voroni_index GT
-  // from given voroni_center points
-  // voroni center points should be the output of getVoroniFaceList so that the repeated center points are removed
-  // call this function with raw vecor-of-obstacle-points-in-grid does not garantee accurate voroni index GT
-  bool constructGridAndVoroniGTFromVoroniCenterPoints(const std::vector<cv::Point2f>& voroni_center_points_in_grid) { 
+  // this function generates full grid_data && voroni_index GT
+  //  from given voroni_center points
+  //  voroni center points should be the output of getVoroniFaceList so that the
+  //  repeated center points are removed call this function with raw
+  //  vecor-of-obstacle-points-in-grid does not garantee accurate voroni index
+  //  GT
+  bool constructGridAndVoroniGTFromVoroniCenterPoints(
+      const std::vector<cv::Point2f> &voroni_center_points_in_grid) {
     for (int gy = 0; gy < rows_; gy++) {
       double y = gy * res_ + origin_y_;
       for (int gx = 0; gx < cols_; gx++) {
@@ -149,15 +152,14 @@ public:
           double dy = voroni_center_points_in_grid[i].y - gy;
 
           double sqr_distance = dx * dx + dy * dy;
-          if(sqr_distance < min_square_distance)
-          {
+          if (sqr_distance < min_square_distance) {
             min_square_distance = sqr_distance;
             min_sqr_idx = i;
           }
         }
 
-        grid_data_gt_.at<float>(gy,gx) = std::sqrt(min_square_distance) * res_;
-        voroni_index_gt_.at<int>(gy,gx) = min_sqr_idx;
+        grid_data_gt_.at<float>(gy, gx) = std::sqrt(min_square_distance) * res_;
+        voroni_index_gt_.at<int>(gy, gx) = min_sqr_idx;
       }
     }
     return true;
@@ -202,22 +204,21 @@ public:
     return min_distance_gt;
   }
 
-  void testDistanceWithGTOnce(double min_distance, double min_distance_gt)
-  {
+  void testDistanceWithGTOnce(double min_distance, double min_distance_gt) {
     double diff = min_distance - min_distance_gt;
-    if(diff > 0.0){
+    if (diff > 0.0) {
       debug_max_positive_diff = std::max(debug_max_positive_diff, diff);
     } else {
       debug_max_minus_diff = std::min(debug_max_minus_diff, diff);
     }
     debug_sum_abs_diff += std::abs(diff);
-    debug_calcdis_function_called_num ++;
+    debug_calcdis_function_called_num++;
   }
 
-  //test grid diff
-  //expected result should be max_grid_positive_diff ~ float 0
-  //                        && max_grid_negative_diff ~ float 0
-  // will output coordinates of big diff coordinates
+  // test grid diff
+  // expected result should be max_grid_positive_diff ~ float 0
+  //                         && max_grid_negative_diff ~ float 0
+  //  will output coordinates of big diff coordinates
   template <typename Dtype>
   void testGridDiff(const Dtype *other_obs_grid_ptr, double scale = 1.0) {
     double max_positive_diff = 0.0;
@@ -225,22 +226,21 @@ public:
     double sum_abs_diff = 0.0;
     std::vector<cv::Point2i> diff_coordinate;
 
-    for(int gy=0; gy<rows_; gy++){
-      for(int gx = 0; gx<cols_ ;gx++){
-        float obs_grid_gt_data = grid_data_gt_.at<float>(gy,gx);
+    for (int gy = 0; gy < rows_; gy++) {
+      for (int gx = 0; gx < cols_; gx++) {
+        float obs_grid_gt_data = grid_data_gt_.at<float>(gy, gx);
         float other_grid_data =
             double(other_obs_grid_ptr[gy * cols_ + gx]) * scale;
 
         double diff = other_grid_data - obs_grid_gt_data;
-        if(diff > 0.0){
+        if (diff > 0.0) {
           max_positive_diff = std::max(max_positive_diff, diff);
         } else {
           max_negative_diff = std::min(max_negative_diff, diff);
         }
         sum_abs_diff += std::abs(diff);
 
-        if(diff > 0.01)
-        {
+        if (diff > 0.01) {
           diff_coordinate.push_back(cv::Point2i(gx, gy));
         }
       }
@@ -248,7 +248,7 @@ public:
 
     test_result_max_grid_positive_diff_ = max_positive_diff;
     test_result_max_grid_negative_diff_ = max_negative_diff;
-    test_result_sum_grid_mean_abs_diff_ = sum_abs_diff / (rows_*cols_);
+    test_result_sum_grid_mean_abs_diff_ = sum_abs_diff / (rows_ * cols_);
     test_result_big_grid_diff_coordinate_ = diff_coordinate;
   }
 
@@ -265,7 +265,7 @@ public:
     double max_val_visual = 2.0;
     double min_val_visual = 0;
 
-    float *grid_data_ptr = (float*) grid_data_gt_.data;
+    float *grid_data_ptr = (float *)grid_data_gt_.data;
     for (int gy = 0; gy < rows_; gy++) {
       for (int gx = 0; gx < cols_; gx++) {
         double value_normalized =
@@ -292,7 +292,7 @@ public:
 
     double max_val_visual = 2.0;
     double min_val_visual = 0;
-    float *grid_data_ptr = (float*) grid_data_gt_.data;
+    float *grid_data_ptr = (float *)grid_data_gt_.data;
     for (int gy = 0; gy < rows_; gy++) {
       for (int gx = 0; gx < cols_; gx++) {
         double value_normalized =
@@ -322,7 +322,7 @@ public:
     return cv::imwrite(filename, debug_image_colored);
   }
 
-  bool dumpTestDataToFile(std::string file_name){
+  bool dumpTestDataToFile(std::string file_name) {
     std::ofstream ofs(file_name);
     if (!ofs.is_open()) {
       return false;
@@ -331,15 +331,16 @@ public:
     sprintf(str, "%d %d %f %f %f", rows_, cols_, res_, origin_x_, origin_y_);
     ofs << str << std::endl;
     ofs << test_buffer_obstacle_points_.size() << std::endl;
-    for(std::size_t i=0; i<test_buffer_obstacle_points_.size(); i++){
-      sprintf(str, "%f %f", test_buffer_obstacle_points_[i].x(), test_buffer_obstacle_points_[i].y());
+    for (std::size_t i = 0; i < test_buffer_obstacle_points_.size(); i++) {
+      sprintf(str, "%f %f", test_buffer_obstacle_points_[i].x(),
+              test_buffer_obstacle_points_[i].y());
       ofs << str << std::endl;
     }
     ofs.close();
     return true;
   }
 
-bool loadTestDataFromFile(std::string file_name){
+  bool loadTestDataFromFile(std::string file_name) {
     std::ifstream ifs(file_name);
     if (!ifs.is_open()) {
       return false;
@@ -355,15 +356,14 @@ bool loadTestDataFromFile(std::string file_name){
     ifs >> point_num;
 
     test_buffer_obstacle_points_.resize(point_num);
-    for(std::size_t i=0; i<test_buffer_obstacle_points_.size(); i++){
+    for (std::size_t i = 0; i < test_buffer_obstacle_points_.size(); i++) {
       double x, y;
       ifs >> x >> y;
-      test_buffer_obstacle_points_[i] = planning_math::Vec2d(x,y);
+      test_buffer_obstacle_points_[i] = planning_math::Vec2d(x, y);
     }
     ifs.close();
     return true;
   }
-
 };
 
 } // namespace hybrid_a_star_2

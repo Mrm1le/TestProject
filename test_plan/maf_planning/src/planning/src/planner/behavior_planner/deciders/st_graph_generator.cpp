@@ -1557,7 +1557,7 @@ void StGraphGenerator::set_obstacle_new(const Obstacle *obstacle) {
       }
 
       // if ego is in target lane, AND is_follow == true
-      if (std::fabs(ego_l) < std::fabs(lane_width/2.0) && is_follow == true) {
+      if (std::fabs(ego_l) < std::fabs(lane_width / 2.0) && is_follow == true) {
         ObjectDecisionType follow_decision;
         auto mutable_follow_decision = follow_decision.mutable_follow();
         obstacle_decision_manager.add_longitudinal_decision(
@@ -1567,7 +1567,6 @@ void StGraphGenerator::set_obstacle_new(const Obstacle *obstacle) {
         lon_decision_info.is_follow = true;
         lon_decision_info.ignore_time_count = 0;
       }
-      
     }
   } else {
     lon_decision_info.lc_follow_id = -1;
@@ -2187,8 +2186,8 @@ void StGraphGenerator::preliminary_screen_obstacles() {
 
   const double K_cone_bucket_ignore_dist_thr = 80.0;
   const double front_edge_to_center = ConfigurationContext::Instance()
-                                        ->get_vehicle_param()
-                                        .front_edge_to_center;
+                                          ->get_vehicle_param()
+                                          .front_edge_to_center;
   const double back_edge_to_center =
       ConfigurationContext::Instance()->get_vehicle_param().back_edge_to_center;
   const double back_axle_to_geometry_center =
@@ -2268,9 +2267,8 @@ void StGraphGenerator::preliminary_screen_obstacles() {
       std::string cone_bucket_info =
           "rel_s: " + std::to_string(perception_sl_boundary.start_s - ego_s +
                                      back_axle_to_geometry_center);
-      
-      LOG_LON_DECISION_INFO(obstacle->Id(), "ignore",
-                            cone_bucket_info);
+
+      LOG_LON_DECISION_INFO(obstacle->Id(), "ignore", cone_bucket_info);
       // (void)obstacle_decision_manager.add_lateral_decision(
       //     "st_graph_generator", obstacle->Id(), ignore_decision);
     }

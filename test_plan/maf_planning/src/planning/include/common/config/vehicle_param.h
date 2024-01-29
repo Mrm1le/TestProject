@@ -1,8 +1,8 @@
 #ifndef MODULES_PLANNING_OPTIMIZERS_VEHICLE_PARAM_H_
 #define MODULES_PLANNING_OPTIMIZERS_VEHICLE_PARAM_H_
 
-#include "common/math/vec2d.h"
 #include "common/math/box2d.h"
+#include "common/math/vec2d.h"
 #include "common/utils/macro.h"
 #include "nlohmann/json.hpp"
 #include <cassert>
@@ -12,44 +12,45 @@ namespace msquare {
 class VehicleParam {
   DECLARE_SINGLETON(VehicleParam);
 
-struct SpareTire{
-  bool exist_spare_tire = false;
-  double spare_tire_level_arm[3] = {0.0,0.0,0.0}; // position
-  double spare_tire_r_s2b[3] = {0.0, 0.0, 0.0}; // rotation, yaw pitch roll
-  double spare_tire_radius = 0.0;
-  double spare_tire_thickness = 0.0;
-  double spare_tire_protrusion_length = 0.0;
-  bool loadFromYaml(const YAML::Node& spare_tire_node);
-  NLOHMANN_DEFINE_TYPE_INTRUSIVE(SpareTire, 
-    exist_spare_tire, spare_tire_level_arm, spare_tire_r_s2b,
-    spare_tire_radius, spare_tire_thickness, spare_tire_protrusion_length)
-};
+  struct SpareTire {
+    bool exist_spare_tire = false;
+    double spare_tire_level_arm[3] = {0.0, 0.0, 0.0}; // position
+    double spare_tire_r_s2b[3] = {0.0, 0.0, 0.0}; // rotation, yaw pitch roll
+    double spare_tire_radius = 0.0;
+    double spare_tire_thickness = 0.0;
+    double spare_tire_protrusion_length = 0.0;
+    bool loadFromYaml(const YAML::Node &spare_tire_node);
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(SpareTire, exist_spare_tire,
+                                   spare_tire_level_arm, spare_tire_r_s2b,
+                                   spare_tire_radius, spare_tire_thickness,
+                                   spare_tire_protrusion_length)
+  };
 
-struct GeometryContour {
-public:
-  bool loadFromYaml(const YAML::Node &yaml_node);
-  NLOHMANN_DEFINE_TYPE_INTRUSIVE(GeometryContour, is_using_geometry_contour_,
-                                 octagon_contour_point_,
-                                 hexadecagon_contour_point_)
+  struct GeometryContour {
+  public:
+    bool loadFromYaml(const YAML::Node &yaml_node);
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(GeometryContour, is_using_geometry_contour_,
+                                   octagon_contour_point_,
+                                   hexadecagon_contour_point_)
 
-public:
-  const bool is_using_geometry_contour() const {
-    return is_using_geometry_contour_;
-  }
+  public:
+    const bool is_using_geometry_contour() const {
+      return is_using_geometry_contour_;
+    }
 
-  const std::vector<planning_math::Vec2d> &octagon_contour_point() const {
-    return octagon_contour_point_;
-  }
+    const std::vector<planning_math::Vec2d> &octagon_contour_point() const {
+      return octagon_contour_point_;
+    }
 
-  const std::vector<planning_math::Vec2d> &hexadecagon_contour_point() const {
-    return hexadecagon_contour_point_;
-  }
+    const std::vector<planning_math::Vec2d> &hexadecagon_contour_point() const {
+      return hexadecagon_contour_point_;
+    }
 
-private:
-  bool is_using_geometry_contour_ = false;
-  std::vector<planning_math::Vec2d> octagon_contour_point_;
-  std::vector<planning_math::Vec2d> hexadecagon_contour_point_;
-};
+  private:
+    bool is_using_geometry_contour_ = false;
+    std::vector<planning_math::Vec2d> octagon_contour_point_;
+    std::vector<planning_math::Vec2d> hexadecagon_contour_point_;
+  };
 
 public:
   double front_edge_to_center = 3.89;
@@ -89,7 +90,7 @@ public:
 
   // about spare tire
   SpareTire spare_tire_;
-  
+
   // about geometry contour
   GeometryContour geometry_contour_;
 

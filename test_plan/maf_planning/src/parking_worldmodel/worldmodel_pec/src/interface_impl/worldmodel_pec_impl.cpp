@@ -17,10 +17,10 @@ WorldModelPECImpl::~WorldModelPECImpl() {}
 bool WorldModelPECImpl::isInited() { return inited_; }
 
 bool WorldModelPECImpl::init(std::string params_json_str) {
-  //互斥锁，防止此函数和其他函数被同时执行
+  // 互斥锁，防止此函数和其他函数被同时执行
   std::lock_guard<std::mutex> lg(process_mutex_);
 
-  //初始化parking_slot_operator_
+  // 初始化parking_slot_operator_
   nlohmann::json json = nlohmann::json::parse(params_json_str);
   SlotReleaseParams params = json;
   if (!parking_slot_operator_.init(params)) {
@@ -41,14 +41,14 @@ bool WorldModelPECImpl::reset() {
 
 bool WorldModelPECImpl::feedLocalization(
     const maf_mla_localization::MLALocalization &loc) {
-  //互斥锁，防止此函数和其他函数被同时执行
+  // 互斥锁，防止此函数和其他函数被同时执行
   std::lock_guard<std::mutex> lg(process_mutex_);
-  //检查初始化状态
+  // 检查初始化状态
   if (!inited_) {
     MLOG_ERROR("UNINITED, DO NOT CALL ANYTHING");
     return false;
   }
-  //调用parking_slot_operator_接口，输入定位数据
+  // 调用parking_slot_operator_接口，输入定位数据
   if (!parking_slot_operator_.feedLocalization(loc)) {
     MLOG_ERROR("[WorldModelPECImpl::feedLocalization] unexpected process error "
                "in parking_slot_operator_.feedLocalization");
@@ -60,9 +60,9 @@ bool WorldModelPECImpl::feedLocalization(
 
 bool WorldModelPECImpl::feedWirelessChargerReport(
     const maf_endpoint::WirelessChargerReport &wireless_charger_report) {
-  //互斥锁，防止此函数和其他函数被同时执行
+  // 互斥锁，防止此函数和其他函数被同时执行
   std::lock_guard<std::mutex> lg(process_mutex_);
-  //检查初始化状态
+  // 检查初始化状态
   if (!inited_) {
     MLOG_ERROR("UNINITED, DO NOT CALL ANYTHING");
     return false;
@@ -80,14 +80,14 @@ bool WorldModelPECImpl::feedWirelessChargerReport(
 
 bool WorldModelPECImpl::feedParkingSlotPerceptionFusion(
     const maf_perception_interface::FusionParkingSlotResult &psd_fusion) {
-  //互斥锁，防止此函数和其他函数被同时执行
+  // 互斥锁，防止此函数和其他函数被同时执行
   std::lock_guard<std::mutex> lg(process_mutex_);
-  //检查初始化状态
+  // 检查初始化状态
   if (!inited_) {
     MLOG_ERROR("UNINITED, DO NOT CALL ANYTHING");
     return false;
   }
-  //调用parking_slot_operator_接口，输入PSD融合数据
+  // 调用parking_slot_operator_接口，输入PSD融合数据
   if (!parking_slot_operator_.feedPerceptionPSDFusion(psd_fusion)) {
     MLOG_ERROR("[WorldModelPECImpl::feedLocalization] unexpected process error "
                "in parking_slot_operator_.feedPSDFusion");
@@ -98,8 +98,8 @@ bool WorldModelPECImpl::feedParkingSlotPerceptionFusion(
 
 bool WorldModelPECImpl::feedFusionGroundline(
     const maf_perception_interface::FusionGroundLineResult &groundline_fusion) {
-  //检查初始化状态
-  // std::lock_guard<std::mutex> lg(process_mutex_);
+  // 检查初始化状态
+  //  std::lock_guard<std::mutex> lg(process_mutex_);
   if (!inited_) {
     MLOG_ERROR("UNINITED, DO NOT CALL ANYTHING\n");
     return false;
@@ -121,7 +121,7 @@ bool WorldModelPECImpl::feedFusionObject(
     const maf_perception_interface::PerceptionFusionObjectResult
         &object_fusion) {
   // std::lock_guard<std::mutex> lg(process_mutex_);
-  //检查初始化状态
+  // 检查初始化状态
   if (!inited_) {
     MLOG_ERROR("UNINITED, DO NOT CALL ANYTHING\n");
     return false;
@@ -142,7 +142,7 @@ bool WorldModelPECImpl::feedFusionObject(
 bool WorldModelPECImpl::feedInitAPAMode(
     const maf_system_manager::SysPlanningRequest &planning_request) {
   // std::lock_guard<std::mutex> lg(process_mutex_);
-  //检查初始化状态
+  // 检查初始化状态
   if (!inited_) {
     MLOG_ERROR("UNINITED, DO NOT CALL ANYTHING\n");
     return false;
@@ -161,9 +161,9 @@ bool WorldModelPECImpl::feedInitAPAMode(
 }
 
 maf_worldmodel::FusionAPA WorldModelPECImpl::getParkingSlotOutput() {
-  //互斥锁，防止此函数和其他函数被同时执行
+  // 互斥锁，防止此函数和其他函数被同时执行
   std::lock_guard<std::mutex> lg(process_mutex_);
-  //检查初始化状态
+  // 检查初始化状态
   if (!inited_) {
     MLOG_ERROR("UNINITED, DO NOT CALL ANYTHING");
     return maf_worldmodel::FusionAPA{};
@@ -171,20 +171,20 @@ maf_worldmodel::FusionAPA WorldModelPECImpl::getParkingSlotOutput() {
   // parking_slot_operator_.ProcessSlotReleaseAndGetResult(
   //   object_fusion_latest_, groundline_fusion_latest_);
   // (void)parking_slot_operator_.calculateSuggestedParkingSlot();
-  //调用parking_slot_operator_接口，返回输出结果
+  // 调用parking_slot_operator_接口，返回输出结果
   return parking_slot_operator_.ProcessSlotReleaseAndGetResult();
 }
 
 bool WorldModelPECImpl::setSystemManagerRequestBlackList(
     const SystemManagerRequestBlackList &request_data) {
-  //互斥锁，防止此函数和其他函数被同时执行
+  // 互斥锁，防止此函数和其他函数被同时执行
   std::lock_guard<std::mutex> lg(process_mutex_);
-  //检查初始化状态
+  // 检查初始化状态
   if (!inited_) {
     MLOG_ERROR("UNINITED, DO NOT CALL ANYTHING");
     return false;
   }
-  //调用parking_slot_operator_接口，输入车位黑名单信息
+  // 调用parking_slot_operator_接口，输入车位黑名单信息
   if (!parking_slot_operator_.setBlackList(request_data.blacklist_id_)) {
     MLOG_ERROR("[WorldModelPECImpl::setSystemManagerRequestBlackList] "
                "unexpected error in parking_slot_operator_.setBlackList ");
@@ -199,22 +199,22 @@ bool WorldModelPECImpl::setSystemManagerRequestBlackList(
 
 bool WorldModelPECImpl::setSystemManagerRequestChangeRandomSearchList(
     const std::string &map_folder) {
-  //互斥锁，防止此函数和其他函数被同时执行
+  // 互斥锁，防止此函数和其他函数被同时执行
   std::lock_guard<std::mutex> lg(process_mutex_);
-  //检查初始化状态
+  // 检查初始化状态
   if (!inited_) {
     MLOG_ERROR("UNINITED, DO NOT CALL ANYTHING");
     return false;
   }
 
-  //调用parking_slot_operator_接口，重新通过读文件的形式加载地图白名单信息
-  // parking_slot_operator_需要重新通过读文件的形式加载地图车位白名单
-  //车位黑名单和地图车位不在此处处理
+  // 调用parking_slot_operator_接口，重新通过读文件的形式加载地图白名单信息
+  //  parking_slot_operator_需要重新通过读文件的形式加载地图车位白名单
+  // 车位黑名单和地图车位不在此处处理
   if (!parking_slot_operator_.loadWhiteListFromMap(map_folder)) {
     MLOG_ERROR("[WorldModelPECImpl::setSystemManagerRequestChangeMap] failed "
                "in parking_slot_operator_.loadWhiteListFromMap ");
 
-    //致命错误：清除初始化状态
+    // 致命错误：清除初始化状态
     MLOG_ERROR("[WorldModelPEC] A FATAL ERROR OCCURED");
     (void)deInit();
     return false;
@@ -236,7 +236,7 @@ bool WorldModelPECImpl::deInit() {
   inited_ = false;
 
   // static_vehicle_operator_和parking_slot_operator_不需要特殊处理
-  //他们在再次初始化的时候，会清除所有的变量
+  // 他们在再次初始化的时候，会清除所有的变量
 
   return true;
 }

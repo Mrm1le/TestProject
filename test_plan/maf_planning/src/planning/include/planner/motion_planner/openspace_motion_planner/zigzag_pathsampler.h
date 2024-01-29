@@ -14,12 +14,15 @@ public:
   sample(ZigzagPath &path,
          std::vector<DirTrajectoryPoint>::const_iterator iter);
   std::vector<DirTrajectoryPoint> &
-  sample_sop(ZigzagPath &path, 
-         std::vector<DirTrajectoryPoint>::const_iterator iter);
-  std::vector<DirTrajectoryPoint> get_second_traj(ZigzagPath &path, 
-        std::vector<DirTrajectoryPoint>::const_iterator iter);
+  sample_sop(ZigzagPath &path,
+             std::vector<DirTrajectoryPoint>::const_iterator iter);
+  std::vector<DirTrajectoryPoint>
+  get_second_traj(ZigzagPath &path,
+                  std::vector<DirTrajectoryPoint>::const_iterator iter);
   void reset_stage_idx();
-  void set_extend_length(double extend_length) {DIST_FIRST_EXTEND_ = extend_length;}
+  void set_extend_length(double extend_length) {
+    DIST_FIRST_EXTEND_ = extend_length;
+  }
 
 private:
   const double DELTA_T_;

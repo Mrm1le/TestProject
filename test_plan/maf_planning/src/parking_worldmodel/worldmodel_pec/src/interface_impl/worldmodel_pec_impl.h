@@ -15,13 +15,13 @@ namespace worldmodel_pec {
 class WorldModelPECImpl : public WorldModelPEC {
 
 private:
-  //是否初始化的标记
+  // 是否初始化的标记
   bool inited_;
 
-  //车位信息整合（感知+地图）和车位推荐逻辑相关算法的入口
+  // 车位信息整合（感知+地图）和车位推荐逻辑相关算法的入口
   SlotReleaseManager parking_slot_operator_;
 
-  //互斥锁
+  // 互斥锁
   std::mutex process_mutex_;
 
   maf_perception_interface::FusionGroundLineResult groundline_fusion_latest_;

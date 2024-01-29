@@ -23,7 +23,7 @@ struct ParallelImpl {
   unsigned int rs_size;
 };
 
-struct ParallelParkoutImpl:ParallelImpl{
+struct ParallelParkoutImpl : ParallelImpl {
   std::vector<planning_math::Vec2d> zero_6_corners;
   double c4_add_theta;
   double c4_to_center;

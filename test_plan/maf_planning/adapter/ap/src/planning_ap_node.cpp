@@ -377,7 +377,6 @@ int main(int argc, char **argv) {
       pub_node_status_apa_planning(
           "framework_status_NodesStatus/node_status_apa_planning/APAPlanning");
 
-
   // yaml file don't support env parse, so use relative path directly
   std::string config_file = std::string(std::getenv("EXEC_PATH")) +
                             "/../resource/config/msquare_planning.ap.mdc.json";
@@ -753,8 +752,9 @@ int main(int argc, char **argv) {
             planning_control_cmd_response.request_seq = dst.header.seq;
             planning_control_cmd_response.success = true;
 
-            auto to_ap_dst = pub_system_manager_apa_planning_control_cmd_response
-                                 .allocateEmptyData();
+            auto to_ap_dst =
+                pub_system_manager_apa_planning_control_cmd_response
+                    .allocateEmptyData();
             TO_AP(planning_control_cmd_response, to_ap_dst);
             pub_system_manager_apa_planning_control_cmd_response.publish(
                 std::move(to_ap_dst));
@@ -940,7 +940,8 @@ int main(int argc, char **argv) {
         auto ap_planning_node_status =
             pub_node_status_apa_planning.allocateEmptyData();
         TO_AP(planning_nodes_status, ap_planning_node_status);
-        pub_node_status_apa_planning.publish(std::move(ap_planning_node_status));
+        pub_node_status_apa_planning.publish(
+            std::move(ap_planning_node_status));
 
         // highway worldmodel
         maf_framework_status::NodesStatus highway_wm_nodes_status;

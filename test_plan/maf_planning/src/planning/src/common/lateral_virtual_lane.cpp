@@ -811,8 +811,8 @@ void VirtualLaneManager::set_fix_lane(LaneProperty lane) {
   }
 }
 
-VirtualLaneManager &VirtualLaneManager::
-operator=(const VirtualLaneManager &source) {
+VirtualLaneManager &
+VirtualLaneManager::operator=(const VirtualLaneManager &source) {
   if (this == &source) {
     return *this;
   }

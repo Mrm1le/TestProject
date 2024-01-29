@@ -26,7 +26,8 @@ PlanningEngine::PlanningEngine(const MSDPlanningConfig &planning_config)
   planning_config_ = planning_config;
 
   // TODO 需要在构造函数中指明当前模块的NodeType
-  status_manager_->set_node_type(static_cast<node_status::NodeType>(33)); // node_status::NodeType::MODULE_PLANNING
+  status_manager_->set_node_type(static_cast<node_status::NodeType>(
+      33)); // node_status::NodeType::MODULE_PLANNING
   // TODO
   // start_notifier会单独启动一个通知线程，每1000ms调用一次callback，如果模块为了节省线程，可以手动get_status()
   status_manager_->start_notifier(100);
@@ -196,7 +197,7 @@ PlanningEngine::PlanningEngine(const MSDPlanningConfig &planning_config)
   if (sim_env != nullptr && std::string(sim_env) == "simulation") {
     snapshot = false;
   }
-  
+
   task_config.config_key = "ParkingPlanTask";
   // task_config.force_disable_snap = true;
   parking_planning_task_ = machine_.create_task<parking::PlanningTask>(
@@ -244,8 +245,7 @@ PlanningEngine::PlanningEngine(const MSDPlanningConfig &planning_config)
     pec_task_config.running_mode_config.hz = 5;
     // pec_task_config.force_disable_snap = true;
     pec_task_ = machine_.create_task<::parking::SetPSDFusionTask>(
-        pec_task_config,
-        fusion_parking_slot_resource->create_receiver(),
+        pec_task_config, fusion_parking_slot_resource->create_receiver(),
         ego_pose_resource->create_receiver(),
         fusion_uss_groundlines_resource->create_receiver(),
         fusion_objects_resource->create_receiver(),
@@ -270,8 +270,7 @@ PlanningEngine::PlanningEngine(const MSDPlanningConfig &planning_config)
     task_config.config_key = "WorldmodelPubTask";
     // task_config.force_disable_snap = true;
     wm_pub_task_ = machine_.create_task<msd_worldmodel::WorldmodelPubTask>(
-        task_config,
-        ddmap_processed_map_resource->create_receiver(),
+        task_config, ddmap_processed_map_resource->create_receiver(),
         wm_obj_resource->create_receiver());
   }
 
@@ -670,8 +669,7 @@ void PlanningEngine::set_callback(MSDPlanningInfoCallback callback) {
   parking_planning_task_->set_callback(callback);
 }
 
-void PlanningEngine::set_callback(MSDMdebugCallback callback) {
-}
+void PlanningEngine::set_callback(MSDMdebugCallback callback) {}
 
 // for wm
 void PlanningEngine::feed_perception_fusion_result(

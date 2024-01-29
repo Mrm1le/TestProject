@@ -1020,9 +1020,10 @@ bool ObstacleManager::obj_speed_filter() {
       obstacles_.Find(obj->Id())->SetStatic(1);
       continue;
     }
-    if ((obj->Type() == ObjectType::COUPE && VehicleParam::Instance()->car_type == "C03")
-    	  || (obj->Type() == ObjectType::PEDESTRIAN)
-        || (obj->Type() == ObjectType::CONE_BUCKET)) {
+    if ((obj->Type() == ObjectType::COUPE &&
+         VehicleParam::Instance()->car_type == "C03") ||
+        (obj->Type() == ObjectType::PEDESTRIAN) ||
+        (obj->Type() == ObjectType::CONE_BUCKET)) {
       continue;
     }
     if (obj->IsLonStaticWrtFrenet() != 1 || obj->IsLatStaticWrtFrenet() != 1 ||

@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "utils/macro.h"
 #include "nlohmann/json.hpp"
+#include "utils/macro.h"
 #include <cassert>
 #include <yaml-cpp/yaml.h>
 
@@ -110,4 +110,4 @@ struct vehicle_param {
   std::string architecture = "none";
 };
 
-}
+} // namespace worldmodel_pec

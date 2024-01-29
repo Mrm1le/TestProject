@@ -12,10 +12,13 @@
 namespace msquare {
 namespace parking {
 
-void SpeedPlannerCofig::init(double _dt, bool is_reverse){
+void SpeedPlannerCofig::init(double _dt, bool is_reverse) {
   dt = _dt;
   v_lo = 0.0;
-  v_up = is_reverse ? msquare::TrajectoryOptimizerConfig::GetInstance()->param_max_speed_reverse : msquare::TrajectoryOptimizerConfig::GetInstance()->param_max_speed_forward;
+  v_up = is_reverse ? msquare::TrajectoryOptimizerConfig::GetInstance()
+                          ->param_max_speed_reverse
+                    : msquare::TrajectoryOptimizerConfig::GetInstance()
+                          ->param_max_speed_forward;
   a_up = (msquare::CarParams::GetInstance()->car_config.lon_config.acc + 1.0);
   a_lo = -(msquare::CarParams::GetInstance()->car_config.lon_config.dec);
 
@@ -31,30 +34,33 @@ void SpeedPlannerCofig::init(double _dt, bool is_reverse){
   // std::cout<<"a_lo:"<<a_lo<<" a_up:"<<a_up<<std::endl;
 }
 
-
-bool PiecewiseJerkSpeedOptimizer::makeOptimize(const double init_speed, const double init_a,
-                                        std::vector<std::vector<double>>* path, const VecST& vec_st, 
-                                        const msquare::parking::VecST& first_st_obs,
-                                        const msquare::parking::VecST& second_st_obs) {
+bool PiecewiseJerkSpeedOptimizer::makeOptimize(
+    const double init_speed, const double init_a,
+    std::vector<std::vector<double>> *path, const VecST &vec_st,
+    const msquare::parking::VecST &first_st_obs,
+    const msquare::parking::VecST &second_st_obs) {
 
   // std::cout<<"Start Speed Qp Optimize"<<config_.dt<<std::endl;
-  
+
   // std::cout << "Ref planning size is:" << vec_st.size() << std::endl;
-  // std::cout << "-------------------> QP init_speed  speed is:" << init_speed << std::endl;
-  double qp_init_speed  = init_speed;
+  // std::cout << "-------------------> QP init_speed  speed is:" << init_speed
+  // << std::endl;
+  double qp_init_speed = init_speed;
   if (vec_st.empty()) {
     return false;
   }
   if (qp_init_speed > vec_st[0].v) {
-    qp_init_speed  = vec_st[0].v - 0.01;
-    // std::cout << "-------------------> QP init_speed  speed is over than limit:" 
+    qp_init_speed = vec_st[0].v - 0.01;
+    // std::cout << "-------------------> QP init_speed  speed is over than
+    // limit:"
     //           << "set init speed to" << qp_init_speed << std::endl;
   }
-  Eigen::Vector3d init_state {vec_st.front().s, qp_init_speed, init_a};
-  // std::cout << "init state is v: " << qp_init_speed << "  a: " << init_a << std::endl;
-  
+  Eigen::Vector3d init_state{vec_st.front().s, qp_init_speed, init_a};
+  // std::cout << "init state is v: " << qp_init_speed << "  a: " << init_a <<
+  // std::endl;
+
   const size_t param_num = vec_st.size();
-  
+
   PieceWiseJerk piecewise_jerk_optimizer(param_num, config_.dt, init_state);
   std::vector<std::pair<double, double>> x_bounds;
   std::vector<std::pair<double, double>> dx_bounds;
@@ -78,13 +84,13 @@ bool PiecewiseJerkSpeedOptimizer::makeOptimize(const double init_speed, const do
     // MSD_LOG(ERROR, "before target v is: %f", ref_velocity);
     if (first_st_obs.size() > 0 && first_st_obs.size() - 1 >= i) {
       if (std::fabs(first_st_obs[i].v) < ref_velocity) {
-        ref_velocity = 0.3*ref_velocity + 0.7*first_st_obs[i].v;
+        ref_velocity = 0.3 * ref_velocity + 0.7 * first_st_obs[i].v;
         ref_v_w = 100 + ref_v_w;
         ref_s_w = 5;
       }
       if (second_st_obs.size() > 0 && second_st_obs.size() - 1 >= i) {
         if (std::fabs(second_st_obs[i].v) < ref_velocity)
-        ref_velocity = 0.8*ref_velocity + 0.2*second_st_obs[i].v;
+          ref_velocity = 0.8 * ref_velocity + 0.2 * second_st_obs[i].v;
       }
     }
 
@@ -99,7 +105,7 @@ bool PiecewiseJerkSpeedOptimizer::makeOptimize(const double init_speed, const do
   // piecewise_jerk_optimizer.set_x_bounds(x_bounds);
   piecewise_jerk_optimizer.set_dx_bounds(dx_bounds);
   piecewise_jerk_optimizer.set_ddx_bounds(ddx_bounds);
-  piecewise_jerk_optimizer.set_dddx_bound(config_.j_lo,config_.j_up);
+  piecewise_jerk_optimizer.set_dddx_bound(config_.j_lo, config_.j_up);
 
   piecewise_jerk_optimizer.set_weight_x(config_.s_w);
   piecewise_jerk_optimizer.set_weight_dx(config_.v_w);
@@ -108,12 +114,11 @@ bool PiecewiseJerkSpeedOptimizer::makeOptimize(const double init_speed, const do
   piecewise_jerk_optimizer.set_x_ref(ref_s_weight, ref_s_target);
   piecewise_jerk_optimizer.set_dx_ref(ref_v_weight, ref_v_target);
 
-
   const auto ret = piecewise_jerk_optimizer.Solve();
 
-  const auto& result_x = piecewise_jerk_optimizer.optimal_x();
-  const auto& result_dx = piecewise_jerk_optimizer.optimal_dx();
-  const auto& result_ddx = piecewise_jerk_optimizer.optimal_ddx();
+  const auto &result_x = piecewise_jerk_optimizer.optimal_x();
+  const auto &result_dx = piecewise_jerk_optimizer.optimal_dx();
+  const auto &result_ddx = piecewise_jerk_optimizer.optimal_ddx();
   if (not ret) {
     // std::cout << "QP Failed" << std::endl;
     return false;
@@ -146,9 +151,9 @@ bool PiecewiseJerkSpeedOptimizer::makeOptimize(const double init_speed, const do
   // uint32_t order = 3;
   // Spline2d spline_2d= Spline2d(t_knots, order);
   // Eigen::VectorXd resolution = piecewise_jerk_optimizer.getSolution();
-  // Eigen::MatrixXd solved_params = Eigen::MatrixXd::Zero(resolution.rows(), 1);
-  // std::cout << "the resolution size is: " << resolution.rows() << std::endl;
-  // for (int i = 0; i < resolution.rows(); ++i) {
+  // Eigen::MatrixXd solved_params = Eigen::MatrixXd::Zero(resolution.rows(),
+  // 1); std::cout << "the resolution size is: " << resolution.rows() <<
+  // std::endl; for (int i = 0; i < resolution.rows(); ++i) {
   //   solved_params(i, 0) = resolution[i];
   // }
   // spline_2d.set_splines(solved_params, 3);
@@ -156,7 +161,8 @@ bool PiecewiseJerkSpeedOptimizer::makeOptimize(const double init_speed, const do
   return true;
 }
 
-// void PiecewiseJerkSpeedOptimizer::interpolateSpeedData(SpeedData* speed_data) {
+// void PiecewiseJerkSpeedOptimizer::interpolateSpeedData(SpeedData* speed_data)
+// {
 //   SpeedData temp_speed_data = *speed_data;
 //   double time = 0;
 //   speed_data->clear();

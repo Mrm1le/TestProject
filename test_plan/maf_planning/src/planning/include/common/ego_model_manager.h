@@ -65,9 +65,7 @@ public:
   get_ego_model_polygon(const EgoModelType ego_model_type,
                         const PathPoint &center_point);
 
-  const double& chassis_height() const {
-    return chassis_height_;
-  }
+  const double &chassis_height() const { return chassis_height_; }
 
 private:
   bool set_params(const double &deviation_length, const double &cut_length,

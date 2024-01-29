@@ -66,9 +66,7 @@ public:
     return dodge_info;
   }
 
-  DLPInfo get_dlp_info() {
-    return current_dlp_info_;
-  }
+  DLPInfo get_dlp_info() { return current_dlp_info_; }
 
 private:
   void init_opt_params(const PathPlannerInput &input);

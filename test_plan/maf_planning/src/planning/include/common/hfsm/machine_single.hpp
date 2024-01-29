@@ -239,67 +239,45 @@ template <unsigned t> struct PowerOf2 {
 
 template <unsigned t> struct BitCount {
   enum {
-    Value =
-        t == 0 ? 0
-               : t >> 1 == 0
-                     ? 1
-                     : t >> 2 == 0
-                           ? 2
-                           : t >> 3 == 0
-                                 ? 3
-                                 : t >> 4 == 0
-                                       ? 4
-                                       : t >> 5 == 0
-                                             ? 5
-                                             : t >> 6 == 0
-                                                   ? 6
-                                                   : t >> 7 == 0
-                                                         ? 7
-                                                         :
+    Value = t == 0        ? 0
+            : t >> 1 == 0 ? 1
+            : t >> 2 == 0 ? 2
+            : t >> 3 == 0 ? 3
+            : t >> 4 == 0 ? 4
+            : t >> 5 == 0 ? 5
+            : t >> 6 == 0 ? 6
+            : t >> 7 == 0 ? 7
+            :
 
-                                                         t >> 8 == 0
-                                                             ? 8
-                                                             : t >> 9 == 0
-                                                                   ? 9
-                                                                   : t >> 10 ==
-                                                                             0
-                                                                         ? 10
-                                                                         : t >> 11 ==
-                                                                                   0
-                                                                               ? 11
-                                                                               : t >> 12 ==
-                                                                                         0
-                                                                                     ? 12
-                                                                                     : t >> 13 == 0 ? 13
-                                                                                                    : t >> 14 == 0 ? 14
-                                                                                                                   : t >> 15 == 0 ? 15
-                                                                                                                                  :
+            t >> 8 == 0    ? 8
+            : t >> 9 == 0  ? 9
+            : t >> 10 == 0 ? 10
+            : t >> 11 == 0 ? 11
+            : t >> 12 == 0 ? 12
+            : t >> 13 == 0 ? 13
+            : t >> 14 == 0 ? 14
+            : t >> 15 == 0 ? 15
+            :
 
-                                                                                                                                  t >> 16 == 0 ? 16
-                                                                                                                                               : t >> 17 == 0 ? 17
-                                                                                                                                                              : t >> 18 == 0 ? 18
-                                                                                                                                                                             : t >> 19 == 0 ? 19
-                                                                                                                                                                                            : t >> 20 == 0 ? 20
-                                                                                                                                                                                                           : t >> 21 ==
-                                                                                                                                                                                                                     0
-                                                                                                                                                                                                                 ? 21
-                                                                                                                                                                                                                 : t >> 22 == 0 ? 22
-                                                                                                                                                                                                                                : t >> 23 == 0 ? 23
-                                                                                                                                                                                                                                               :
+            t >> 16 == 0   ? 16
+            : t >> 17 == 0 ? 17
+            : t >> 18 == 0 ? 18
+            : t >> 19 == 0 ? 19
+            : t >> 20 == 0 ? 20
+            : t >> 21 == 0 ? 21
+            : t >> 22 == 0 ? 22
+            : t >> 23 == 0 ? 23
+            :
 
-                                                                                                                                                                                                                                               t >> 24 == 0 ? 24
-                                                                                                                                                                                                                                                            : t >> 25 == 0 ? 25
-                                                                                                                                                                                                                                                                           : t >> 26 == 0 ? 26
-                                                                                                                                                                                                                                                                                          : t >> 27 == 0 ? 27
-                                                                                                                                                                                                                                                                                                         : t >> 28 ==
-                                                                                                                                                                                                                                                                                                                   0
-                                                                                                                                                                                                                                                                                                               ? 28
-                                                                                                                                                                                                                                                                                                               : t >> 29 == 0 ? 29
-                                                                                                                                                                                                                                                                                                                              : t >> 30 == 0 ? 30
-                                                                                                                                                                                                                                                                                                                                             : t >> 31 ==
-                                                                                                                                                                                                                                                                                                                                                       0
-                                                                                                                                                                                                                                                                                                                                                   ? 31
-                                                                                                                                                                                                                                                                                                                                                   : 32
+            t >> 24 == 0   ? 24
+            : t >> 25 == 0 ? 25
+            : t >> 26 == 0 ? 26
+            : t >> 27 == 0 ? 27
+            : t >> 28 == 0 ? 28
+            : t >> 29 == 0 ? 29
+            : t >> 30 == 0 ? 30
+            : t >> 31 == 0 ? 31
+                           : 32
   };
 };
 
@@ -386,8 +364,8 @@ namespace detail {
 ////////////////////////////////////////////////////////////////////////////////
 
 template <typename TContainer>
-bool Iterator<TContainer>::
-operator!=(const Iterator<TContainer> &HSFM_IF_ASSERT(dummy)) const {
+bool Iterator<TContainer>::operator!=(
+    const Iterator<TContainer> &HSFM_IF_ASSERT(dummy)) const {
   mph_assert(&_container == &dummy._container);
 
   return _cursor != _container.limit();
@@ -405,8 +383,8 @@ Iterator<TContainer> &Iterator<TContainer>::operator++() {
 ////////////////////////////////////////////////////////////////////////////////
 
 template <typename TContainer>
-bool Iterator<const TContainer>::
-operator!=(const Iterator<const TContainer> &HSFM_IF_ASSERT(dummy)) const {
+bool Iterator<const TContainer>::operator!=(
+    const Iterator<const TContainer> &HSFM_IF_ASSERT(dummy)) const {
   mph_assert(&_container == &dummy._container);
 
   return _cursor != _container.limit();
@@ -546,7 +524,7 @@ template <typename T> class Wrap {
 public:
   inline Wrap() = default;
 
-  template <typename... Ts> inline void create(Ts &&... ts) {
+  template <typename... Ts> inline void create(Ts &&...ts) {
     new (&get()) Item(std::forward<Ts>(ts)...);
   }
 
@@ -1071,9 +1049,13 @@ private:
 
   template <typename... TS> struct WrapState;
 
-  template <typename T> struct WrapState<T> { using Type = _S<T>; };
+  template <typename T> struct WrapState<T> {
+    using Type = _S<T>;
+  };
 
-  template <typename T> struct WrapState<_S<T>> { using Type = _S<T>; };
+  template <typename T> struct WrapState<_S<T>> {
+    using Type = _S<T>;
+  };
 
   template <typename T, typename... TS> struct WrapState<_C<T, TS...>> {
     using Type = _C<T, TS...>;
@@ -1685,7 +1667,7 @@ void M<TC, TMS>::_R<TA>::requestScheduled(const Transition request) {
   fork.resumable = parent.prong;
 }
 
-  //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 #ifdef HFSM_ENABLE_STRUCTURE_REPORT
 
@@ -2024,7 +2006,7 @@ void M<TC, TMS>::_S<TH>::deepLeave(
   _head.widePostLeave(context);
 }
 
-  //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 #ifdef HFSM_ENABLE_STRUCTURE_REPORT
 
@@ -2038,9 +2020,10 @@ const char *M<TC, TMS>::_S<TH>::name() {
 
 #if defined(_MSC_VER)
 
-    unsigned first = raw[0] == 's' ? 7 :     // Struct
-                         raw[0] == 'c' ? 6 : // Class
-                             0;
+    unsigned first = raw[0] == 's' ? 7 : // Struct
+                         raw[0] == 'c' ? 6
+                                       : // Class
+                         0;
 
     for (auto c = first; raw[c]; ++c)
       if (raw[c] == ':')
@@ -2083,7 +2066,7 @@ void M<TC, TMS>::_S<TH>::deepIsActive(const bool isActive, unsigned &index,
 
 #endif
 
-  //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 #ifdef HFSM_ENABLE_LOG_INTERFACE
 
@@ -2097,9 +2080,10 @@ const char *M<TC, TMS>::_S<TH>::fullName() {
 
 #if defined(_MSC_VER)
 
-    unsigned first = raw[0] == 's' ? 7 :     // Struct
-                         raw[0] == 'c' ? 6 : // Class
-                             0;
+    unsigned first = raw[0] == 's' ? 7 : // Struct
+                         raw[0] == 'c' ? 6
+                                       : // Class
+                         0;
     return raw + first;
 
 #elif defined(__clang__) || defined(__GNUC__) || defined(__GNUG__)
@@ -2566,7 +2550,7 @@ void M<TC, TMS>::_C<TH, TS...>::deepChangeToRequested(
   }
 }
 
-  //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 #ifdef HFSM_ENABLE_STRUCTURE_REPORT
 
@@ -2777,7 +2761,7 @@ void M<TC, TMS>::_C<T, TS...>::Sub<TN, TI, TR...>::wideChangeToRequested(
     remaining.wideChangeToRequested(prong, context, logger);
 }
 
-  //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 #ifdef HFSM_ENABLE_STRUCTURE_REPORT
 
@@ -2983,7 +2967,7 @@ void M<TC, TMS>::_C<T, TS...>::Sub<TN, TI>::wideChangeToRequested(
   initial.deepChangeToRequested(context, logger);
 }
 
-  //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 #ifdef HFSM_ENABLE_STRUCTURE_REPORT
 
@@ -3412,7 +3396,7 @@ void M<TC, TMS>::_O<TH, TS...>::deepChangeToRequested(
   _subStates.wideChangeToRequested(context, logger);
 }
 
-  //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 #ifdef HFSM_ENABLE_STRUCTURE_REPORT
 
@@ -3620,7 +3604,7 @@ void M<TC, TMS>::_O<T, TS...>::Sub<TN, TI, TR...>::wideChangeToRequested(
   remaining.wideChangeToRequested(context, logger);
 }
 
-  //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 #ifdef HFSM_ENABLE_STRUCTURE_REPORT
 
@@ -3815,7 +3799,7 @@ void M<TC, TMS>::_O<T, TS...>::Sub<TN, TI>::wideChangeToRequested(
   initial.deepChangeToRequested(context, logger);
 }
 
-  //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 #ifdef HFSM_ENABLE_STRUCTURE_REPORT
 

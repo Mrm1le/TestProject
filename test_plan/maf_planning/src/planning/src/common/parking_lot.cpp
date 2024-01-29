@@ -150,8 +150,7 @@ Pose2D BaseParkingSlot::getParkingInPose(double front_edge_to_rear,
   lot_back_pose.x = (corners_[1].x + corners_[2].x) / 2;
   lot_back_pose.y = (corners_[1].y + corners_[2].y) / 2;
 
-  MSD_LOG(ERROR,
-          "BaseParkingSlot enable_get_heading_with_front_corners_=%d",
+  MSD_LOG(ERROR, "BaseParkingSlot enable_get_heading_with_front_corners_=%d",
           enable_get_heading_with_front_corners_);
 
   if (enable_get_heading_with_front_corners_) {
@@ -178,7 +177,8 @@ Pose2D BaseParkingSlot::getParkingInPose(double front_edge_to_rear,
   target_in_lot_front_frame.x =
       -(lot_length - target2back); // with buffer related to control precision
 
-  MSD_LOG(ERROR, "BaseParkingSlot target_in_lot_front_frame.x=%f", target_in_lot_front_frame.x);
+  MSD_LOG(ERROR, "BaseParkingSlot target_in_lot_front_frame.x=%f",
+          target_in_lot_front_frame.x);
 
   return planning_math::tf2d_inv(lot_front_pose, target_in_lot_front_frame);
 }
@@ -759,10 +759,10 @@ double BaseParkingSlot::getOpeningHeading() const { return box_.heading(); }
 
 planning_math::Box2d BaseParkingSlot::getOriginBox() const {
   Box2d box(box_);
-  //todo: replace with original corners
+  // todo: replace with original corners
   const double EXPECTED_SLOT_LENGTH = 5.5;
   if (box.length() < EXPECTED_SLOT_LENGTH) {
-    box.LongitudinalExtend( 2 * (EXPECTED_SLOT_LENGTH - box.length()));
+    box.LongitudinalExtend(2 * (EXPECTED_SLOT_LENGTH - box.length()));
   }
   return box;
 }

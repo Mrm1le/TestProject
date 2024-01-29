@@ -3,10 +3,9 @@
 namespace msquare {
 namespace parking {
 
-using planning_math::Vec2d;
 using planning_math::Box2d;
 using planning_math::Polygon2d;
-
+using planning_math::Vec2d;
 
 APABehaviorCalculatorParkIn::APABehaviorCalculatorParkIn(
     const std::shared_ptr<WorldModel> &world_model)
@@ -51,7 +50,6 @@ bool APABehaviorCalculatorParkIn::calculate_approaching_wheel_stop(
           ->parking_behavior_planner_output()
           .parking_slot_info.wheel_stop_info.available;
 
-
   //[Calculation]
   bool base_scene = g_planning_gear == GearState::REVERSE &&
                     g_slot_info.type.value != ParkingSlotType::PARALLEL &&
@@ -65,13 +63,15 @@ bool APABehaviorCalculatorParkIn::calculate_approaching_wheel_stop(
   if (g_wheel_stop_info_available) {
     result_approaching_wheel_stop = distance_to_end < 1.0;
   } else {
-    result_approaching_wheel_stop = distance_to_end < VehicleParam::Instance()->length / 2.0;
+    result_approaching_wheel_stop =
+        distance_to_end < VehicleParam::Instance()->length / 2.0;
   }
 
   return result_approaching_wheel_stop;
 }
 
-bool APABehaviorCalculatorParkIn::calculate_blocked_base_scene(bool openspace_is_running) {
+bool APABehaviorCalculatorParkIn::calculate_blocked_base_scene(
+    bool openspace_is_running) {
   // ################## Rule Explanation ##################
 
   // [Base Scene] Blocked
@@ -93,7 +93,8 @@ bool APABehaviorCalculatorParkIn::calculate_blocked_base_scene(bool openspace_is
   return base_scene;
 }
 
-bool APABehaviorCalculatorParkIn::calculate_hit_sth_base_scene(bool openspace_is_running) {
+bool APABehaviorCalculatorParkIn::calculate_hit_sth_base_scene(
+    bool openspace_is_running) {
   // ################## Rule Explanation ##################
 
   // [Base Scene] Blocked
@@ -110,14 +111,14 @@ bool APABehaviorCalculatorParkIn::calculate_hit_sth_base_scene(bool openspace_is
                         !g_planning_status.stopping) ||
                        g_planning_status.collide_to_sth;
 
-  bool base_scene = !world_model_->get_pause_status() &&
-                    hit_something &&
+  bool base_scene = !world_model_->get_pause_status() && hit_something &&
                     openspace_is_running;
   return base_scene;
 }
 
 bool APABehaviorCalculatorParkIn::calculate_times_try_parkin(
-    bool base_scene, bool is_at_last_segment, std::size_t* ptr_times_try_parking_in) {
+    bool base_scene, bool is_at_last_segment,
+    std::size_t *ptr_times_try_parking_in) {
   // ################## Rule Explanation ##################
 
   // [Base Scene] Blocked OR HitSth
@@ -132,8 +133,7 @@ bool APABehaviorCalculatorParkIn::calculate_times_try_parkin(
   // ############## End of Rule Explanation ###############
 
   // [PlanningContext Input]
-  const auto &g_times_try_parking_in =
-      *ptr_times_try_parking_in;
+  const auto &g_times_try_parking_in = *ptr_times_try_parking_in;
 
   const auto &g_has_moved =
       PlanningContext::Instance()->parking_behavior_planner_output().has_moved;
@@ -144,16 +144,15 @@ bool APABehaviorCalculatorParkIn::calculate_times_try_parkin(
 
   const auto &ego_pose = world_model_->get_ego_state().ego_pose;
 
-  //[Calculation]  
+  //[Calculation]
   std::size_t result_times_try_parking_in = g_times_try_parking_in;
 
-  if(!base_scene){
+  if (!base_scene) {
     return false;
   }
 
   Box2d slot_box = g_parking_lot->getBox();
-  bool is_ego_overlaps_lot =
-      slot_box.IsPointIn(Vec2d(ego_pose.x, ego_pose.y));
+  bool is_ego_overlaps_lot = slot_box.IsPointIn(Vec2d(ego_pose.x, ego_pose.y));
 
   // sub scene 1
   if (g_has_moved && is_ego_overlaps_lot && is_at_last_segment) {
@@ -180,17 +179,15 @@ bool APABehaviorCalculatorParkIn::calculate_blocked_by_obstacle_behind_in_slot(
 
   // ############## End of Rule Explanation ###############
 
-
   //[PlanningContext Input]
   const auto &ego_pose = world_model_->get_ego_state().ego_pose;
 
   //[Calculation]
   bool result_is_blocked_by_obstacle_behind_in_slot = false;
-  
-  if(!blocked_base_scene){
+
+  if (!blocked_base_scene) {
     return false;
   }
-
 
   result_is_blocked_by_obstacle_behind_in_slot = isGroundlineBehindEgoUnsafe(
       world_model_->get_parking_ground_line_fusion(), ego_pose,
@@ -201,7 +198,7 @@ bool APABehaviorCalculatorParkIn::calculate_blocked_by_obstacle_behind_in_slot(
 
 bool APABehaviorCalculatorParkIn::calculate_need_update_parking_slot_corners(
     const Pose2D &target_pose_lot) {
-    // ################## Rule Explanation ##################
+  // ################## Rule Explanation ##################
   // [Default Value]
   //    ---> Rule: if need stop update parking slot corners(default is true)
 
@@ -221,8 +218,8 @@ bool APABehaviorCalculatorParkIn::calculate_need_update_parking_slot_corners(
                                 .parking_slot_info;
   const auto &ego_pose = world_model_->get_ego_state().ego_pose;
 
-  double distance_ego_to_target =
-      std::hypot(target_pose_lot.x - ego_pose.x, target_pose_lot.y - ego_pose.y);
+  double distance_ego_to_target = std::hypot(target_pose_lot.x - ego_pose.x,
+                                             target_pose_lot.y - ego_pose.y);
 
   bool base_scene = world_model_->get_pause_status() ||
                     distance_ego_to_target > 3.0 ||
@@ -248,7 +245,8 @@ bool APABehaviorCalculatorParkIn::calculate_need_check_mpc_collide(
   const auto &g_has_moved =
       PlanningContext::Instance()->parking_behavior_planner_output().has_moved;
 
-  bool base_scene = !need_update_slot_corners && g_has_moved && is_at_last_segment;
+  bool base_scene =
+      !need_update_slot_corners && g_has_moved && is_at_last_segment;
   return base_scene;
 }
 
@@ -275,12 +273,14 @@ bool APABehaviorCalculatorParkIn::calculate_need_dynamic_plan_adjust_tail(
   return base_scene;
 }
 
-bool APABehaviorCalculatorParkIn::isPointBehindEgoUnsafe(const planning_math::Vec2d &point,
-                            const Pose2D &ego_pose, const Pose2D &target_pose) {
+bool APABehaviorCalculatorParkIn::isPointBehindEgoUnsafe(
+    const planning_math::Vec2d &point, const Pose2D &ego_pose,
+    const Pose2D &target_pose) {
   double lon_inflation = CarParams::GetInstance()->lon_inflation();
   double lat_inflation = CarParams::GetInstance()->lat_inflation();
   // behind ego?
-  planning_math::Vec2d point_in_ego_frame = planning_math::tf2d(ego_pose, point);
+  planning_math::Vec2d point_in_ego_frame =
+      planning_math::tf2d(ego_pose, point);
   if (point_in_ego_frame.y() <
           -(VehicleParam::Instance()->width + lat_inflation) ||
       point_in_ego_frame.y() >
@@ -293,9 +293,9 @@ bool APABehaviorCalculatorParkIn::isPointBehindEgoUnsafe(const planning_math::Ve
   return true;
 }
 
-
-bool APABehaviorCalculatorParkIn::isGroundlineBehindEgoUnsafe(const std::vector<GroundLine> &groundline,
-                                 const Pose2D &ego_pose, const Pose2D &target_pose) {
+bool APABehaviorCalculatorParkIn::isGroundlineBehindEgoUnsafe(
+    const std::vector<GroundLine> &groundline, const Pose2D &ego_pose,
+    const Pose2D &target_pose) {
   MSD_LOG(INFO, "[short_block] %s-%d", __FUNCTION__, __LINE__);
   for (auto &obs : groundline) {
     if (obs.id != PlanningContext::Instance()
@@ -314,9 +314,6 @@ bool APABehaviorCalculatorParkIn::isGroundlineBehindEgoUnsafe(const std::vector<
   }
   return false;
 }
-
-
-
 
 } // namespace parking
 } // namespace msquare

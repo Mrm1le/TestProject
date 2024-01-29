@@ -1165,8 +1165,8 @@ bool HybridAstar2::isReplanInSlot(const SearchNode &start) {
 
 bool HybridAstar2::Plan(const std::vector<SbpObstaclePtr> &obs_ptrs,
                         parking::SearchProcessDebug *sp_debug) {
-                          std::cout << "astar Plan!" << std::endl;
-search_node_record.open("../build/search_node.txt", std::ios::out);
+  std::cout << "astar Plan!" << std::endl;
+  search_node_record.open("../build/search_node.txt", std::ios::out);
 #ifdef BUILD_IN_TEST_BAG_RECURRENT
   constexpr bool enable_timer = true;
 #else  // BUILD_IN_TEST_BAG_RECURRENT
@@ -1227,7 +1227,8 @@ search_node_record.open("../build/search_node.txt", std::ios::out);
     require_forward = true;
     require_backward = false;
   }
-  std::cout << "require_forward: " << require_forward << "require_backward: " << require_backward << std::endl;
+  std::cout << "require_forward: " << require_forward
+            << "require_backward: " << require_backward << std::endl;
 
   curve::Curve start_curve;
   start_curve.initAsStart(require_forward, require_backward);
@@ -1255,8 +1256,10 @@ search_node_record.open("../build/search_node.txt", std::ios::out);
 
   trans.toSelf(start_node);
   trans.toSelf(end_node);
-  printf("end_node %.3f, %.3f, %.3f\n", end_node.x(), end_node.y(), end_node.theta());
-  printf("start_node %.3f, %.3f, %.3f\n", start_node.x(), start_node.y(), start_node.theta());
+  printf("end_node %.3f, %.3f, %.3f\n", end_node.x(), end_node.y(),
+         end_node.theta());
+  printf("start_node %.3f, %.3f, %.3f\n", start_node.x(), start_node.y(),
+         start_node.theta());
   if (slot_type_ == SlotType::PARALLEL) {
     simple_rs_euler_spiral_min_straight_len_ = 0.0f;
     if (isPlanInSlot(start_node)) {
@@ -1315,12 +1318,13 @@ search_node_record.open("../build/search_node.txt", std::ios::out);
       lat_inflation_ + extra_inflation, lat_inflation_low_ + extra_inflation);
   std::cout << "lat_inflation_: " << lat_inflation_ << " | "
             << "lat_inflation_low_: " << lat_inflation_low_ << " | "
-            << "extra_inflation: " << extra_inflation  << " | "
-            << "node_config_.traj_gear_switch_penalty: " << node_config_.traj_gear_switch_penalty << " | "
+            << "extra_inflation: " << extra_inflation << " | "
+            << "node_config_.traj_gear_switch_penalty: "
+            << node_config_.traj_gear_switch_penalty << " | "
             << "max_iter_max_: " << max_iter_max_
             << "max_iter_base_: " << max_iter_base_ << " | "
-            << "enable_offline_boundary_cost_: " << enable_offline_boundary_cost_ << " | "
-            << std::endl;
+            << "enable_offline_boundary_cost_: "
+            << enable_offline_boundary_cost_ << " | " << std::endl;
 
   obstacle_grid_cost_timer.Toc();
 
@@ -1364,8 +1368,8 @@ search_node_record.open("../build/search_node.txt", std::ios::out);
     return false;
   }
   std::cout << "useHeuristicCostFromInside(): " << useHeuristicCostFromInside()
-            << " enable_offline_boundary_cost_ " << enable_offline_boundary_cost_
-            << std::endl;
+            << " enable_offline_boundary_cost_ "
+            << enable_offline_boundary_cost_ << std::endl;
   float heuristic_cost_from_inside_weight = 0.0f;
   if (useHeuristicCostFromInside()) {
     heuristic_cost_from_inside_weight = 1.0f;
@@ -1561,13 +1565,15 @@ search_node_record.open("../build/search_node.txt", std::ios::out);
         pq_insert_timer.Tic();
         pq_.push(allocate_res.key);
         parking::SearchDebugNode search_node_next(
-              copied_next.x(), copied_next.y(), copied_next.theta(),
-              copied_next.trajectory_cost(), copied_next.heuristic_cost());
+            copied_next.x(), copied_next.y(), copied_next.theta(),
+            copied_next.trajectory_cost(), copied_next.heuristic_cost());
         trans.fromSelf(search_node_next);
-        // printf("search_node_next %.3f, %.3f, %.3f\n", nodes_pool_[allocate_res.key].x(),
-              //  nodes_pool_[allocate_res.key].y(),
-              //  nodes_pool_[allocate_res.key].theta());
-        // search_node_record << search_node_next.x << " " << search_node_next.y << " " << search_node_next.theta << std::endl;
+        // printf("search_node_next %.3f, %.3f, %.3f\n",
+        // nodes_pool_[allocate_res.key].x(),
+        //  nodes_pool_[allocate_res.key].y(),
+        //  nodes_pool_[allocate_res.key].theta());
+        // search_node_record << search_node_next.x << " " << search_node_next.y
+        // << " " << search_node_next.theta << std::endl;
         pq_insert_timer.Toc();
         int replaced = nodes_pool_.invalidKey();
         if (state_insert_res_fine_end.belong) {

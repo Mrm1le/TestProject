@@ -1712,7 +1712,7 @@ bool MapInfoManager::splice_smooth_seg(
       break;
     }
     if (s > 20) {
-      has_passed = false; //自车没有驶过曲率异常点，置false
+      has_passed = false; // 自车没有驶过曲率异常点，置false
       MSD_LOG(INFO,
               "[refsmooth]lane_id = %d car has not passed smooth seg!  "
               "remain_s = %f",

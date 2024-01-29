@@ -9,7 +9,7 @@ namespace msquare {
 namespace {
 constexpr double kOctagonContourPointNumber = 8;
 constexpr double kHexadecagonContourPointNumber = 16;
-}
+} // namespace
 
 bool VehicleParam::loadFile(std::string file) {
   YAML::Node yaml_node = YAML::LoadFile(file);
@@ -40,7 +40,7 @@ bool VehicleParam::loadFile(std::string file) {
   }
 
   // remedy  spare_tire
-  if(spare_tire_.exist_spare_tire){
+  if (spare_tire_.exist_spare_tire) {
     length += spare_tire_.spare_tire_protrusion_length;
     back_edge_to_center += spare_tire_.spare_tire_protrusion_length;
   }

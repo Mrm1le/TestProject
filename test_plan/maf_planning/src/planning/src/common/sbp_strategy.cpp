@@ -8,7 +8,6 @@
 #include "common/utils/trajectory_point_utils.h"
 #include "planner/motion_planner/optimizers/openspace_optimizer/openspace_optimizer.h"
 
-
 namespace msquare {
 namespace parking {
 
@@ -156,14 +155,16 @@ bool GenerateSpeedAcceleration(SbpResult *result) {
   result->a.push_back(result->a.back());
 
   // load steering from phi
-  if (msquare::CarParams::GetInstance()->car_config.lon_config.use_sop_algorithm) {
-    if (!(result->steer.size() >= 2 && result->x.size() == result->steer.size())) {
+  if (msquare::CarParams::GetInstance()
+          ->car_config.lon_config.use_sop_algorithm) {
+    if (!(result->steer.size() >= 2 &&
+          result->x.size() == result->steer.size())) {
       for (size_t i = 0; i + 1 < x_size; ++i) {
-        double discrete_steer =
-            planning_math::NormalizeAngle((result->phi[i + 1] - result->phi[i])) *
-            wheel_base_ /
-            std::hypot(result->x[i + 1] - result->x[i],
-                      result->y[i + 1] - result->y[i]);
+        double discrete_steer = planning_math::NormalizeAngle(
+                                    (result->phi[i + 1] - result->phi[i])) *
+                                wheel_base_ /
+                                std::hypot(result->x[i + 1] - result->x[i],
+                                           result->y[i + 1] - result->y[i]);
         if (result->v[i] > 0.0) {
           discrete_steer = std::atan(discrete_steer);
         } else {
@@ -172,14 +173,14 @@ bool GenerateSpeedAcceleration(SbpResult *result) {
         result->steer.push_back(discrete_steer);
       }
       result->steer.push_back(result->steer.back());
-    }    
+    }
   } else {
     for (size_t i = 0; i + 1 < x_size; ++i) {
       double discrete_steer =
           planning_math::NormalizeAngle((result->phi[i + 1] - result->phi[i])) *
           wheel_base_ /
           std::hypot(result->x[i + 1] - result->x[i],
-                    result->y[i + 1] - result->y[i]);
+                     result->y[i + 1] - result->y[i]);
       if (result->v[i] > 0.0) {
         discrete_steer = std::atan(discrete_steer);
       } else {
@@ -316,7 +317,8 @@ bool assembleSearchProblem(const StrategyParams *cfg, SbpResult &sbp_result) {
     std::reverse(sbp_result.x.begin(), sbp_result.x.end());
     std::reverse(sbp_result.y.begin(), sbp_result.y.end());
     std::reverse(sbp_result.phi.begin(), sbp_result.phi.end());
-    if (msquare::CarParams::GetInstance()->car_config.lon_config.use_sop_algorithm) {
+    if (msquare::CarParams::GetInstance()
+            ->car_config.lon_config.use_sop_algorithm) {
       std::reverse(sbp_result.steer.begin(), sbp_result.steer.end());
     }
   }
@@ -484,11 +486,9 @@ bool genOpenspacePath(const SearchBasedPlannerPtr sbp,
   sbp->setTargetNode(std::make_shared<SearchNode>(
       target_state.path_point.x, target_state.path_point.y,
       target_state.path_point.theta, target_state.v));
-  sbp->setStartRange(init_state.sigma_x,
-                     init_state.sigma_y,
+  sbp->setStartRange(init_state.sigma_x, init_state.sigma_y,
                      init_state.sigma_yaw);
-  sbp->setTargetRange(target_state.sigma_x,
-                      target_state.sigma_y,
+  sbp->setTargetRange(target_state.sigma_x, target_state.sigma_y,
                       target_state.sigma_yaw);
   sbp_obs_ptrs.push_back(
       std::make_shared<SbpObstacleLine>(input.obstacle_lines));

@@ -1455,8 +1455,8 @@ bool BaseLineInfo::construct_obstacle_manager(
       }
 
       if (nullptr == obs_ptr) {
-        obs_ptr = std::make_shared<Obstacle>(prediction_object.id, cone_bucket_fusion,
-                                             is_static);
+        obs_ptr = std::make_shared<Obstacle>(prediction_object.id,
+                                             cone_bucket_fusion, is_static);
       }
       obs_ptr->update(prediction_object.id, cone_bucket_fusion, is_static);
       auto mutable_obs = obstacle_manager_->add_obstacle(*obs_ptr);

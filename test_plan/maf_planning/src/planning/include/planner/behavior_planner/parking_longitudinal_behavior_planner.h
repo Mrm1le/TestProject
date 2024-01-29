@@ -33,8 +33,8 @@ public:
 
   static bool compute_lead_obs_info(
       const ParkingSlotInfo &park_info,
-      LongitudinalBehaviorPlannerOutput::RemainDistInfo *ptr_remain_dist_info, 
-      int* ptr_is_need_pause);
+      LongitudinalBehaviorPlannerOutput::RemainDistInfo *ptr_remain_dist_info,
+      int *ptr_is_need_pause);
 
 private:
   bool compute(LeaderPair &lead_cars);
@@ -71,7 +71,7 @@ private:
       std::vector<std::vector<std::pair<double, double>>> &vec_sl_points,
       const bool remain_decider_status);
 
-  RemainDistDecider::OutHoleParam* const mutable_out_hole_param() {
+  RemainDistDecider::OutHoleParam *const mutable_out_hole_param() {
     return &out_hole_param_;
   }
 
@@ -93,7 +93,6 @@ private:
 
   // remain dist decider
   RemainDistDecider::OutHoleParam out_hole_param_;
-
 };
 
 } // namespace parking

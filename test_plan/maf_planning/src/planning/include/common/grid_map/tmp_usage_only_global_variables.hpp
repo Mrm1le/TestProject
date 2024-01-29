@@ -10,7 +10,6 @@
 namespace msquare {
 namespace grid {
 
-
 class TmpGlobals {
 public:
   static constexpr int CONFIG_VARIABLE_STEP_SIZE_STEER_OPTION_COUNT = 7;
@@ -60,8 +59,7 @@ public:
   };
   static constexpr SimpleRSCurveMode CONFIG_SIMPLE_RS_CURVE_MODE =
       SimpleRSCurveMode::EULER_SPIRAL;
-  static constexpr double CONFIG_SIMPLE_RS_EULER_SPIRAL_MAX_SPEED =
-      0.9;
+  static constexpr double CONFIG_SIMPLE_RS_EULER_SPIRAL_MAX_SPEED = 0.9;
 
   static constexpr double CONFIG_MAX_PATH_LENGTH_PER_NODE = 0.1;
 

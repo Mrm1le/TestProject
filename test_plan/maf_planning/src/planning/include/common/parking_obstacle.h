@@ -65,9 +65,10 @@ public:
   // explicit Obstacle(int id, const Point3D &point,
   //                  const double v_ego, const Pose2D &ego_pose);
 
-  explicit Obstacle(int id, const Point3D &point, const ObjectType& type);
-  explicit Obstacle(int id, const Point3D &point, bool is_freespace = false, 
-      const GroundLineType fusion_type = GroundLineType::GROUND_LINE_TYPE_UNKNOWN);
+  explicit Obstacle(int id, const Point3D &point, const ObjectType &type);
+  explicit Obstacle(int id, const Point3D &point, bool is_freespace = false,
+                    const GroundLineType fusion_type =
+                        GroundLineType::GROUND_LINE_TYPE_UNKNOWN);
 
   // explicit Obstacle(int id, const Point3D &point1, const Point3D &point2,
   //                  const double v_ego, const Pose2D &ego_pose);
@@ -76,7 +77,8 @@ public:
   //                  const double v_ego, const Pose2D &ego_pose);
 
   explicit Obstacle(int id, const planning_math::LineSegment2d &line,
-      const GroundLineType fusion_type = GroundLineType::GROUND_LINE_USS_TYPE_UNKNOWN);
+                    const GroundLineType fusion_type =
+                        GroundLineType::GROUND_LINE_USS_TYPE_UNKNOWN);
 
   // for parking car
   explicit Obstacle(int id, const FusionObject &object, bool is_static);
@@ -104,8 +106,8 @@ public:
 
   void update(const Obstacle &obstacle);
 
-  Point3D point() const {return point_;};
-  Point3D* mutable_point() {return &point_;};
+  Point3D point() const { return point_; };
+  Point3D *mutable_point() { return &point_; };
 
   int Id() const { return id_; }
   void SetId(int id) { id_ = id; }
@@ -128,7 +130,7 @@ public:
   int RoadType() const { return road_type_; }
 
   int IsStatic() const { return is_static_; }
-  int IsSFStatic() const { return is_sf_static_;}
+  int IsSFStatic() const { return is_sf_static_; }
   int IsLonStaticWrtFrenet() const { return is_lon_static_wrt_frenet_; }
   int IsLatStaticWrtFrenet() const { return is_lat_static_wrt_frenet_; }
   int IsLonHighspeedWrtFrenet() const { return is_lon_highspeed_wrt_frenet_; }
@@ -294,7 +296,7 @@ public:
 
   GroundLineType LineFusionType() const { return line_fusion_type_; }
 
-  ObjectType* const mutable_Type() { return &type_; }
+  ObjectType *const mutable_Type() { return &type_; }
 
   double Prob() const { return prob_; }
 
@@ -561,7 +563,8 @@ private:
   int gear_ = 0;
   ObjectType type_;
   FusionObjectType sf_type_;
-  GroundLineType line_fusion_type_ = GroundLineType::GROUND_LINE_USS_TYPE_UNKNOWN;
+  GroundLineType line_fusion_type_ =
+      GroundLineType::GROUND_LINE_USS_TYPE_UNKNOWN;
 
   std::vector<TrajectoryPoint> trajectory_;
   FusionObject perception_obstacle_;

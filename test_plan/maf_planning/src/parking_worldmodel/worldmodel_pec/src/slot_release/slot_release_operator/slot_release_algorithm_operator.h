@@ -55,9 +55,7 @@ public:
   std::vector<Eigen::Vector3d> getObjFusionToObliqueSlotFrame() {
     return obj_fusions_to_oblique_slot_frame_;
   }
-  std::vector<Eigen::Vector3d> getObjPosVec() {
-    return obj_pos_vec_;
-  }
+  std::vector<Eigen::Vector3d> getObjPosVec() { return obj_pos_vec_; }
   SlotReleaseParams getParams() { return params_; }
 
 private:
@@ -167,7 +165,8 @@ public:
   bool isCarInSlot();
   bool isParkingStatus();
   bool isSlotCenterToEgoDisReasonable();
-  bool isSlotFullyObservedAccordHisTraj(SlotReleaseManager::ParkingSlotUnion &union_slot);
+  bool isSlotFullyObservedAccordHisTraj(
+      SlotReleaseManager::ParkingSlotUnion &union_slot);
   bool isEgoCarPassSlotDownstream();
 
 private:

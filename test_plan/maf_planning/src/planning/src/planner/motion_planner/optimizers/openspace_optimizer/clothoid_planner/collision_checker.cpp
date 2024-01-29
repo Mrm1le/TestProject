@@ -414,7 +414,6 @@ double CollisionChecker::moveForward(const Pose2D &pose, double lat, double lon,
     forward_length = std::max(0.0, forward_length);
   }
 
-
   // for road side
   std::vector<msquare::planning_math::Vec2d> corners;
   csg_.getWheelBaseShape(local_ego_pose, corners, lat, lon);

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "common/parking_obstacle_manager.h"
-#include "common/parking_world_model.h"
 #include "common/ego_model_manager.h"
+#include "common/parking_obstacle_manager.h"
 #include "common/parking_slot_interface.h"
+#include "common/parking_world_model.h"
 
 #include "common/grid_map/grid_map.h"
 
@@ -15,11 +15,11 @@ public:
   struct OutHoleParam {
     // parameter
     const int kGettingOutHoldCountThreshold = 30; // 1.5s
-    const double kSafeLateralThreshold = 0.05; 
+    const double kSafeLateralThreshold = 0.05;
     const double kSafeLateralDeltaDistThreshold = 1e-2;
     const double kCheckingRisingPathLength = 0.3;
     const double kSlowEgoVel = 0.3;
-    const double kSafeRemainDist = 0.99;  // set 0.99 just for easy debug
+    const double kSafeRemainDist = 0.99; // set 0.99 just for easy debug
 
     bool prev_is_planner_update_plan_path = false;
     int getting_out_count = 0;
@@ -37,9 +37,8 @@ public:
                     OutHoleParam *const ptr_out_hole_param);
 
 private:
-
-  bool
-  constructGridMap(const EgoModelManager &ego_model, const double pilliar_extra);
+  bool constructGridMap(const EgoModelManager &ego_model,
+                        const double pilliar_extra);
 
   bool
   getSlBoundary(const Pose2DTrajectory &path, const bool is_reverse,
@@ -66,7 +65,7 @@ private:
   std::shared_ptr<grid::MultiCircleFootprintModel> mc_footprint_model_;
   // int32_t current_lane_id_ = -1000;
 
-  OutHoleParam* out_hole_param_;
+  OutHoleParam *out_hole_param_;
 };
 
 } // namespace parking

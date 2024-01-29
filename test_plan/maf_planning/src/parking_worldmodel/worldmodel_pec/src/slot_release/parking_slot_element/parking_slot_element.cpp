@@ -19,7 +19,7 @@ ParkingSlotElement::ParkingSlotElement() {
 ParkingSlotElement::~ParkingSlotElement() {}
 
 bool ParkingSlotElement::isMatchWith(const ParkingSlotElement &other) const {
-  //边界条件检查：角点非空（防呆）
+  // 边界条件检查：角点非空（防呆）
   if (corners_.empty() || other.corners_.empty()) {
     MLOG_ERROR("[ParkingSlotElement::isMatchWith] trying to call match in an "
                "invalid parking slot(? ? ? ?), this should not happen ");
@@ -56,24 +56,24 @@ bool ParkingSlotElement::isMatchWith(const ParkingSlotElement &other) const {
 
 bool ParkingSlotElement::pointInParkingSlot(
     const Eigen::Vector3d &point) const {
-  //边界条件检查：角点非空（防呆）
+  // 边界条件检查：角点非空（防呆）
   if (corners_.empty()) {
     MLOG_ERROR("[ParkingSlotElement::match] trying to call match in an invalid "
                "parking slot(? ? ? ?), this should not happen ");
     return false;
   }
 
-  //高程差超过1.0m的，忽略
+  // 高程差超过1.0m的，忽略
   if (std::abs(point.z() - corners_[0].position.z()) > 1.0) {
     return false;
   }
 
-  //距离超过10.0m的，忽略
+  // 距离超过10.0m的，忽略
   if ((point - center_).norm() > 6.0) {
     return false;
   }
 
-  //基于点是否在多边形框内，判断点是否在车位框内（调用putils::Polygon）
+  // 基于点是否在多边形框内，判断点是否在车位框内（调用putils::Polygon）
   std::vector<Eigen::Vector2d> corners_2d;
   for (auto &corner : corners_) {
     corners_2d.push_back(corner.position.topRows(2));

@@ -55,13 +55,14 @@ bool RemainDistDecider::MakeDecision(
     planning_math::LineSegment2d slot_center_line = parking_slot.center_line;
     planning_math::Vec2d pseudo_target_slot = slot_center_line.start();
     planning_math::Vec2d vec2d_ego_pose(ego_pose.x, ego_pose.y, ego_pose.theta);
-    bool is_outside_slot = slot_center_line.unit_direction().InnerProd(
-                               vec2d_ego_pose - pseudo_target_slot) > kOutSideSlotThreshold
-                               ? true
-                               : false;
+    bool is_outside_slot =
+        slot_center_line.unit_direction().InnerProd(
+            vec2d_ego_pose - pseudo_target_slot) > kOutSideSlotThreshold
+            ? true
+            : false;
 
     if (is_moved && std::abs(aheading_pose.kappa()) > kHighKappaThreshold &&
-        std::abs(world_model_->get_ego_state().ego_vel) > kHighSpeedThreshold && 
+        std::abs(world_model_->get_ego_state().ego_vel) > kHighSpeedThreshold &&
         is_outside_slot) {
       turnning_extra_buffer = 0.05;
       debug_string +=
@@ -83,7 +84,8 @@ bool RemainDistDecider::MakeDecision(
     side_safe_threshold = secure_thres;
   }
   *ptr_side_safe_threshold = side_safe_threshold;
-  debug_string += ",side_buf" + std::to_string(side_safe_threshold).substr(0, 5) + ", ";
+  debug_string +=
+      ",side_buf" + std::to_string(side_safe_threshold).substr(0, 5) + ", ";
 
   // 2. constuct grid map
   if (PlanningContext::Instance()
@@ -139,7 +141,8 @@ bool RemainDistDecider::MakeDecision(
     // hack vec_sl for debug visualize
     if (!ego_sl_points.empty())
       // second + 0.1 is hack number
-      ego_sl_points.emplace_back(ego_sl_points.at(0).first + 0.1, ego_sl_points.at(0).second + 0.1);
+      ego_sl_points.emplace_back(ego_sl_points.at(0).first + 0.1,
+                                 ego_sl_points.at(0).second + 0.1);
     ptr_vec_debug_sl_points->emplace_back(ego_sl_points);
     ptr_vec_debug_sl_points->emplace_back(plan_path_sl_points);
   } else {
@@ -227,7 +230,7 @@ bool RemainDistDecider::MakeDecision(
     ptr_lead_point->collision_type = CollisionType::COLLISIONFREE;
   }
 
-    // special case
+  // special case
   if (!is_moved)
     GetOutHole(
         *PlanningContext::Instance()->mutable_is_planner_update_plan_path(),
@@ -241,8 +244,9 @@ bool RemainDistDecider::MakeDecision(
 bool RemainDistDecider::GetOutHole(
     const bool is_planner_update_plan_path,
     const std::vector<std::vector<std::pair<double, double>>>
-        &vec_debug_sl_points, const double side_safe_threshold, 
-    FreespacePoint *const ptr_lead_point, string *const ptr_debug_str) {
+        &vec_debug_sl_points,
+    const double side_safe_threshold, FreespacePoint *const ptr_lead_point,
+    string *const ptr_debug_str) {
   // counter
   bool is_getting_out_hole_duration = false;
   if (is_planner_update_plan_path) {
@@ -292,8 +296,8 @@ bool RemainDistDecider::GetOutHole(
       }
       // need get out danger threshold in one step
       else if ((sl_points.at(j).second - sl_points.at(j - 1).second) <
-                     out_hole_param_->kSafeLateralDeltaDistThreshold &&
-                 sl_points.at(j).second < side_safe_threshold) {
+                   out_hole_param_->kSafeLateralDeltaDistThreshold &&
+               sl_points.at(j).second < side_safe_threshold) {
         is_sl_rising = false;
         break;
       }
@@ -301,8 +305,10 @@ bool RemainDistDecider::GetOutHole(
   }
 
   if (out_hole_param_->getting_out_count) {
-    *ptr_debug_str += "\n,hole(" + std::to_string(out_hole_param_->getting_out_count) + ","
-       + std::to_string(is_getting_out_hole_duration) + "," + std::to_string(is_sl_rising) + ") ";
+    *ptr_debug_str += "\n,hole(" +
+                      std::to_string(out_hole_param_->getting_out_count) + "," +
+                      std::to_string(is_getting_out_hole_duration) + "," +
+                      std::to_string(is_sl_rising) + ") ";
   }
 
   const auto &mpc_sl_points = vec_debug_sl_points.at(0);
@@ -402,12 +408,13 @@ bool RemainDistDecider::constructGridMap(const EgoModelManager &ego_model,
       extra_inflation);
   auto time_stamp = MTIME()->timestamp().ms() - last_time;
   std::string debug_string;
-  debug_string += "\n[vp]con_grid=" + std::to_string(time_stamp).substr(0, 5)
-     + "ms,origin_pt=" + std::to_string(obs_tmp.size()) + ",grid_pt=" + std::to_string(obs_ptrs.size())
-     + ".(";
+  debug_string += "\n[vp]con_grid=" + std::to_string(time_stamp).substr(0, 5) +
+                  "ms,origin_pt=" + std::to_string(obs_tmp.size()) +
+                  ",grid_pt=" + std::to_string(obs_ptrs.size()) + ".(";
   int i = 0;
   for (const auto &it : obs_ptrs) {
-    if (++i > 2) break;
+    if (++i > 2)
+      break;
     debug_string += std::to_string(it->getDiscretePoints(0.1).size()) + ",";
   }
   debug_string += ")\n";
@@ -434,7 +441,8 @@ bool RemainDistDecider::getSlBoundary(
     if (std::abs(path_point.s - last_s) < delta_s && i > 0) {
       continue;
     }
-    if (path_point.s > kConsiderPathDistance) break;
+    if (path_point.s > kConsiderPathDistance)
+      break;
 
     double obs_dist =
         obs_grid_->getMinDistance(path_point, mc_footprint_model_);

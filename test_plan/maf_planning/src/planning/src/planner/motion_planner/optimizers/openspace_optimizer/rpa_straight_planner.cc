@@ -2,10 +2,10 @@
 #include "planner/motion_planner/optimizers/openspace_optimizer/clothoid_planner/local_log.h"
 #include "planner/motion_planner/optimizers/openspace_optimizer/config.h"
 
-
 namespace msquare {
 
-RpaStraightPlanner::RpaStraightPlanner(const parking::OpenspaceDeciderOutput &odo){
+RpaStraightPlanner::RpaStraightPlanner(
+    const parking::OpenspaceDeciderOutput &odo) {
   LOCAL_LOG(LOCAL_INFO, ""); // empty line
   LOCAL_LOG(LOCAL_INFO, ""); // empty line
   LOCAL_LOG(LOCAL_INFO, "***************************************");
@@ -17,7 +17,7 @@ RpaStraightPlanner::RpaStraightPlanner(const parking::OpenspaceDeciderOutput &od
 }
 
 void RpaStraightPlanner::fillPara(const parking::OpenspaceDeciderOutput &odo,
-                                   clothoid::Parameter &para) {
+                                  clothoid::Parameter &para) {
   para_.width = VehicleParam::Instance()->width_wo_rearview_mirror;
   para_.length = VehicleParam::Instance()->length;
   para_.width_with_rearview = VehicleParam::Instance()->width;
@@ -66,15 +66,19 @@ void RpaStraightPlanner::fillPara(const parking::OpenspaceDeciderOutput &odo,
 
 void RpaStraightPlanner::initScenario(
     const parking::OpenspaceDeciderOutput &input) {
-  local_frame_pose_ = Pose2D(input.init_state.path_point.x, input.init_state.path_point.y,
+  local_frame_pose_ =
+      Pose2D(input.init_state.path_point.x, input.init_state.path_point.y,
              input.init_state.path_point.theta);
-  init_pose_ = Pose2D(input.init_state.path_point.x, input.init_state.path_point.y,
+  init_pose_ =
+      Pose2D(input.init_state.path_point.x, input.init_state.path_point.y,
              input.init_state.path_point.theta);
-  target_pose_ = Pose2D(input.target_state.path_point.x, input.target_state.path_point.y,
-                                           input.target_state.path_point.theta);
-  LOCAL_LOG(LOCAL_INFO, "target_pose_ x:%.6f, y:%.6f, z:%.6f",target_pose_.x, target_pose_.y, target_pose_.theta);
-  LOCAL_LOG(LOCAL_INFO, "init_pose_ x:%.6f, y:%.6f, z:%.6f",init_pose_.x, init_pose_.y, init_pose_.theta);
-
+  target_pose_ =
+      Pose2D(input.target_state.path_point.x, input.target_state.path_point.y,
+             input.target_state.path_point.theta);
+  LOCAL_LOG(LOCAL_INFO, "target_pose_ x:%.6f, y:%.6f, z:%.6f", target_pose_.x,
+            target_pose_.y, target_pose_.theta);
+  LOCAL_LOG(LOCAL_INFO, "init_pose_ x:%.6f, y:%.6f, z:%.6f", init_pose_.x,
+            init_pose_.y, init_pose_.theta);
 
   std::vector<planning_math::LineSegment2d> obs_lines;
   std::vector<planning_math::Vec2d> obs_pts;
@@ -82,22 +86,22 @@ void RpaStraightPlanner::initScenario(
   std::vector<planning_math::Vec2d> step_pts;
 
   for (auto line : input.obstacle_lines) {
-      auto local_line = planning_math::tf2d(local_frame_pose_, line);
-      obs_lines.push_back(line);
+    auto local_line = planning_math::tf2d(local_frame_pose_, line);
+    obs_lines.push_back(line);
   }
   for (auto line : obs_lines) {
-      obs_pts.push_back(line.start());
-      obs_pts.push_back(line.end());
+    obs_pts.push_back(line.start());
+    obs_pts.push_back(line.end());
   }
   for (auto point : input.points) {
-      obs_pts.push_back(point);
+    obs_pts.push_back(point);
   }
   for (auto line : input.lines) {
-      step_lines.push_back(line);
+    step_lines.push_back(line);
   }
   for (auto obstacle : step_lines) {
-      step_pts.push_back(obstacle.start());
-      step_pts.push_back(obstacle.end());
+    step_pts.push_back(obstacle.start());
+    step_pts.push_back(obstacle.end());
   }
 
   csg_ = clothoid::CollisionShapeGenerator(para_);
@@ -106,7 +110,7 @@ void RpaStraightPlanner::initScenario(
 }
 
 bool RpaStraightPlanner::Plan(const std::vector<SbpObstaclePtr> &obs_ptrs,
-                                  parking::SearchProcessDebug *sp_debug) {
+                              parking::SearchProcessDebug *sp_debug) {
   if (!checkStartPose()) {
     return false;
   }
@@ -123,43 +127,49 @@ bool RpaStraightPlanner::Plan(const std::vector<SbpObstaclePtr> &obs_ptrs,
   return true;
 }
 
-bool RpaStraightPlanner::planStraightPath(clothoid::StraightCurve& straight_curve){
+bool RpaStraightPlanner::planStraightPath(
+    clothoid::StraightCurve &straight_curve) {
   double theta_diff = std::abs(init_pose_.theta - target_pose_.theta);
-  double s_total = std::hypot(init_pose_.x-target_pose_.x, init_pose_.y-target_pose_.y);
-  if(theta_diff > 1e-3){
+  double s_total =
+      std::hypot(init_pose_.x - target_pose_.x, init_pose_.y - target_pose_.y);
+  if (theta_diff > 1e-3) {
     LOCAL_LOG(LOCAL_DEBUG, "theta_diff %.6f > 1e-3", theta_diff);
     return false;
   }
 
-  if(s_total < para_.min_block_len){
+  if (s_total < para_.min_block_len) {
     LOCAL_LOG(LOCAL_DEBUG, "s_total %.6f is tiny", s_total);
     return false;
   }
 
   double cs = std::cos(init_pose_.theta);
   double ss = std::sin(init_pose_.theta);
-  double dot_direc = cs * (target_pose_.x-init_pose_.x) + ss * (target_pose_.y-init_pose_.y);
+  double dot_direc = cs * (target_pose_.x - init_pose_.x) +
+                     ss * (target_pose_.y - init_pose_.y);
   bool is_forward = dot_direc > 0.0;
 
   double allowed_dis = 0;
-  if(is_forward){
-    allowed_dis = checker_.moveForward(init_pose_, para_.lat, para_.lon,clothoid::ShapeType::RAW);
+  if (is_forward) {
+    allowed_dis = checker_.moveForward(init_pose_, para_.lat, para_.lon,
+                                       clothoid::ShapeType::RAW);
     LOCAL_LOG(LOCAL_DEBUG, "moveForward");
-  }
-  else{
+  } else {
     LOCAL_LOG(LOCAL_DEBUG, "moveBackward");
-    allowed_dis = checker_.moveBackward(init_pose_, para_.lat, para_.lon,clothoid::ShapeType::RAW);
+    allowed_dis = checker_.moveBackward(init_pose_, para_.lat, para_.lon,
+                                        clothoid::ShapeType::RAW);
   }
 
-  if(allowed_dis < para_.min_block_len){
+  if (allowed_dis < para_.min_block_len) {
     LOCAL_LOG(LOCAL_DEBUG, "allowed_dis %.6f is tiny", s_total);
     return false;
   }
 
   double real_dis = std::min(s_total, allowed_dis);
-  LOCAL_LOG(LOCAL_INFO, "s_total: %.6f, allowed_dis: %.6f, real_dis: %.6f", s_total, allowed_dis, real_dis);
+  LOCAL_LOG(LOCAL_INFO, "s_total: %.6f, allowed_dis: %.6f, real_dis: %.6f",
+            s_total, allowed_dis, real_dis);
 
-  straight_curve = clothoid::linspace(init_pose_, is_forward?real_dis: -real_dis, para_.step);
+  straight_curve = clothoid::linspace(
+      init_pose_, is_forward ? real_dis : -real_dis, para_.step);
   return true;
 }
 
@@ -173,7 +183,8 @@ bool RpaStraightPlanner::checkStartPose() {
   return true;
 }
 
-void RpaStraightPlanner::generatePath(const clothoid::StraightCurve& straight_curve) {
+void RpaStraightPlanner::generatePath(
+    const clothoid::StraightCurve &straight_curve) {
   result_.clear();
   for (auto pt : straight_curve) {
     result_.x.push_back(pt.x);
@@ -191,4 +202,4 @@ std::vector<Pose2D> RpaStraightPlanner::getSearchPoints() {
   return key_points_;
 }
 
-}   // end namespace msquare
+} // end namespace msquare

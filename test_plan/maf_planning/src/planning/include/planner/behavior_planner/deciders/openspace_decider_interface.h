@@ -23,7 +23,7 @@ public:
   // OpenspaceDeciderOutput& context);
   void feedOutput();
   virtual bool isReverseSearchRequired();
-  virtual bool isNarrowChannelScenario() {return false;}
+  virtual bool isNarrowChannelScenario() { return false; }
 
 protected:
   std::shared_ptr<WorldModel> world_model_;

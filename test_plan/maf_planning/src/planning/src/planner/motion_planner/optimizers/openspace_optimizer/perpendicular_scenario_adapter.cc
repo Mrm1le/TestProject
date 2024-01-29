@@ -11,7 +11,7 @@ bool PerpendicularScenarioAdapter::init(
     std::vector<planning_math::Vec2d> &points_of_obstacles, Pose2D &init_pose,
     Pose2D &local_frame_pose, bool &is_on_left) {
   return env_generator_.init(p_left, p_right, points_of_obstacles, init_pose,
-                      local_frame_pose, is_on_left);
+                             local_frame_pose, is_on_left);
 }
 
 bool PerpendicularScenarioAdapter::process() {

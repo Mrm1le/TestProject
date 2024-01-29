@@ -126,7 +126,7 @@ void LateralMotionPlannerPreprocessor::generate_output() {
   generate_obstacle_info();
 
   set_vehicle_params();
-  
+
   set_intelligent_dodge_info();
 
   set_dlp_info();

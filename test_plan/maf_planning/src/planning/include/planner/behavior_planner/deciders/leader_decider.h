@@ -1,12 +1,12 @@
 #ifndef MSQUARE_DECISION_PLANNING_PLANNER_LEADER_DECIDER_H_
 #define MSQUARE_DECISION_PLANNING_PLANNER_LEADER_DECIDER_H_
 
+#include "common/math/linear_interpolation.h"
 #include "common/parking_obstacle_manager.h"
 #include "common/parking_world_model.h"
-#include "common/math/linear_interpolation.h"
 // #include "common/ego_model_manager.h"
-#include "common/parking_slot_interface.h"
 #include "common/math/linear_interpolation.h"
+#include "common/parking_slot_interface.h"
 #include "planner/behavior_planner/deciders/collision_checker.h"
 
 namespace msquare {
@@ -24,21 +24,21 @@ public:
 private:
   double calc_lat_offset(std::vector<PathPoint> path_points_real,
                          const double s);
-  
+
   bool clip_traj();
 
   bool clip_traj_sop();
 
   bool check_bounding_box_collision(const planning_math::Box2d &obstacle_box);
-  
+
   CollisionCheckStatus
   calc_bounding_box_collision_dist(const planning_math::Box2d &obstacle_box,
                                    const Obstacle *obstacle = nullptr);
-  
+
   CollisionCheckStatus calc_polygon_collision_dist(
       const planning_math::Box2d &obstacle_box,
       const planning_math::Polygon2d &fillet_cutting_polygon);
-  
+
   planning_math::Polygon2d
   generate_fillet_cutting_polygon(const planning_math::Box2d &obstacle_box,
                                   double fillet_cutting_length);

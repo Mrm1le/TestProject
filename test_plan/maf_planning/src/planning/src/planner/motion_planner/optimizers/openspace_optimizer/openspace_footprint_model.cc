@@ -199,7 +199,8 @@ bool BoxFootprintModel::checkTraceOverlap(
 PolygonFootprintModel::PolygonFootprintModel(
     const VehicleParam *vehicle_param, EgoModelType type,
     const double lat_inflation, const double shrink_ratio_for_lines)
-    : vehicle_param_(vehicle_param), ego_model_type_(type), lat_inflation_(lat_inflation),
+    : vehicle_param_(vehicle_param), ego_model_type_(type),
+      lat_inflation_(lat_inflation),
       shrink_ratio_for_lines_(shrink_ratio_for_lines),
       inflation_for_points_(
           std::max(HybridAstarConfig::GetInstance()->inflation_for_points_ +
@@ -228,7 +229,8 @@ void PolygonFootprintModel::updatePose(const Pose2D &current_pose) {
   planning_math::Vec2d center = getCenter(current_pose);
   PathPoint center_pp(center.x(), center.y(), 0, current_pose.theta);
   geometry_cache_.pose = current_pose;
-  geometry_cache_.polygon = ego_model_manager_.get_ego_model_polygon(ego_model_type_, center_pp);
+  geometry_cache_.polygon =
+      ego_model_manager_.get_ego_model_polygon(ego_model_type_, center_pp);
   geometry_cache_.box_shrinked = getWheelSafeBox(
       current_pose, vehicle_param_->wheel_base,
       vehicle_param_->wheel_rolling_radius,

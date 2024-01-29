@@ -72,7 +72,7 @@ public:
    */
   template <typename... Args>
   std::shared_ptr<AbstractProduct> CreateObjectOrNull(const IdentifierType &id,
-                                                      Args &&... args) {
+                                                      Args &&...args) {
     auto id_iter = producers_.find(id);
     auto deletor_iter = deletors_.find(id);
 
@@ -94,7 +94,7 @@ public:
    */
   template <typename... Args>
   std::shared_ptr<AbstractProduct> CreateObject(const IdentifierType &id,
-                                                Args &&... args) {
+                                                Args &&...args) {
     auto result = CreateObjectOrNull(id, std::forward<Args>(args)...);
     if (result == nullptr) {
       // std::cout << "Factory could not create Object of type : " << id <<

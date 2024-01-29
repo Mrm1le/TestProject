@@ -43,7 +43,7 @@ void SBPlanningTask::on_running() {
     if (!ret) {
       continue;
     }
-    
+
     reschedule("mode_running");
     timestamp = MTIME()->timestamp().sec();
     debug_info = "sbp_task construct() " + std::to_string(timestamp);

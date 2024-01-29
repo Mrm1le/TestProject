@@ -2,14 +2,14 @@
 
 // #include "common/pnc_trigger.h"
 // #include "common/collision_check.h"
-#include "common/math/math_utils.h"
 #include "common/apa_workflow/apa_state_machine.h"
+#include "common/math/math_utils.h"
 #include "common/parking_world_model.h"
+#include "common/planning_task_interface.h"
 #include "common/search_based_planning_utils.h"
 #include "common/static_check.h"
 #include "common/utils/polyfit.h"
 #include "mtaskflow/mtaskflow.hpp"
-#include "common/planning_task_interface.h"
 #include "rapidjson/document.h" // rapidjson's DOM-style API
 #include <iostream>
 
@@ -78,7 +78,8 @@ public:
           sbp_problem_publisher,
       mtaskflow::FlowReceiver<SbpResult> sbp_result_receiver,
       mtaskflow::FlowReceiver<std::string> sbp_debug_receiver,
-      mtaskflow::FlowReceiver<std::shared_ptr<maf_endpoint::WirelessChargerReport>>
+      mtaskflow::FlowReceiver<
+          std::shared_ptr<maf_endpoint::WirelessChargerReport>>
           wireless_charger_report_recv)
       : enable_timer_tick_(enable_timer_tick), monitor_(monitor),
         tick_receiver_(tick_receiver),
@@ -1241,12 +1242,14 @@ private:
         parking_lot_info.wheel_stop.point2.z = wheel_stop_points[1].z;
       }
 
-      const auto& parking_slot_infos = input[i].parking_slot;
-      if(parking_slot_infos.available) {
+      const auto &parking_slot_infos = input[i].parking_slot;
+      if (parking_slot_infos.available) {
         bool source_from_uss =
-          parking_slot_infos.available & parking_slot_infos.FUSION_PARKING_SLOT_SOURCE_ULTRASONIC;
+            parking_slot_infos.available &
+            parking_slot_infos.FUSION_PARKING_SLOT_SOURCE_ULTRASONIC;
         bool source_from_vision =
-          parking_slot_infos.available & parking_slot_infos.FUSION_PARKING_SLOT_SOURCE_VISON;
+            parking_slot_infos.available &
+            parking_slot_infos.FUSION_PARKING_SLOT_SOURCE_VISON;
         parking_lot_info.is_space_slot = source_from_uss && !source_from_vision;
       }
 
@@ -1327,8 +1330,8 @@ private:
           mpc_trajectory_receiver_->fetch_newest_and_clear(mpc_trajectory);
       if (ret && mpc_trajectory->mpc_trajectory.available &
                      maf_planning::MpcTrajectory::PATH_POINTS) {
-        bool use_sop_algotithm = 
-            msquare::CarParams::GetInstance()->car_config.lon_config.use_sop_algorithm;
+        bool use_sop_algotithm = msquare::CarParams::GetInstance()
+                                     ->car_config.lon_config.use_sop_algorithm;
         std::vector<PathPoint> mpc_traj;
         auto &path_points = mpc_trajectory->mpc_trajectory.path_points;
         uint64_t ignore_point_count = 1;
@@ -1357,20 +1360,21 @@ private:
           PlanningContext::Instance()
               ->mutable_planning_status()
               ->control_block_feedback = blocked_by_uss || blocked_by_ground;
-          MSD_LOG(ERROR, "[%s] blocked_by_uss:%d, blocked_by_ground:%d", __FUNCTION__, blocked_by_uss, blocked_by_ground);    
+          MSD_LOG(ERROR, "[%s] blocked_by_uss:%d, blocked_by_ground:%d",
+                  __FUNCTION__, blocked_by_uss, blocked_by_ground);
           world_model_->feed_steering_reset(steering_reset);
           if (path_points.size() >= 2 && use_sop_algotithm) {
             const auto &last_second_pt = path_points[path_points.size() - 2];
             if (std::fabs(last_second_pt.heading_yaw - 1.0) < 1e-3) {
               PlanningContext::Instance()
-                ->mutable_planning_status()
-                ->is_reached_end = true;
+                  ->mutable_planning_status()
+                  ->is_reached_end = true;
               MSD_LOG(ERROR, "----------------> is reached end");
               // std::cout << "----------------> is reached end" << std::endl;
             } else {
               PlanningContext::Instance()
-                ->mutable_planning_status()
-                ->is_reached_end = false;            
+                  ->mutable_planning_status()
+                  ->is_reached_end = false;
             }
           }
         } else {
@@ -1406,11 +1410,14 @@ private:
   void update_wlc_info() {
     if (!wireless_charger_report_recv_->empty()) {
       std::shared_ptr<maf_endpoint::WirelessChargerReport>
-        wireless_charger_report{};
-      auto ret = wireless_charger_report_recv_->fetch_newest_and_clear(wireless_charger_report);
+          wireless_charger_report{};
+      auto ret = wireless_charger_report_recv_->fetch_newest_and_clear(
+          wireless_charger_report);
       if (ret) {
-        if (wireless_charger_report->available & maf_endpoint::WirelessChargerReport::WIRELESS_CHARGER_REPORT_DATA) {
-          world_model_->feed_wireless_charger_report_data(wireless_charger_report->wireless_charger_report_data);
+        if (wireless_charger_report->available &
+            maf_endpoint::WirelessChargerReport::WIRELESS_CHARGER_REPORT_DATA) {
+          world_model_->feed_wireless_charger_report_data(
+              wireless_charger_report->wireless_charger_report_data);
         }
       }
     }
@@ -1515,8 +1522,8 @@ private:
     bool res = true;
     for (int i = 0; i < FEED_TYPE_MAX; ++i) {
       const char *feed_type_str = to_string(static_cast<FeedType>(i));
-      if ((world_model_->is_parking_apa() ||
-          world_model_->is_parking_lvp()) && i == FEED_SCENE_OBJECT) {
+      if ((world_model_->is_parking_apa() || world_model_->is_parking_lvp()) &&
+          i == FEED_SCENE_OBJECT) {
         // Do not have map info in APA mode
         continue;
       }
@@ -1694,18 +1701,21 @@ private:
       leader_info["d_rel"] =
           mjson::Json(CarParams::GetInstance()->lon_inflation());
       leader_info["type"] = mjson::Json((int)ObjectType::FREESPACE);
-      
+
     } else {
-      const auto& remain_dist_info = PlanningContext::Instance()
-                        ->longitudinal_behavior_planner_output().remain_dist_info_;
+      const auto &remain_dist_info =
+          PlanningContext::Instance()
+              ->longitudinal_behavior_planner_output()
+              .remain_dist_info_;
 
       leader_info["id"] = mjson::Json(remain_dist_info.id_);
-      if(msquare::CarParams::GetInstance()->car_config.lon_config.keep_people_dynamic){
+      if (msquare::CarParams::GetInstance()
+              ->car_config.lon_config.keep_people_dynamic) {
         leader_info["is_static"] =
             ((int)remain_dist_info.type_ == (int)ObjectType::PEDESTRIAN)
                 ? mjson::Json(false)
                 : mjson::Json((int)remain_dist_info.is_static_);
-      }else{
+      } else {
         leader_info["is_static"] = mjson::Json(remain_dist_info.is_static_);
       }
       leader_info["d_rel"] = mjson::Json(remain_dist_info.d_rel_);
@@ -1724,9 +1734,11 @@ private:
 
     // debug info
     PlanningContext::Instance()
-                        ->mutable_longitudinal_behavior_planner_output()->
-                        remain_dist_info_.is_need_pause_ = PlanningContext::Instance()
-                        ->longitudinal_behavior_planner_output().is_need_pause_;
+        ->mutable_longitudinal_behavior_planner_output()
+        ->remain_dist_info_.is_need_pause_ =
+        PlanningContext::Instance()
+            ->longitudinal_behavior_planner_output()
+            .is_need_pause_;
 
     leader_info["is_blocked_by_obstacle_behind_in_slot"] =
         mjson::Json(PlanningContext::Instance()
@@ -1736,13 +1748,14 @@ private:
         mjson::Json(PlanningContext::Instance()->planning_debug_info());
 
     // add multi circle ft model
-    const auto& mc_model = PlanningContext::Instance()->lon_mc_footprint_model();
+    const auto &mc_model =
+        PlanningContext::Instance()->lon_mc_footprint_model();
     int circle_num = mc_model->circles_vehicle_.size();
     auto mc_model_json = mjson::Json::array(3 * circle_num, mjson::Json(0.0));
     if (circle_num > 0) {
-      //auto polynomial_curve = mjson::Json::array(5, mjson::Json(0.0));
+      // auto polynomial_curve = mjson::Json::array(5, mjson::Json(0.0));
       mc_model_json.clear();
-      for (const auto& circle : mc_model->circles_vehicle_) {
+      for (const auto &circle : mc_model->circles_vehicle_) {
         mc_model_json.emplace_back(circle.center_.x());
         mc_model_json.emplace_back(circle.center_.y());
         mc_model_json.emplace_back(circle.radius_);
@@ -1751,12 +1764,13 @@ private:
     }
 
     // add
-    const auto& full_body_model_contour = *PlanningContext::Instance()->mutable_full_body_model_contour();
-    auto model_json = mjson::Json::array(2 * full_body_model_contour.size(), 
-        mjson::Json(0.0));
+    const auto &full_body_model_contour =
+        *PlanningContext::Instance()->mutable_full_body_model_contour();
+    auto model_json = mjson::Json::array(2 * full_body_model_contour.size(),
+                                         mjson::Json(0.0));
     if (full_body_model_contour.size() > 0) {
       model_json.clear();
-      for (const auto& pt : full_body_model_contour) {
+      for (const auto &pt : full_body_model_contour) {
         model_json.emplace_back(pt.x());
         model_json.emplace_back(pt.y());
       }
@@ -1768,10 +1782,10 @@ private:
     if (!vec_extra_obstacle_points.empty()) {
       // 1. add extra pilliar points
       const auto &extra_pilliar_points = vec_extra_obstacle_points.at(0);
-      auto model_json = mjson::Json::array(2 * extra_pilliar_points.size(), 
-        mjson::Json(0.0));
+      auto model_json =
+          mjson::Json::array(2 * extra_pilliar_points.size(), mjson::Json(0.0));
       model_json.clear();
-      for (const auto& pt : extra_pilliar_points) {
+      for (const auto &pt : extra_pilliar_points) {
         model_json.emplace_back(pt.x());
         model_json.emplace_back(pt.y());
       }
@@ -1785,15 +1799,21 @@ private:
                         ->parking_slot_info.available_park_out_type.value);
     auto wlc_info = mjson::Json(mjson::Json::object());
     int approaching = 0;
-    if (PlanningContext::Instance()->planning_status().wlc_info.is_approaching) {
+    if (PlanningContext::Instance()
+            ->planning_status()
+            .wlc_info.is_approaching) {
       approaching = 1;
-      if (PlanningContext::Instance()->planning_status().wlc_info.is_approached) {
+      if (PlanningContext::Instance()
+              ->planning_status()
+              .wlc_info.is_approached) {
         approaching = 2;
       }
     }
 
-    info["get_take_over_point"] = mjson::Json(PlanningContext::Instance()
-          ->parking_behavior_planner_output().reached_parkout_takeover_point);
+    info["get_take_over_point"] =
+        mjson::Json(PlanningContext::Instance()
+                        ->parking_behavior_planner_output()
+                        .reached_parkout_takeover_point);
 
     wlc_info["approaching"] = mjson::Json(approaching);
     info["wlc_info"] = wlc_info;
@@ -1817,8 +1837,10 @@ private:
                         ->rpa_backward_dis);
     info["rpa_info"] = rpa_info;
 #ifdef RUN_IN_FPP
-    //encode and publish planning_context debug data to /planning/info in FPP mode
-    info["parking_planning_context"] = PlanningContext::Instance()->encoder_planning_context();
+    // encode and publish planning_context debug data to /planning/info in FPP
+    // mode
+    info["parking_planning_context"] =
+        PlanningContext::Instance()->encoder_planning_context();
 #endif
     planning_info.stamp = MTIME()->timestamp().ns();
     planning_info.seq = tick_count;

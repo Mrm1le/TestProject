@@ -1,9 +1,9 @@
 #include "common/config/vehicle_param.h"
 #include "common/math/polygon2d.h"
-#include "search_based_planner.h"
-#include "planner/motion_planner/optimizers/openspace_optimizer/clothoid_planner/local_log.h"
 #include "planner/motion_planner/optimizers/openspace_optimizer/clothoid_planner/collision_checker.h"
+#include "planner/motion_planner/optimizers/openspace_optimizer/clothoid_planner/local_log.h"
 #include "planner/motion_planner/optimizers/openspace_optimizer/parallel_path_segments.h"
+#include "search_based_planner.h"
 
 namespace msquare {
 
@@ -29,12 +29,14 @@ private:
 
   // plan
   bool planParkoutHalf(InSlotPathSegemnts &path_segments);
-  bool planDiffRadius(const double backward_max, const std::vector<double>& radiu_list, 
+  bool planDiffRadius(const double backward_max,
+                      const std::vector<double> &radiu_list,
                       InSlotPathSegemnts &path_segments);
   bool isParkoutSuccess(const Pose2D &start_pose, const double radiu_rotate,
                         const bool is_init, Pose2D &escape_pose, bool &valid);
-  bool isParkoutForLowerTline(const Pose2D &start_pose, const double radiu_rotate,
-                              const bool is_init, Pose2D &escape_pose, bool &valid);
+  bool isParkoutForLowerTline(const Pose2D &start_pose,
+                              const double radiu_rotate, const bool is_init,
+                              Pose2D &escape_pose, bool &valid);
   bool isEscapable(const Pose2D &key_pose, Pose2D &escape_pose, bool &valid,
                    const bool is_init);
   bool isEscapableForLowerTline(const Pose2D &key_pose, Pose2D &escape_pose,
@@ -46,7 +48,7 @@ private:
                           const bool is_init, Pose2D &next_pose);
   bool getRealRotatePose(const Pose2D &start_pose, const double radiu_rotate,
                          Pose2D &next_pose);
-  bool getRightBackwardPose(const Pose2D &start_pose, const double radiu_rotate, 
+  bool getRightBackwardPose(const Pose2D &start_pose, const double radiu_rotate,
                             const bool is_init, Pose2D &next_pose);
   bool getBackwardPose(const Pose2D &start_pose, const double radiu_rotate,
                        const double lat, const double lon, const bool is_init,
@@ -66,7 +68,7 @@ private:
   Pose2D init_pose_;
   Pose2D target_pose_;
 
-  ParallelParkoutImpl impl_;  // generated parameter
+  ParallelParkoutImpl impl_; // generated parameter
   clothoid::Parameter para_; // constant parameter
   clothoid::CollisionChecker checker_;
   clothoid::CollisionShapeGenerator csg_;

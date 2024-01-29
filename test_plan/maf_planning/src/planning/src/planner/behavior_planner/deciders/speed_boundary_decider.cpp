@@ -92,11 +92,9 @@ void SpeedBoundaryDecider::getTargetLaneCurv(
               current_refline_polys_max_x)) {
         if (ss - ego_s < current_refline_polys_max_x) {
           if (map_info.get_curv_from_current_refline_polys(ss - ego_s,
-                                                            c_mean_polys)) {
-            c_mean = c_s[0] = c_s[1] = c_s[2] = c_s[3] = c_s[4] =
-                c_mean_polys;
-            MSD_LOG(INFO,
-                    "CURV_DEBUG, current_refline_polys c_mean: %f at %f",
+                                                           c_mean_polys)) {
+            c_mean = c_s[0] = c_s[1] = c_s[2] = c_s[3] = c_s[4] = c_mean_polys;
+            MSD_LOG(INFO, "CURV_DEBUG, current_refline_polys c_mean: %f at %f",
                     c_mean_polys, ss - ego_s);
           }
         }
@@ -119,24 +117,28 @@ void SpeedBoundaryDecider::getTargetLaneCurv(
         world_model_->set_max_curv_distance(ss - ego_s);
       }
       c_max = c_mean > c_max ? c_mean : c_max;
-      
+
       int cnt_num = 5;
       for (int i = 0; i < cnt_num; i++) {
         c_max_point = std::max(c_max_point, c_s[i]);
       }
       if (c_s[0] > curv_turn / 3 && c_s[2] > curv_turn / 3 &&
-              c_s[3] > curv_turn / 3 && c_mean > curv_turn &&
-              c_mean > c_max - 1e-5) {
+          c_s[3] > curv_turn / 3 && c_mean > curv_turn &&
+          c_mean > c_max - 1e-5) {
         int n = 0;
         cs_v_lim = c_mean;
-        double v_curv =
-            std::sqrt(max_centrifugal_acceleration / (cs_v_lim + kMinCurvature));
-        MSD_LOG(INFO, "CURV_DEBUG: v_curv = %.2f, vel_limit = %.2f", v_curv, vel_limit);
+        double v_curv = std::sqrt(max_centrifugal_acceleration /
+                                  (cs_v_lim + kMinCurvature));
+        MSD_LOG(INFO, "CURV_DEBUG: v_curv = %.2f, vel_limit = %.2f", v_curv,
+                vel_limit);
         if (vel_limit > v_curv) {
           vel_limit =
               (1 - curv_filter_param) * std::min(vel_limit, last_v_lim_curv_) +
               curv_filter_param * v_curv;
-          MSD_LOG(INFO, "CURV_DEBUG2: v_curv = %.2f, vel_limit = %.2f, last_v_lim_curv_ = %.2f", v_curv, vel_limit, last_v_lim_curv_);
+          MSD_LOG(INFO,
+                  "CURV_DEBUG2: v_curv = %.2f, vel_limit = %.2f, "
+                  "last_v_lim_curv_ = %.2f",
+                  v_curv, vel_limit, last_v_lim_curv_);
           double lower_bound = -0.5;
           if (world_model_->is_ddmap()) {
             lower_bound = -1.5;
@@ -148,8 +150,11 @@ void SpeedBoundaryDecider::getTargetLaneCurv(
                                              (vel_limit * vel_limit -
                                               std::pow(ego_vel, 2)) /
                                                  2.0 / (ss - ds_step - ego_s)));
-          MSD_LOG(INFO, "CURV_DEBUG2: a_cross = %.2f, last_a_cross_ = %.2f, ss = %.2f", a_cross, last_a_cross_, ss);
-          
+          MSD_LOG(
+              INFO,
+              "CURV_DEBUG2: a_cross = %.2f, last_a_cross_ = %.2f, ss = %.2f",
+              a_cross, last_a_cross_, ss);
+
           if (n_prebrake_curv_ == 0 ||
               vel_limit < planning_status->pre_action.v_lim_curv) {
             n_prebrake_curv_ = pre_brake_curv;
@@ -175,7 +180,7 @@ void SpeedBoundaryDecider::getTargetLaneCurv(
       ds_step = std::max(2.0, std::min(5.0, 0.016 / (c_mean + 1e-5)));
       ss += ds_step;
     }
-  }  
+  }
 }
 
 void SpeedBoundaryDecider::cp_curve_speed(double &vel_limit, double &a_cross,
@@ -281,16 +286,17 @@ void SpeedBoundaryDecider::cp_curve_speed(double &vel_limit, double &a_cross,
     double c_max = 0.0;
 
     auto lane_status = context_->mutable_planning_status()->lane_status;
-    MSD_LOG(INFO, "CURV_DEBUG, lane_status.status = %d, lane_status.change_lane.status = %d", lane_status.status,
-    lane_status.change_lane.status);
+    MSD_LOG(INFO,
+            "CURV_DEBUG, lane_status.status = %d, "
+            "lane_status.change_lane.status = %d",
+            lane_status.status, lane_status.change_lane.status);
 
     if (lane_status.status == LaneStatus::Status::LANE_CHANGE &&
-          lane_status.change_lane.status ==
-              ChangeLaneStatus::Status::IN_CHANGE_LANE) {
+        lane_status.change_lane.status ==
+            ChangeLaneStatus::Status::IN_CHANGE_LANE) {
       getTargetLaneCurv(vel_limit, a_cross, curv_turn,
                         max_centrifugal_acceleration, curv_filter_param,
-                        ego_vel,
-                        pre_brake_curv, planning_status);
+                        ego_vel, pre_brake_curv, planning_status);
     } else {
       // cal curv by lateral_planning trajectory
       if (traj_pose_array.size()) {
@@ -299,7 +305,7 @@ void SpeedBoundaryDecider::cp_curve_speed(double &vel_limit, double &a_cross,
           cart.x = traj_pose.position_enu.x;
           cart.y = traj_pose.position_enu.y;
           baseline_info_->get_frenet_coord()->CartCoord2FrenetCoord(cart, fren);
-          
+
           const double traj_pose_s = fren.x;
           c_mean = fabs(traj_pose.curvature);
           if (c_mean > c_max) {
@@ -328,10 +334,10 @@ void SpeedBoundaryDecider::cp_curve_speed(double &vel_limit, double &a_cross,
                   (1 - curv_filter_param) * std::fmin(a_cross, last_a_cross_) +
                   curv_filter_param *
                       std::fmin(a_cross,
-                              std::fmax(lower_bound, (vel_limit * vel_limit -
-                                                      std::pow(ego_vel, 2)) /
-                                                        2.0 /
-                                                        (traj_pose_s - ego_s)));
+                                std::fmax(lower_bound,
+                                          (vel_limit * vel_limit -
+                                           std::pow(ego_vel, 2)) /
+                                              2.0 / (traj_pose_s - ego_s)));
               if (n_prebrake_curv_ == 0 ||
                   vel_limit < planning_status->pre_action.v_lim_curv) {
                 n_prebrake_curv_ = pre_brake_curv;
@@ -351,7 +357,7 @@ void SpeedBoundaryDecider::cp_curve_speed(double &vel_limit, double &a_cross,
             "CURV_DEBUG  rt=%d c_s=%f     "
             "c_mean=%f  c_max=%f  v_curv=%f  v_lim=%f  "
             "v_ego=%f  n_curv_pre=%d  vlim_pre=%f alim_pre=%f",
-            (int)map_info.road_type(), 
+            (int)map_info.road_type(),
             std::abs(frenet_coord->GetRefCurveCurvature(
                 clip(ego_s, frenet_coord->GetSlength(), 0.0))),
             c_mean, c_max,

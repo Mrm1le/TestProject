@@ -2,7 +2,6 @@
 
 #include "common/math/vec2d.h"
 
-
 namespace msquare {
 namespace parking {
 double calculateMinDistOnLine(const planning_math::Vec2d &line_pt1,
@@ -27,5 +26,5 @@ double calculateMinDistOnLine(const planning_math::Vec2d &line_pt1,
 
   return fabs(numerator / denominator);
 }
-} //namespace parking
-} //namespace msquare
+} // namespace parking
+} // namespace msquare

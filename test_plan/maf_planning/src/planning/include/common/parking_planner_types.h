@@ -22,16 +22,16 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(TshapedAreaLines, is_inited,
                                    slot_left_bound, road_lower_right_bound,
                                    slot_right_bound)
 
-struct APAMetaState{
+struct APAMetaState {
   bool is_valid = false;
   double last_v = 0.0;
   double parallel_direc;
   double meta_pose_x;
   double meta_pose_y;
   double meta_pose_theta;
-  NLOHMANN_DEFINE_TYPE_INTRUSIVE(APAMetaState, is_valid, last_v, parallel_direc, meta_pose_x, meta_pose_y, meta_pose_theta)
+  NLOHMANN_DEFINE_TYPE_INTRUSIVE(APAMetaState, is_valid, last_v, parallel_direc,
+                                 meta_pose_x, meta_pose_y, meta_pose_theta)
 };
-
 
 typedef struct {
   bool is_request_square_map = false;
@@ -48,7 +48,7 @@ typedef struct {
   std::vector<planning_math::Vec2d> step_points;
   TshapedAreaLines T_lines;
   std::string pattern_path;
-  APAMetaState apa_meta_state;                       // the init pose at fist planning in parkout
+  APAMetaState apa_meta_state; // the init pose at fist planning in parkout
 } OpenspaceDeciderOutput;
 #ifdef BUILD_IN_TEST_BAG_RECURRENT
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE_WITH_DEFAULT(

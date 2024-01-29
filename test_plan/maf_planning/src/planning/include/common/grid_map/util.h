@@ -3,7 +3,6 @@
 namespace msquare {
 namespace grid {
 
-
 enum class ObstacleHeightType {
   // *****this is only for compatibility ****
   //     OBSTACLES should always be set height type

@@ -8,7 +8,7 @@ namespace parking {
 namespace {
 constexpr double kDeadZonePathLength = 0.1;
 constexpr double kRemainDistFromPauseReplan = 0.4;
-}
+} // namespace
 
 using planning_math::Box2d;
 using planning_math::Polygon2d;
@@ -29,14 +29,15 @@ APABehaviorDeciderParkIn::APABehaviorDeciderParkIn(
   const double DYNAMIC_PLAN_MPC_BLOCK_DURATION =
       CarParams::GetInstance()
           ->car_config.parkin_decider_config.curve_join_block_duration;
-  dynamic_plan_mpc_block_timer_.set_timer_duration(DYNAMIC_PLAN_MPC_BLOCK_DURATION);
+  dynamic_plan_mpc_block_timer_.set_timer_duration(
+      DYNAMIC_PLAN_MPC_BLOCK_DURATION);
 }
 
 APABehaviorDeciderParkIn::~APABehaviorDeciderParkIn() {}
 
 APABehaviorDeciderParkIn::DeciderResult
-APABehaviorDeciderParkIn::strategy_hit_wheelstop(bool openspace_is_running,
-                                           bool vehicle_reached_no_wheelstop) {
+APABehaviorDeciderParkIn::strategy_hit_wheelstop(
+    bool openspace_is_running, bool vehicle_reached_no_wheelstop) {
   // ################## Strategy Explanation ##################
   // [Base Scene] NonParallel R-gear Traj Following HIT something
   //    1. gear == REVERSE
@@ -111,7 +112,8 @@ APABehaviorDeciderParkIn::strategy_hit_wheelstop(bool openspace_is_running,
                       "not reach target pose";
     } else {
       result.strategy = APAStrategyType::FINISH;
-      result.reason = "finish because of hit wheel_stop (collide_to_sth), more than 2 times";
+      result.reason = "finish because of hit wheel_stop (collide_to_sth), more "
+                      "than 2 times";
     }
   }
 
@@ -230,7 +232,8 @@ APABehaviorDeciderParkIn::strategy_blocked_and_reached(
 }
 
 APABehaviorDeciderParkIn::DeciderResult
-APABehaviorDeciderParkIn::strategy_tiny_perpendicular_and_oblique_slot(bool is_at_last_segment) {
+APABehaviorDeciderParkIn::strategy_tiny_perpendicular_and_oblique_slot(
+    bool is_at_last_segment) {
   // ################## Strategy Explanation ##################
   // [Base Scene] (Perpendicular || Oblique) && next-to-car && last_segment
   //    1. not pause
@@ -324,7 +327,8 @@ APABehaviorDeciderParkIn::strategy_tiny_perpendicular_and_oblique_slot(bool is_a
   return result;
 }
 
-bool APABehaviorDeciderParkIn::checkTwoSides(bool &is_left_car, bool &is_right_car) {
+bool APABehaviorDeciderParkIn::checkTwoSides(bool &is_left_car,
+                                             bool &is_right_car) {
   auto &parking_slot_info = PlanningContext::Instance()
                                 ->parking_behavior_planner_output()
                                 .parking_slot_info;
@@ -440,7 +444,7 @@ APABehaviorDeciderParkIn::strategy_dynamic_plan_simple_mpc(
   }
 
   //[fenix.refactor] 是否真的执行dynamic planning
-  //和is_dynamic_planning_activated 不完全对应
+  // 和is_dynamic_planning_activated 不完全对应
   bool do_dynamic_planning = false;
 
   if (openspace_is_running) {
@@ -669,7 +673,8 @@ APABehaviorDeciderParkIn::strategy_mpc_collide(bool need_check_mpc_collide) {
 }
 
 APABehaviorDeciderParkIn::DeciderResult
-APABehaviorDeciderParkIn::strategy_openspace_fallback(bool openspace_is_fallback) {
+APABehaviorDeciderParkIn::strategy_openspace_fallback(
+    bool openspace_is_fallback) {
   // ################## Strategy Explanation ##################
   // [Base Scene] Openspace Statemachine Fallback
   //    1. Openspace state == OpenspaceStateEnum::FALLBACK
@@ -981,7 +986,8 @@ APABehaviorDeciderParkIn::strategy_during_pause(
     const bool is_at_last_segment, const bool vehicle_reached_with_wheelstop,
     const bool has_moved, const bool need_pause,
     const LongitudinalBehaviorPlannerOutput::RemainDistInfo
-        &remain_distance_info, std::string* ptr_debug_string) {
+        &remain_distance_info,
+    std::string *ptr_debug_string) {
   // ################## Strategy Explanation ##################
   // [Base Scene ] Pause
   //    1. have paused
@@ -1002,12 +1008,12 @@ APABehaviorDeciderParkIn::strategy_during_pause(
       [&](const APABehaviorDeciderParkIn::DeciderResult &result) {
         std::string debug_string;
         debug_string =
-            "\n[sm]pause(status" + std::to_string(is_pause_status) +
-            "|tl" + std::to_string(trajectory_length).substr(0, 5) +
-            ",hasMov" + std::to_string(has_moved) +
-            ",needPa" + std::to_string(need_pause) + ",isDyn" +
-            std::to_string(remain_distance_info.is_traj_have_dynamic_obs_) + ",reach" +
-            std::to_string(vehicle_reached_with_wheelstop) + "=act" +
+            "\n[sm]pause(status" + std::to_string(is_pause_status) + "|tl" +
+            std::to_string(trajectory_length).substr(0, 5) + ",hasMov" +
+            std::to_string(has_moved) + ",needPa" + std::to_string(need_pause) +
+            ",isDyn" +
+            std::to_string(remain_distance_info.is_traj_have_dynamic_obs_) +
+            ",reach" + std::to_string(vehicle_reached_with_wheelstop) + "=act" +
             std::to_string((int)result.strategy);
         return debug_string;
       };

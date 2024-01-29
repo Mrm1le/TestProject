@@ -1,11 +1,11 @@
 #ifndef MSQUARE_DECISION_PLANNING_PLANNER_COLLISION_CHECKER_H_
 #define MSQUARE_DECISION_PLANNING_PLANNER_COLLISION_CHECKER_H_
 
-#include "common/planning_context.h"
 #include "common/config/vehicle_param.h"
 #include "common/ego_model_manager.h"
 #include "common/math/box2d.h"
 #include "common/math/polygon2d.h"
+#include "common/planning_context.h"
 #include "planner/message_type.h"
 
 namespace msquare {
@@ -37,21 +37,18 @@ struct ObsPointWithId {
   CollisionCheckStatus result;
   planning_math::Vec2d p;
   Pose2D ego_danger_location;
-  
-  ObsPointWithId(
-    double _collision_threshold, 
-    double _extra_thres,
-    CollisionCheckStatus _result,
-    planning_math::Vec2d _p, 
-    double _z)
-    :collision_threshold(_collision_threshold),
-    extra_thres(_extra_thres),
-    result(_result),p(_p), z_(_z){}
+
+  ObsPointWithId(double _collision_threshold, double _extra_thres,
+                 CollisionCheckStatus _result, planning_math::Vec2d _p,
+                 double _z)
+      : collision_threshold(_collision_threshold), extra_thres(_extra_thres),
+        result(_result), p(_p), z_(_z) {}
   ObsPointWithId(double _collision_threshold, double _extra_thres,
                  CollisionCheckStatus _result, planning_math::Vec2d _p,
                  double _z, Pose2D _ego_danger_location)
       : collision_threshold(_collision_threshold), extra_thres(_extra_thres),
-        result(_result), p(_p), z_(_z), ego_danger_location(_ego_danger_location) {}
+        result(_result), p(_p), z_(_z),
+        ego_danger_location(_ego_danger_location) {}
 
 public:
   const double z() const { return z_; };

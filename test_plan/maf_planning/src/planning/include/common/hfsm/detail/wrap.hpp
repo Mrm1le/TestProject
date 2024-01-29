@@ -17,7 +17,7 @@ template <typename T> class Wrap {
 public:
   inline Wrap() = default;
 
-  template <typename... Ts> inline void create(Ts &&... ts) {
+  template <typename... Ts> inline void create(Ts &&...ts) {
     new (&get()) Item(std::forward<Ts>(ts)...);
   }
 

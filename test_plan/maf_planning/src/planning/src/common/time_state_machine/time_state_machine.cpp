@@ -94,7 +94,7 @@ TState TimeStateMachine::Run() {
     MSD_LOG(INFO, "TST current state is NOT_SET !!! ");
     return TState::NOT_SET;
   }
-  
+
   if (real_state_ == TState::RUNNING) {
     MSD_LOG(INFO, "TST 111111");
     if (real_run_time_s_ >= max_run_time_s_) {

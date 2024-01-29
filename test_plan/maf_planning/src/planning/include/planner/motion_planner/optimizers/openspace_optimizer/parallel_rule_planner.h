@@ -36,9 +36,9 @@ private:
   bool findEscapePose(Pose2D &escape_pose, InSlotPathSegemnts &path_segments);
   bool findEscapePoseV2(Pose2D &escape_pose, InSlotPathSegemnts &path_segments);
 
-
   /* out slot plan */
-  bool planOneTry(const Pose2D &escape_pose, const Pose2D &init_pose,int block_direc);
+  bool planOneTry(const Pose2D &escape_pose, const Pose2D &init_pose,
+                  int block_direc);
   bool planOutslot(const Pose2D &escape_pose, const Pose2D &init_pose,
                    OutSlotPathSegments &opti_path_segments, int block_direc);
   bool spiralCscPath(const Pose2D &escape_pose, const Pose2D &start_pose,
@@ -70,28 +70,30 @@ private:
   bool planInSlotKeepStraight(InSlotPathSegemnts &path_segments,
                               const Pose2D &pose, bool is_init,
                               int block_direc);
-  bool planInSlotOffset(std::vector<Pose2D> &local_planning_key_points, 
-                        const Pose2D &pose, double min_step_size, 
-                        double theta_epsilon, double max_offset_desired, 
-                        bool is_init, int block_direc);
-  bool planInSlotHorizon(std::vector<Pose2D> &local_planning_key_points, 
-                        const Pose2D &pose, double min_step_size, 
+  bool planInSlotOffset(std::vector<Pose2D> &local_planning_key_points,
+                        const Pose2D &pose, double min_step_size,
                         double theta_epsilon, double max_offset_desired,
                         bool is_init, int block_direc);
-  double getMaxOffsetCover(const Pose2D &pose, double min_step_size, 
-                        double theta_epsilon);
-  void getStartPoseAndDirect(const std::vector<Pose2D> &local_planning_key_points, 
-                        const double min_step_size, const Pose2D &pose, 
+  bool planInSlotHorizon(std::vector<Pose2D> &local_planning_key_points,
+                         const Pose2D &pose, double min_step_size,
+                         double theta_epsilon, double max_offset_desired,
+                         bool is_init, int block_direc);
+  double getMaxOffsetCover(const Pose2D &pose, double min_step_size,
+                           double theta_epsilon);
+  void
+  getStartPoseAndDirect(const std::vector<Pose2D> &local_planning_key_points,
+                        const double min_step_size, const Pose2D &pose,
                         int &path_block_direc, double &added_dis);
-  bool isEscapable(const Pose2D &start_pose, const int steer_dirct, 
-                    const int travel_direct, const bool is_init,
-                    double obs_distance);
-  bool getRealRotatePose(const Pose2D &start_pose, const double min_step_size, 
+  bool isEscapable(const Pose2D &start_pose, const int steer_dirct,
+                   const int travel_direct, const bool is_init,
+                   double obs_distance);
+  bool getRealRotatePose(const Pose2D &start_pose, const double min_step_size,
                          const double theta_epsilon, Pose2D &next_pose);
-  bool getRightBackwardPose(const Pose2D &start_pose, const double min_step_size, 
+  bool getRightBackwardPose(const Pose2D &start_pose,
+                            const double min_step_size,
                             const double theta_epsilon, Pose2D &next_pose);
-  bool getLeftForwardPose(const Pose2D &start_pose, const double min_step_size, 
-                            const double theta_epsilon, Pose2D &next_pose);
+  bool getLeftForwardPose(const Pose2D &start_pose, const double min_step_size,
+                          const double theta_epsilon, Pose2D &next_pose);
 
   /* util functions */
   void fillPara(const parking::OpenspaceDeciderOutput &odo,
@@ -111,7 +113,7 @@ private:
 
   double in_slot_x_ = 0.5;
   double in_slot_y_ = 1.0;
-  double lon_left_dis_ = 0.03; // m
+  double lon_left_dis_ = 0.03;        // m
   double corner_safe_distance_ = 0.3; // m
 
   double max_steer_;

@@ -285,13 +285,13 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(ExpandParamConfig, vehicle_type,
                                    apa_lon_adjust, apa_lat_adjust,
                                    apoa_lon_adjust, apoa_lat_adjust)
 
-struct KinoDynamicConfig{
+struct KinoDynamicConfig {
   double vel_forward = 0.5;
   double vel_backward = 0.4;
 };
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(KinoDynamicConfig, vel_forward,vel_backward)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(KinoDynamicConfig, vel_forward, vel_backward)
 
-struct KinoDynamicSceneConfig{
+struct KinoDynamicSceneConfig {
   KinoDynamicConfig apa_parallel;
   KinoDynamicConfig apa_vertical;
   KinoDynamicConfig apa_oblique;
@@ -302,11 +302,11 @@ struct KinoDynamicSceneConfig{
 
   KinoDynamicConfig rpa;
 };
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(KinoDynamicSceneConfig, apa_parallel,apa_vertical, apa_oblique, 
-                apoa_parallel, apoa_vertical, apoa_oblique, rpa)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(KinoDynamicSceneConfig, apa_parallel,
+                                   apa_vertical, apa_oblique, apoa_parallel,
+                                   apoa_vertical, apoa_oblique, rpa)
 
-
-struct LonConfig{
+struct LonConfig {
   bool keep_people_dynamic = false;
   double wheel_approaching_dis = 0.6;
   double max_v_approaching_wheel_stop = 0.3;
@@ -341,7 +341,7 @@ struct LonConfig{
   double j_up = 1.0;
   double a_w = 1.0;
   double j_w = 1.0;
-  double s_ref_w = 1.0;  
+  double s_ref_w = 1.0;
   double v_ref_w = 1.0;
 
   // sop algorithm option
@@ -350,18 +350,24 @@ struct LonConfig{
   bool use_margin_speed = false;
   bool use_osqp_speed = false;
 };
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(LonConfig, keep_people_dynamic, wheel_approaching_dis, max_v_approaching_wheel_stop, obstacle_consider_max, obstacle_consider_min, obstacle_consider_min_v, obstacle_consider_extend_length, 
-  window_s_size,curvature_change_threshold, curvature_limit_v, acc, dec,limit_dec,rate,forbid_acc_max_s,
-  min_duration_filter_time, traj_end_speed_limit_s, control_take_over_remain_s, control_take_over_speed,
-  control_take_over_acc,min_velocity, planning_deceleration,planning_deceleration_last, consider_obstacle_max_s, max_dis_for_adjust_target,
-  s_w, v_w, j_lo, j_up, a_w, j_w,s_ref_w, v_ref_w,
-  use_sop_algorithm,use_margin_speed,use_osqp_speed)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
+    LonConfig, keep_people_dynamic, wheel_approaching_dis,
+    max_v_approaching_wheel_stop, obstacle_consider_max, obstacle_consider_min,
+    obstacle_consider_min_v, obstacle_consider_extend_length, window_s_size,
+    curvature_change_threshold, curvature_limit_v, acc, dec, limit_dec, rate,
+    forbid_acc_max_s, min_duration_filter_time, traj_end_speed_limit_s,
+    control_take_over_remain_s, control_take_over_speed, control_take_over_acc,
+    min_velocity, planning_deceleration, planning_deceleration_last,
+    consider_obstacle_max_s, max_dis_for_adjust_target, s_w, v_w, j_lo, j_up,
+    a_w, j_w, s_ref_w, v_ref_w, use_sop_algorithm, use_margin_speed,
+    use_osqp_speed)
 
 struct ParallelPlannerConfig {
   double check_empty_length = 3.5;
   bool is_min_r_priority = false;
 };
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(ParallelPlannerConfig, check_empty_length,is_min_r_priority)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(ParallelPlannerConfig, check_empty_length,
+                                   is_min_r_priority)
 
 struct EndingCheckConfig {
   double lon_ending_thres = 0.7;
@@ -416,7 +422,8 @@ struct SlotTypeDistanceConfig {
   double perpendicular = 0.3;
   double oblique = 0.3;
 };
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(SlotTypeDistanceConfig, perpendicular, oblique)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(SlotTypeDistanceConfig, perpendicular,
+                                   oblique)
 
 struct ObsTypeDistanceConfig {
   SlotTypeDistanceConfig step;
@@ -446,7 +453,7 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(TargetPoseConfig, bottom_obs_distance_config,
                                    twosides_narrowest_width_advanced_abandon,
                                    oneside_narrowest_width_advanced_abandon,
                                    rear_axis_to_stopper)
-struct SVSpeedConfig{
+struct SVSpeedConfig {
   bool use_sv_speed_generator = false;
   double out_slot_coeff = 1.0;
   double large_curv_coeff = 0.625;
@@ -455,7 +462,10 @@ struct SVSpeedConfig{
   bool no_acc_limit = false;
   double not_use_comfortable_min_s = 0.3;
 };
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(SVSpeedConfig, use_sv_speed_generator, out_slot_coeff, large_curv_coeff, in_slot_coeff, min_radius_coeff,no_acc_limit, not_use_comfortable_min_s)
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(SVSpeedConfig, use_sv_speed_generator,
+                                   out_slot_coeff, large_curv_coeff,
+                                   in_slot_coeff, min_radius_coeff,
+                                   no_acc_limit, not_use_comfortable_min_s)
 
 struct CarConfig {
   SVSpeedConfig sv_config;
@@ -472,8 +482,9 @@ struct CarConfig {
   SlotConfig slot_config;
   RpaConfig rpa_config;
 };
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(CarConfig, sv_config,common_config, car_only_config,kino_config,
-                                   lon_config, apoa_config, expand_param_config,
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(CarConfig, sv_config, common_config,
+                                   car_only_config, kino_config, lon_config,
+                                   apoa_config, expand_param_config,
                                    parallel_config, target_pose_config,
                                    ending_check_config, parkin_decider_config,
                                    slot_config, rpa_config)
@@ -546,8 +557,8 @@ public:
   double shrink_ratio_for_lines_min_;
   bool enable_multiple_steer_modes;
 
-  double lat_inflation_low = 0.05;    //inflation params for low-height obstacles
-  
+  double lat_inflation_low = 0.05; // inflation params for low-height obstacles
+
   // derivated params
   double max_delta_angle;
   double max_delta_angle_rate;

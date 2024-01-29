@@ -1,6 +1,6 @@
 #include "common/search_based_planning_engine.h"
-#include "common/search_based_planning_utils.h"
 #include "common/planning_context.h"
+#include "common/search_based_planning_utils.h"
 #include "nlohmann/json.hpp"
 #include "planner/motion_planner/optimizers/openspace_optimizer/config.h"
 

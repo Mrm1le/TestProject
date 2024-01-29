@@ -1,6 +1,7 @@
 #ifndef COMMON_PLANNING_CONTEXT_
 #define COMMON_PLANNING_CONTEXT_
 
+#include "common/grid_map/grid_map.h"
 #include "common/ldp_result.h"
 #include "common/math/math_utils.h"
 #include "common/obstacle_decision_manager.h"
@@ -15,8 +16,6 @@
 #include "parking_planner_types.h"
 #include "planner/message_type.h"
 #include "pnc.h"
-#include "common/grid_map/grid_map.h"
-
 
 using json = nlohmann::json;
 // #include "pnc/define/parking_vehicle_report.h"
@@ -431,20 +430,26 @@ typedef struct ParkingLateralBehaviorPlannerOutput_ {
       result["sigma_y"] = mjson::Json(in.sigma_y);
       result["relative_ego_yaw"] = mjson::Json(in.relative_ego_yaw);
       auto p = in.path_point;
-      mjson::Json::array p_array{mjson::Json(p.x), mjson::Json(p.y), mjson::Json(p.z), 
-          mjson::Json(p.theta), mjson::Json(p.kappa), mjson::Json(p.rho),
-          mjson::Json(p.s), mjson::Json(p.l), mjson::Json(p.dkappa), mjson::Json(p.ddkappa),
-          mjson::Json(p.lane_id), mjson::Json(p.x_derivative), mjson::Json(p.y_derivative)};
+      mjson::Json::array p_array{
+          mjson::Json(p.x),           mjson::Json(p.y),
+          mjson::Json(p.z),           mjson::Json(p.theta),
+          mjson::Json(p.kappa),       mjson::Json(p.rho),
+          mjson::Json(p.s),           mjson::Json(p.l),
+          mjson::Json(p.dkappa),      mjson::Json(p.ddkappa),
+          mjson::Json(p.lane_id),     mjson::Json(p.x_derivative),
+          mjson::Json(p.y_derivative)};
       result["path_point"] = mjson::Json(p_array);
       return result;
     };
 
     mjson::Json result = mjson::Json(mjson::Json::object());
-    result["is_pwj_init_state_success"] = mjson::Json(is_pwj_init_state_success);
+    result["is_pwj_init_state_success"] =
+        mjson::Json(is_pwj_init_state_success);
     result["delta_s"] = mjson::Json(delta_s);
     result["adc_vel"] = mjson::Json(adc_vel);
     result["init_state"] = mjson::Json(mjson::Json::array{
-      mjson::Json(init_state[0]), mjson::Json(init_state[1]), mjson::Json(init_state[2]), mjson::Json(init_state[3])});
+        mjson::Json(init_state[0]), mjson::Json(init_state[1]),
+        mjson::Json(init_state[2]), mjson::Json(init_state[3])});
     result["traj_tag"] = mjson::Json(traj_tag);
     result["last_traj_tag"] = mjson::Json(last_traj_tag);
     result["init_state_cart"] = encoderTrajectoryPoint(init_state_cart);
@@ -453,11 +458,14 @@ typedef struct ParkingLateralBehaviorPlannerOutput_ {
     result["target_state_cart"] = encoderTrajectoryPoint(target_state_cart);
     result["gate_info"] = gate_info.encoder();
     result["map_boundary"] = mjson::Json(mjson::Json::array{
-      mjson::Json(map_boundary.center_x()), mjson::Json(map_boundary.center_y()), 
-      mjson::Json(map_boundary.length()), mjson::Json(map_boundary.width()), mjson::Json(map_boundary.heading())});
+        mjson::Json(map_boundary.center_x()),
+        mjson::Json(map_boundary.center_y()),
+        mjson::Json(map_boundary.length()), mjson::Json(map_boundary.width()),
+        mjson::Json(map_boundary.heading())});
     result["using_fix_end"] = mjson::Json(using_fix_end);
     // result["lateral_planning_info"] = mjson::Json();
-    result["enable_arc_extention_before_apa"] = mjson::Json(enable_arc_extention_before_apa);
+    result["enable_arc_extention_before_apa"] =
+        mjson::Json(enable_arc_extention_before_apa);
     return result;
   }
 } ParkingLateralBehaviorPlannerOutput;
@@ -514,7 +522,8 @@ typedef struct ScenarioStatus_ {
     result["scenario_type"] = mjson::Json(scenario_type);
     result["stage_type"] = mjson::Json(stage_type);
     result["status_type"] = mjson::Json(static_cast<int>(status_type));
-    result["next_status_type"] = mjson::Json(static_cast<int>(next_status_type));
+    result["next_status_type"] =
+        mjson::Json(static_cast<int>(next_status_type));
     return result;
   }
 } ScenarioStatus;
@@ -646,8 +655,7 @@ typedef struct PlanningResult_ {
   bool real_gear_change_flag = false;
   int pre_real_gear = 0;
   double pre_wheel_velocity = 0.0;
-  std::pair<double, double>
-      second_traj_not_replan_scope = {0.0, 0.0};
+  std::pair<double, double> second_traj_not_replan_scope = {0.0, 0.0};
   bool is_finish_switch_next_traj_flag = false;
   bool is_finished_flag = false;
 
@@ -686,7 +694,8 @@ typedef struct PlanningResult_ {
     result["is_loaded"] = mjson::Json(is_loaded);
     mjson::Json::array traj_pose{};
     for (const auto &p : traj_pose_array) {
-      traj_pose.emplace_back(mjson::Json(mjson::Json::array{mjson::Json(p.x), mjson::Json(p.y), mjson::Json(p.theta)}));
+      traj_pose.emplace_back(mjson::Json(mjson::Json::array{
+          mjson::Json(p.x), mjson::Json(p.y), mjson::Json(p.theta)}));
     }
     result["traj_pose_array"] = mjson::Json(traj_pose);
     mjson::Json::array ref_trajectory_array{};
@@ -718,24 +727,25 @@ struct WlcInfo {
   bool is_fusion_wlc_property_valid = false;
   bool is_valid = false;
   bool is_approached = false;
-  bool is_approaching =false;
+  bool is_approaching = false;
 };
 
-struct PlanControlInterface{
-    bool is_extended = true;  // true: 可延长；false: 不可延长
-    unsigned int extend_type; // 0: default; 1: straight; 2: circular curve; 可延长状态下为0。
-                              // 在不可延长状态下，水平窄车位场景为2， 其他为1
-    double remain_traj;    //  规划路径的剩余距离
-    double second_remain_traj; //第二段轨迹剩余距离
-    double second_traj_target_v; //第二段轨迹的目标速度
-    bool is_use_traj_s_and_v = false; // 是否使用第二段轨迹目标速度和剩余距离
-    unsigned int first_gear;   // 第一段轨迹档位
-    unsigned int second_gear;    // 第二段轨迹档位
-    unsigned int gear_change_index;    // 第二段轨迹的起始点索引值
-    bool is_static = false;
+struct PlanControlInterface {
+  bool is_extended = true;  // true: 可延长；false: 不可延长
+  unsigned int extend_type; // 0: default; 1: straight; 2: circular curve;
+                            // 可延长状态下为0。
+                            // 在不可延长状态下，水平窄车位场景为2， 其他为1
+  double remain_traj;          //  规划路径的剩余距离
+  double second_remain_traj;   // 第二段轨迹剩余距离
+  double second_traj_target_v; // 第二段轨迹的目标速度
+  bool is_use_traj_s_and_v = false; // 是否使用第二段轨迹目标速度和剩余距离
+  unsigned int first_gear;        // 第一段轨迹档位
+  unsigned int second_gear;       // 第二段轨迹档位
+  unsigned int gear_change_index; // 第二段轨迹的起始点索引值
+  bool is_static = false;
 };
 
-typedef struct PlanningStatus_{
+typedef struct PlanningStatus_ {
   int64_t planning_loop = 0;
   bool planning_success = false;
   bool is_reached_end = false;
@@ -841,7 +851,8 @@ struct FreespacePoint {
   double s = 0.0;
   double l = 0.0;
   Pose2D ego_danger_location;
-  CollisionType collision_type = CollisionType::COLLISIONFREE;  // 0-free, 1-pp, 2-mpc, 3-both
+  CollisionType collision_type =
+      CollisionType::COLLISIONFREE; // 0-free, 1-pp, 2-mpc, 3-both
 };
 
 struct FreespaceLine {
@@ -907,7 +918,7 @@ struct LongitudinalBehaviorPlannerOutput {
       is_static_ = is_static;
       lon_safe_dis_ = lon_safe_dis;
       is_traj_have_dynamic_obs_ = is_traj_have_dynamic_obs;
-      if (id >= 0)  // temp
+      if (id >= 0) // temp
         remaining_distance_ = d_rel_ - lon_safe_dis_;
       else
         remaining_distance_ = d_rel;
@@ -958,7 +969,7 @@ public:
         mjson::Json(remain_dist_info_.is_traj_have_dynamic_obs_),
         mjson::Json(remain_dist_info_.remaining_distance_),
         mjson::Json(remain_dist_info_.obstacle_type_),
-        mjson::Json(remain_dist_info_.slot_type_), 
+        mjson::Json(remain_dist_info_.slot_type_),
         mjson::Json(remain_dist_info_.now_time_seq_str_),
         mjson::Json(remain_dist_info_.is_need_pause_)});
     return result;
@@ -985,18 +996,23 @@ struct ParkOutType {
   uint32_t value;
 
   enum : uint32_t {
-    INVALID = 0,                   //!< invalid park out direction
-    PERPENDICULAR_OBLIQUE_FRONT = 1,       //!< perpendicular or oblique slot front side
-    PERPENDICULAR_OBLIQUE_FRONT_LEFT = 2,  //!< perpendicular or oblique slot front-left side
-    PERPENDICULAR_OBLIQUE_FRONT_RIGHT = 4, //!< perpendicular or oblique slot front-right side
-    PERPENDICULAR_OBLIQUE_REAR = 8,        //!< perpendicular or oblique slot rear side
-    PERPENDICULAR_OBLIQUE_REAR_LEFT = 16,  //!< perpendicular or oblique slot rear-left side
-    PERPENDICULAR_OBLIQUE_REAR_RIGHT = 32, //!< perpendicular or oblique slot rear-right side
-    PARALLEL_LEFT = 64,            //!< parallel slot left side
-    PARALLEL_LEFT_FRONT = 128,     //!< parallel slot left-front side
-    PARALLEL_RIGHT = 256,          //!< parallel slot right side
-    PARALLEL_RIGHT_FRONT = 512,    //!< parallel slot right-front side
-    CALC_INVALID = 1024,          //!< calc park out direction invalid
+    INVALID = 0, //!< invalid park out direction
+    PERPENDICULAR_OBLIQUE_FRONT =
+        1, //!< perpendicular or oblique slot front side
+    PERPENDICULAR_OBLIQUE_FRONT_LEFT =
+        2, //!< perpendicular or oblique slot front-left side
+    PERPENDICULAR_OBLIQUE_FRONT_RIGHT =
+        4, //!< perpendicular or oblique slot front-right side
+    PERPENDICULAR_OBLIQUE_REAR = 8, //!< perpendicular or oblique slot rear side
+    PERPENDICULAR_OBLIQUE_REAR_LEFT =
+        16, //!< perpendicular or oblique slot rear-left side
+    PERPENDICULAR_OBLIQUE_REAR_RIGHT =
+        32,             //!< perpendicular or oblique slot rear-right side
+    PARALLEL_LEFT = 64, //!< parallel slot left side
+    PARALLEL_LEFT_FRONT = 128,  //!< parallel slot left-front side
+    PARALLEL_RIGHT = 256,       //!< parallel slot right side
+    PARALLEL_RIGHT_FRONT = 512, //!< parallel slot right-front side
+    CALC_INVALID = 1024,        //!< calc park out direction invalid
   };
   ParkOutType() : value(0) {}
 };
@@ -1014,12 +1030,23 @@ struct WheelStopInfo {
   mjson::Json encoder() const {
     mjson::Json result = mjson::Json(mjson::Json::object());
     result["available"] = mjson::Json(available);
-    result["vision_wheel_stop_available"] = mjson::Json(vision_wheel_stop_available);
-    result["vision_point1"] = mjson::Json(mjson::Json::array{mjson::Json(vision_point1.x), mjson::Json(vision_point1.y), mjson::Json(vision_point1.z)});
-    result["vision_point2"] = mjson::Json(mjson::Json::array{mjson::Json(vision_point2.x), mjson::Json(vision_point2.y), mjson::Json(vision_point2.z)});
-    result["collision_wheel_stop_available"] = mjson::Json(collision_wheel_stop_available);
-    result["collision_point1"] = mjson::Json(mjson::Json::array{mjson::Json(collision_point1.x), mjson::Json(collision_point1.y), mjson::Json(collision_point1.z)});;
-    result["collision_point2"] = mjson::Json(mjson::Json::array{mjson::Json(collision_point2.x), mjson::Json(collision_point2.y), mjson::Json(collision_point2.z)});
+    result["vision_wheel_stop_available"] =
+        mjson::Json(vision_wheel_stop_available);
+    result["vision_point1"] = mjson::Json(mjson::Json::array{
+        mjson::Json(vision_point1.x), mjson::Json(vision_point1.y),
+        mjson::Json(vision_point1.z)});
+    result["vision_point2"] = mjson::Json(mjson::Json::array{
+        mjson::Json(vision_point2.x), mjson::Json(vision_point2.y),
+        mjson::Json(vision_point2.z)});
+    result["collision_wheel_stop_available"] =
+        mjson::Json(collision_wheel_stop_available);
+    result["collision_point1"] = mjson::Json(mjson::Json::array{
+        mjson::Json(collision_point1.x), mjson::Json(collision_point1.y),
+        mjson::Json(collision_point1.z)});
+    ;
+    result["collision_point2"] = mjson::Json(mjson::Json::array{
+        mjson::Json(collision_point2.x), mjson::Json(collision_point2.y),
+        mjson::Json(collision_point2.z)});
     result["wheel_stop_depth"] = mjson::Json(wheel_stop_depth);
     return result;
   }
@@ -1088,7 +1115,8 @@ struct ParkingSlotInfo {
     mjson::Json encoder() const {
       mjson::Json result = mjson::Json(mjson::Json::object());
       result["slot_type"] = mjson::Json(slot_type);
-      result["p"] = mjson::Json(mjson::Json::array{mjson::Json(p.x), mjson::Json(p.y), mjson::Json(p.z)});
+      result["p"] = mjson::Json(mjson::Json::array{
+          mjson::Json(p.x), mjson::Json(p.y), mjson::Json(p.z)});
       result["index"] = mjson::Json(index);
       return result;
     }
@@ -1105,7 +1133,8 @@ struct ParkingSlotInfo {
   }
 
   double slot_width() {
-    return std::sqrt((corners[3].x - corners[0].x) * (corners[3].x - corners[0].x) + 
+    return std::sqrt(
+        (corners[3].x - corners[0].x) * (corners[3].x - corners[0].x) +
         (corners[3].y - corners[0].y) * (corners[3].y - corners[0].y));
   }
 
@@ -1113,16 +1142,20 @@ struct ParkingSlotInfo {
     mjson::Json result = mjson::Json(mjson::Json::object());
     result["id"] = mjson::Json(id);
     result["type"] = mjson::Json(static_cast<int>(type.value));
-    result["park_out_type"] = mjson::Json(static_cast<int>(park_out_type.value));
-    result["available_park_out_type"] = mjson::Json(static_cast<int>(available_park_out_type.value));
+    result["park_out_type"] =
+        mjson::Json(static_cast<int>(park_out_type.value));
+    result["available_park_out_type"] =
+        mjson::Json(static_cast<int>(available_park_out_type.value));
     mjson::Json::array corners_array{};
     for (const auto &c : corners) {
-      corners_array.emplace_back(mjson::Json(mjson::Json::array{mjson::Json(c.x), mjson::Json(c.y), mjson::Json(c.z)}));
+      corners_array.emplace_back(mjson::Json(mjson::Json::array{
+          mjson::Json(c.x), mjson::Json(c.y), mjson::Json(c.z)}));
     }
     result["corners"] = mjson::Json(corners_array);
     mjson::Json::array original_corners_array{};
     for (const auto &c : original_corners) {
-      original_corners_array.emplace_back(mjson::Json(mjson::Json::array{mjson::Json(c.x), mjson::Json(c.y), mjson::Json(c.z)}));
+      original_corners_array.emplace_back(mjson::Json(mjson::Json::array{
+          mjson::Json(c.x), mjson::Json(c.y), mjson::Json(c.z)}));
     }
     result["original_corners"] = mjson::Json(original_corners_array);
     result["is_space_slot"] = mjson::Json(is_space_slot);
@@ -1134,14 +1167,23 @@ struct ParkingSlotInfo {
       nearby_obstacle_id_array.emplace_back(mjson::Json(id));
     }
     result["nearby_obstacle_id"] = mjson::Json(nearby_obstacle_id_array);
-    result["park_in_point"] = mjson::Json(mjson::Json::array{mjson::Json(park_in_point.available), 
-        mjson::Json(park_in_point.point.x), mjson::Json(park_in_point.point.y), mjson::Json(park_in_point.point.theta),
+    result["park_in_point"] = mjson::Json(mjson::Json::array{
+        mjson::Json(park_in_point.available),
+        mjson::Json(park_in_point.point.x), mjson::Json(park_in_point.point.y),
+        mjson::Json(park_in_point.point.theta),
         mjson::Json(park_in_point.distance)});
-    result["park_out_point"] = mjson::Json(mjson::Json::array{mjson::Json(park_out_point.available), 
-        mjson::Json(park_out_point.point.x), mjson::Json(park_out_point.point.y), mjson::Json(park_out_point.point.theta),
-        mjson::Json(park_out_point.distance)});
-    result["front_direction"] = mjson::Json(mjson::Json::array{mjson::Json(front_direction.x()), mjson::Json(front_direction.y()), mjson::Json(front_direction.Id())});
-    result["left_direction"] = mjson::Json(mjson::Json::array{mjson::Json(left_direction.x()), mjson::Json(left_direction.y()), mjson::Json(left_direction.Id())});
+    result["park_out_point"] =
+        mjson::Json(mjson::Json::array{mjson::Json(park_out_point.available),
+                                       mjson::Json(park_out_point.point.x),
+                                       mjson::Json(park_out_point.point.y),
+                                       mjson::Json(park_out_point.point.theta),
+                                       mjson::Json(park_out_point.distance)});
+    result["front_direction"] = mjson::Json(mjson::Json::array{
+        mjson::Json(front_direction.x()), mjson::Json(front_direction.y()),
+        mjson::Json(front_direction.Id())});
+    result["left_direction"] = mjson::Json(mjson::Json::array{
+        mjson::Json(left_direction.x()), mjson::Json(left_direction.y()),
+        mjson::Json(left_direction.Id())});
     result["distance_to_parking_slot"] = mjson::Json(distance_to_parking_slot);
     result["wheel_stop_info"] = wheel_stop_info.encoder();
     result["virtual_corner"] = virtual_corner.encoder();
@@ -1173,7 +1215,7 @@ struct ParkingSlotInfo {
 // };
 
 // parkout with memory
-struct LastParkinData{
+struct LastParkinData {
   bool is_loaded = false;
   bool is_valid = false;
   std::vector<planning_math::Vec2d> corner_pts;
@@ -1185,7 +1227,7 @@ struct ParkingBehaviorPlannerOutput {
   TrajectoryPoint init_traj_point;   // for openspace only
   TrajectoryPoint target_traj_point; // for openspace only
   ParkingSlotInfo parking_slot_info;
-  LastParkinData last_parkin_data;  // for parkout with memory
+  LastParkinData last_parkin_data; // for parkout with memory
   APAMetaState apa_meta_state;
   bool has_ever_been_inside_slot = false;
   // ParkingLotInfo park_in_info;
@@ -1231,10 +1273,14 @@ struct ParkingBehaviorPlannerOutput {
       result["sigma_y"] = mjson::Json(in.sigma_y);
       result["relative_ego_yaw"] = mjson::Json(in.relative_ego_yaw);
       auto p = in.path_point;
-      mjson::Json::array p_array{mjson::Json(p.x), mjson::Json(p.y), mjson::Json(p.z), 
-          mjson::Json(p.theta), mjson::Json(p.kappa), mjson::Json(p.rho),
-          mjson::Json(p.s), mjson::Json(p.l), mjson::Json(p.dkappa), mjson::Json(p.ddkappa),
-          mjson::Json(p.lane_id), mjson::Json(p.x_derivative), mjson::Json(p.y_derivative)};
+      mjson::Json::array p_array{
+          mjson::Json(p.x),           mjson::Json(p.y),
+          mjson::Json(p.z),           mjson::Json(p.theta),
+          mjson::Json(p.kappa),       mjson::Json(p.rho),
+          mjson::Json(p.s),           mjson::Json(p.l),
+          mjson::Json(p.dkappa),      mjson::Json(p.ddkappa),
+          mjson::Json(p.lane_id),     mjson::Json(p.x_derivative),
+          mjson::Json(p.y_derivative)};
       result["path_point"] = mjson::Json(p_array);
       return result;
     };
@@ -1258,7 +1304,6 @@ struct ParkingBehaviorPlannerOutput {
     // result["parking_lot"] = mjson::Json();
     return result;
   }
-
 };
 
 // struct FreespaceDeciderOutput {
@@ -1477,58 +1522,54 @@ public:
     return &openspace_motion_planner_output_;
   }
 
-  const std::string& planning_debug_info() const {
+  const std::string &planning_debug_info() const {
     return planning_debug_info_;
   }
 
-  std::string *mutable_planning_debug_info() {
-    return &planning_debug_info_;
-  }
+  std::string *mutable_planning_debug_info() { return &planning_debug_info_; }
 
-  const int sbp_request_count() const {
-    return sbp_request_count_;
-  }
+  const int sbp_request_count() const { return sbp_request_count_; }
 
-  int *mutable_sbp_request_count() {
-    return &sbp_request_count_;
-  }
+  int *mutable_sbp_request_count() { return &sbp_request_count_; }
 
   std::string *mutable_now_time_seq_str() {
-    return &now_time_seq_str_;;
+    return &now_time_seq_str_;
+    ;
   }
 
-  const std::vector<std::vector<std::pair<double, double>>>& vec_sl_points() const {
+  const std::vector<std::vector<std::pair<double, double>>> &
+  vec_sl_points() const {
     return vec_sl_points_;
   }
 
-  std::vector<std::vector<std::pair<double, double>>>* const mutable_vec_sl_points() {
+  std::vector<std::vector<std::pair<double, double>>> *const
+  mutable_vec_sl_points() {
     return &vec_sl_points_;
   }
 
-  const double& planning_start_time_ms() const {
+  const double &planning_start_time_ms() const {
     return planning_start_time_ms_;
   }
 
-  double* mutable_planning_start_time_ms() {
-    return &planning_start_time_ms_;
-  }
+  double *mutable_planning_start_time_ms() { return &planning_start_time_ms_; }
 
-  bool* mutable_is_planner_update_plan_path() {
+  bool *mutable_is_planner_update_plan_path() {
     return &is_planner_update_plan_path_;
   }
 
-  std::shared_ptr<grid::MultiCircleFootprintModel>& lon_mc_footprint_model() {
+  std::shared_ptr<grid::MultiCircleFootprintModel> &lon_mc_footprint_model() {
     return lon_mc_footprint_model_;
   }
 
-  std::vector<planning_math::Vec2d>* const mutable_full_body_model_contour() {
+  std::vector<planning_math::Vec2d> *const mutable_full_body_model_contour() {
     return &full_body_model_contour_;
   }
 
-  std::vector<std::vector<planning_math::Vec2d>>* const mutable_vec_extra_obstacle_points() {
+  std::vector<std::vector<planning_math::Vec2d>> *const
+  mutable_vec_extra_obstacle_points() {
     return &vec_extra_obstacle_points_;
   }
-  
+
   const ParkingLateralBehaviorPlannerOutput &
   parking_lateral_behavoir_planner_output() const {
     return parking_lateral_behavoir_planner_output_;
@@ -1565,12 +1606,16 @@ public:
   void set_version(const std::string &version) { version_ = version; }
 
   mjson::Json encoder_planning_context() const {
-    // 反馈planning_status_, parking_behavior_planner_output_, parking_lateral_behavoir_planner_output_
+    // 反馈planning_status_, parking_behavior_planner_output_,
+    // parking_lateral_behavoir_planner_output_
     mjson::Json result = mjson::Json(mjson::Json::object());
     result["planning_status_"] = planning_status_.encoder();
-    result["parking_behavior_planner_output_"] = parking_behavior_planner_output_.encoder();
-    result["parking_lateral_behavoir_planner_output_"] = parking_lateral_behavoir_planner_output_.encoder();
-    result["longitudinal_behavior_planner_output_"] = longitudinal_behavior_planner_output_.encoder();
+    result["parking_behavior_planner_output_"] =
+        parking_behavior_planner_output_.encoder();
+    result["parking_lateral_behavoir_planner_output_"] =
+        parking_lateral_behavoir_planner_output_.encoder();
+    result["longitudinal_behavior_planner_output_"] =
+        longitudinal_behavior_planner_output_.encoder();
     return result;
     // return planning_status_.encoder();
   }
@@ -1611,9 +1656,8 @@ private:
   // ego model
   std::shared_ptr<grid::MultiCircleFootprintModel> lon_mc_footprint_model_;
   std::vector<planning_math::Vec2d> full_body_model_contour_;
-  
-  std::vector<std::vector<planning_math::Vec2d>> vec_extra_obstacle_points_;
 
+  std::vector<std::vector<planning_math::Vec2d>> vec_extra_obstacle_points_;
 
   // zjt debug
   // public:

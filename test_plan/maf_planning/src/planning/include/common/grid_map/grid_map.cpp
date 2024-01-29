@@ -18,9 +18,7 @@ namespace grid {
       PlanningContext::Instance()->get_config_file_dir() +
       "/scenario_configs_json/parking/");
 */
-GridMap::GridMap() {
-
-}
+GridMap::GridMap() {}
 
 bool GridMap::Process() { return true; }
 

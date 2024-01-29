@@ -7,7 +7,8 @@ namespace msquare {
 
 void ParallelRulePlanner::fillPara(const parking::OpenspaceDeciderOutput &odo,
                                    clothoid::Parameter &para) {
-  para_.min_block_len = CarParams::GetInstance()->car_config.common_config.min_block_len;
+  para_.min_block_len =
+      CarParams::GetInstance()->car_config.common_config.min_block_len;
   para_.width = VehicleParam::Instance()->width_wo_rearview_mirror;
   para_.length = VehicleParam::Instance()->length;
   para_.width_with_rearview = VehicleParam::Instance()->width;
@@ -23,13 +24,16 @@ void ParallelRulePlanner::fillPara(const parking::OpenspaceDeciderOutput &odo,
   para_.steering_speed = 270;
   para_.steering_angle_ratio = CarParams::GetInstance()->steer_ratio;
   para_.init_steer_angle = std::min(300.0, para_.max_steering_angle);
-  para_.back_light_len = CarParams::GetInstance()->car_config.car_only_config.back_light_len;
-  para_.back_light_height = CarParams::GetInstance()->car_config.car_only_config.back_light_height;
+  para_.back_light_len =
+      CarParams::GetInstance()->car_config.car_only_config.back_light_len;
+  para_.back_light_height =
+      CarParams::GetInstance()->car_config.car_only_config.back_light_height;
   para_.front_corner_width = VehicleParam::Instance()->bumper_length / 2.0;
   para_.front_corner_length = VehicleParam::Instance()->front_edge_to_center -
                               VehicleParam::Instance()->light_to_front_edge;
 
-  para_.check_empty_length = CarParams::GetInstance()->car_config.parallel_config.check_empty_length;
+  para_.check_empty_length =
+      CarParams::GetInstance()->car_config.parallel_config.check_empty_length;
   para_.is_min_r_priority =
       CarParams::GetInstance()->car_config.parallel_config.is_min_r_priority;
   /* */
@@ -197,8 +201,10 @@ bool ParallelRulePlanner::spiralCscPath(const Pose2D &escape_pose,
 
   // add by xhy
   std::vector<planning_math::Vec2d> obs_poses_in_distance;
-  planning_math::Vec2d obs_poses_center(impl_.right_corner.x(), impl_.right_corner.y());
-  double obs_distance = std::min(para_.side_safe_distance, corner_safe_distance_);
+  planning_math::Vec2d obs_poses_center(impl_.right_corner.x(),
+                                        impl_.right_corner.y());
+  double obs_distance =
+      std::min(para_.side_safe_distance, corner_safe_distance_);
   // to get obs points in safe ditance
   for (planning_math::Vec2d obs_pose : checker_.obs_pts_) {
     double obs_pose_dis = obs_poses_center.DistanceTo(obs_pose);
@@ -218,7 +224,8 @@ bool ParallelRulePlanner::spiralCscPath(const Pose2D &escape_pose,
   }
   if (obs_poses_in_distance.empty()) {
     double dis_to_key =
-        std::hypot(c2x - (impl_.right_corner.x() - obs_distance), c2y - (impl_.right_corner.y() - obs_distance));
+        std::hypot(c2x - (impl_.right_corner.x() - obs_distance),
+                   c2y - (impl_.right_corner.y() - obs_distance));
     double safe_dis = r2 - dis_to_key - impl_.half_width;
     if (safe_dis < obs_distance) {
       LOCAL_LOG(LOCAL_DEBUG, "c2 safe distance: %f which is samller than %f",
@@ -237,7 +244,7 @@ bool ParallelRulePlanner::spiralCscPath(const Pose2D &escape_pose,
       }
     }
   }
-  
+
   //   LOCAL_LOG(LOCAL_INFO,"forward length: %f \tl1:%f \tl2:%f",
   //   forward_length, l1, l2); LOCAL_LOG(LOCAL_INFO,"cx:5%f \t cy:%f", c2x,
   //   c2y);
@@ -391,9 +398,11 @@ bool ParallelRulePlanner::spiralCscPath(const Pose2D &escape_pose,
     str7.insert(str7.end(), str7_1.begin(), str7_1.end());
     str7.insert(str7.end(), str7_2.begin(), str7_2.end());
 
-  } else if ((para_.is_min_r_priority && !is_forward && (r2 > para_.min_radius+1e-3) &&
-             remain_s < para_.s_first_straight)  ||
-             (!para_.is_min_r_priority && !is_forward && remain_s < para_.s_first_straight)) { 
+  } else if ((para_.is_min_r_priority && !is_forward &&
+              (r2 > para_.min_radius + 1e-3) &&
+              remain_s < para_.s_first_straight) ||
+             (!para_.is_min_r_priority && !is_forward &&
+              remain_s < para_.s_first_straight)) {
     LOCAL_LOG(LOCAL_DEBUG, "backward length is too short than %.3f m:%.3f",
               para_.s_first_straight, remain_s);
     double add_straight = para_.s_first_straight - remain_s;
@@ -464,10 +473,10 @@ bool ParallelRulePlanner::spiralCscPath(const Pose2D &escape_pose,
     }
   }
 
-path_segments.score =
+  path_segments.score =
       (path_segments.is_forward ? (path_segments.remain_s) : 0.0) -
       (para_.is_min_r_priority ? (-std::sqrt(path_segments.radius2))
-                                : std::sqrt(path_segments.radius2));
+                               : std::sqrt(path_segments.radius2));
 
   return true;
 }
@@ -1146,20 +1155,20 @@ bool ParallelRulePlanner::adjustOutslotCP(
   return true;
 }
 bool ParallelRulePlanner::planOneTry(const Pose2D &target_pose,
-                                      const Pose2D &start_pose,
-                                      int block_direc) {
-  if(!is_front_empty_){
+                                     const Pose2D &start_pose,
+                                     int block_direc) {
+  if (!is_front_empty_) {
     LOCAL_LOG(LOCAL_DEBUG, "return as not is_front_empty_");
     return false;
-  }  
+  }
   // forward distance
   double escape_lon = std::min(para_.lon + 0.10, 0.4);
   double escape_lat = std::min(para_.lat + 0.05, 0.19);
   double real_forward_max = checker_.moveForward(
       target_pose, escape_lat, escape_lon, clothoid::ShapeType::RAW);
-  
-  double min_straight = 0.3-1e-6;
-  double max_straight = std::min(0.5,real_forward_max);
+
+  double min_straight = 0.3 - 1e-6;
+  double max_straight = std::min(0.5, real_forward_max);
   double step_straight = 0.1;
 
   // clothoid path
@@ -1175,30 +1184,33 @@ bool ParallelRulePlanner::planOneTry(const Pose2D &target_pose,
   Pose2D escape_pose;
   clothoid::StraightCurve clo_curve_cur;
 
-  while(cur_straight > min_straight){
+  while (cur_straight > min_straight) {
     local_straight_path.clear();
-    local_straight_path = clothoid::linspace(target_pose, cur_straight, para_.step);
+    local_straight_path =
+        clothoid::linspace(target_pose, cur_straight, para_.step);
     cur_straight -= step_straight;
     escape_pose = local_straight_path.back();
 
     clo_curve_cur.clear();
-    clothoid::transform2D(clo_ps_cir, clo_curve_cur, escape_pose.x, escape_pose.y);
+    clothoid::transform2D(clo_ps_cir, clo_curve_cur, escape_pose.x,
+                          escape_pose.y);
 
     escape_pose = clo_curve_cur.back();
     // validate the possibility with one turn to escape out
-    Pose2D escape_rotate_pose =checker_.rotateMaxPose(escape_pose, clothoid::RotateType::LEFT_FORWARD,
-                              clothoid::ShapeType::OCTAGON, para_.min_radius,
-                              false, para_.lat, para_.lon);
+    Pose2D escape_rotate_pose =
+        checker_.rotateMaxPose(escape_pose, clothoid::RotateType::LEFT_FORWARD,
+                               clothoid::ShapeType::OCTAGON, para_.min_radius,
+                               false, para_.lat, para_.lon);
     std::vector<planning_math::Vec2d> corners_temp;
     csg_.getRawShape(escape_rotate_pose, corners_temp, 0.0, 0.0);
     double theta_diff = escape_rotate_pose.theta - escape_pose.theta;
-    if ( theta_diff < M_PI_2 && corners_temp[5].y() < impl_.right_corner.y()) {
+    if (theta_diff < M_PI_2 && corners_temp[5].y() < impl_.right_corner.y()) {
       continue;
     }
 
     OutSlotPathSegments opti_path_segments;
     if (!planOutslot(escape_pose, start_pose, opti_path_segments,
-                    block_direc)) {
+                     block_direc)) {
       LOCAL_LOG(LOCAL_DEBUG, "failed to plan out slot");
       continue;
     }
@@ -1208,9 +1220,11 @@ bool ParallelRulePlanner::planOneTry(const Pose2D &target_pose,
       LOCAL_LOG(LOCAL_DEBUG, "plan outslot is empty");
       continue;
     }
-    local_straight_path.insert(local_straight_path.end(),clo_curve_cur.begin(), clo_curve_cur.end());
-    local_straight_path.insert(local_straight_path.end(), local_outslot_path.begin(),
-                            local_outslot_path.end());
+    local_straight_path.insert(local_straight_path.end(), clo_curve_cur.begin(),
+                               clo_curve_cur.end());
+    local_straight_path.insert(local_straight_path.end(),
+                               local_outslot_path.begin(),
+                               local_outslot_path.end());
 
     generatePath(local_straight_path);
     return true;
@@ -1461,13 +1475,14 @@ bool ParallelRulePlanner::planOutslot(const Pose2D &escape_pose,
   return false;
 }
 bool ParallelRulePlanner::findEscapePoseV2(Pose2D &escape_pose,
-                                         InSlotPathSegemnts &path_segments){
-                                          // min safe distance
+                                           InSlotPathSegemnts &path_segments) {
+  // min safe distance
   planning_math::Vec2d rot_center(0.0, para_.min_radius);
   Pose2D ego_origin(0.0, 0.0, 0.0);
   std::vector<planning_math::Vec2d> corners, corners_temp;
   csg_.getRawShape(ego_origin, corners, 0.0, 0.0);
-  double corner_obs_distance = std::min(para_.side_safe_distance, corner_safe_distance_);
+  double corner_obs_distance =
+      std::min(para_.side_safe_distance, corner_safe_distance_);
   double l1 = rot_center.DistanceTo(corners[4]);
   double l2 = rot_center.DistanceTo(corners[5]);
   double l1_theta =
@@ -1476,7 +1491,8 @@ bool ParallelRulePlanner::findEscapePoseV2(Pose2D &escape_pose,
       std::atan2(corners[5].x(), para_.min_radius - corners[5].y());
   bool is_l2_l1 = l2 > l1;
   double min_r_dis = std::max(l1, l2) + corner_obs_distance;
-  double min_step_size = std::max(para_.min_block_len, para_.lon - 0.2); // 最小弧长
+  double min_step_size =
+      std::max(para_.min_block_len, para_.lon - 0.2); // 最小弧长
   double theta_epsilon = min_step_size / para_.min_radius - 1e-6; // 最小转角
 
   // back lon  which is larger than rotate lon
@@ -1505,7 +1521,7 @@ bool ParallelRulePlanner::findEscapePoseV2(Pose2D &escape_pose,
   csg_.getRawShape(back_max_rotate_pose, corners_temp, 0.0, 0.0);
 
   double real_forward_length = checker_.moveForward(
-          target_pose_, escape_lat, escape_lon, clothoid::ShapeType::RAW);
+      target_pose_, escape_lat, escape_lon, clothoid::ShapeType::RAW);
   if (real_dis > min_r_dis && corners_temp[5].y() > impl_.right_corner.y()) {
     if (back_max < para_.min_block_len) {
       double need_forward_length = 2 * para_.min_block_len;
@@ -1527,7 +1543,8 @@ bool ParallelRulePlanner::findEscapePoseV2(Pose2D &escape_pose,
     }
   }
 
-  if (real_forward_length < para_.min_block_len && back_max < para_.min_block_len) {
+  if (real_forward_length < para_.min_block_len &&
+      back_max < para_.min_block_len) {
     LOCAL_LOG(LOCAL_INFO, "slot have no space to move straight to target pose");
     return false;
   }
@@ -1546,18 +1563,20 @@ bool ParallelRulePlanner::findEscapePoseV2(Pose2D &escape_pose,
     local_key_poses.push_back(front_pose);
   }
   local_key_poses.push_back(first_pose);
-  for (int i = 0;i < 4;i++) {
+  for (int i = 0; i < 4; i++) {
     is_escapable = isEscapable(first_pose, 1, 1, false, corner_obs_distance);
     if (is_escapable) {
       escape_pose = first_pose;
       break;
     }
     Pose2D next_pose;
-    if (!getLeftForwardPose(first_pose, min_step_size, theta_epsilon, next_pose)) {
+    if (!getLeftForwardPose(first_pose, min_step_size, theta_epsilon,
+                            next_pose)) {
       break;
     }
     Pose2D end_pose;
-    if (!getRightBackwardPose(next_pose, min_step_size, theta_epsilon, end_pose)) {
+    if (!getRightBackwardPose(next_pose, min_step_size, theta_epsilon,
+                              end_pose)) {
       break;
     }
     local_key_poses.push_back(next_pose);
@@ -1568,30 +1587,35 @@ bool ParallelRulePlanner::findEscapePoseV2(Pose2D &escape_pose,
   if (!is_escapable) {
     return false;
   }
-  
+
   path_segments.key_pose.insert(path_segments.key_pose.end(),
-                                local_key_poses.begin(),
-                                local_key_poses.end());
+                                local_key_poses.begin(), local_key_poses.end());
   return true;
 }
 
-bool ParallelRulePlanner::getLeftForwardPose(const Pose2D &start_pose, const double min_step_size, 
-                                             const double theta_epsilon, Pose2D &next_pose) {
-  next_pose = checker_.rotateMaxPose(start_pose, 1, 1, clothoid::ShapeType::OCTAGON, 
-                                     para_.min_radius, false, para_.lat, para_.lon);
+bool ParallelRulePlanner::getLeftForwardPose(const Pose2D &start_pose,
+                                             const double min_step_size,
+                                             const double theta_epsilon,
+                                             Pose2D &next_pose) {
+  next_pose =
+      checker_.rotateMaxPose(start_pose, 1, 1, clothoid::ShapeType::OCTAGON,
+                             para_.min_radius, false, para_.lat, para_.lon);
   if (!getRealRotatePose(start_pose, min_step_size, theta_epsilon, next_pose)) {
     return false;
   }
-  Pose2D end_pose = checker_.rotateMaxPose(next_pose, -1, -1, clothoid::ShapeType::OCTAGON, 
-                                           para_.min_radius, false, para_.lat, para_.lon);
+  Pose2D end_pose =
+      checker_.rotateMaxPose(next_pose, -1, -1, clothoid::ShapeType::OCTAGON,
+                             para_.min_radius, false, para_.lat, para_.lon);
   double deta_theta = std::abs(next_pose.theta - start_pose.theta);
   if (deta_theta < theta_epsilon) {
     return false;
   }
   double rotate_theta = std::abs(end_pose.theta - next_pose.theta);
   if (rotate_theta < theta_epsilon) {
-    double start_pose_center_x = start_pose.x - para_.min_radius * std::sin(start_pose.theta);
-    double start_pose_center_y = start_pose.y + para_.min_radius * std::cos(start_pose.theta);
+    double start_pose_center_x =
+        start_pose.x - para_.min_radius * std::sin(start_pose.theta);
+    double start_pose_center_y =
+        start_pose.y + para_.min_radius * std::cos(start_pose.theta);
     double step_theta = deta_theta - theta_epsilon;
     int i = 0;
     while (i < 5) {
@@ -1599,8 +1623,9 @@ bool ParallelRulePlanner::getLeftForwardPose(const Pose2D &start_pose, const dou
       next_pose.x = start_pose_center_x + para_.min_radius * std::sin(alpha);
       next_pose.y = start_pose_center_y - para_.min_radius * std::cos(alpha);
       next_pose.theta = alpha;
-      end_pose = checker_.rotateMaxPose(next_pose, -1, -1, clothoid::ShapeType::OCTAGON, 
-                                        para_.min_radius, false, para_.lat, para_.lon);
+      end_pose = checker_.rotateMaxPose(
+          next_pose, -1, -1, clothoid::ShapeType::OCTAGON, para_.min_radius,
+          false, para_.lat, para_.lon);
       if (std::abs(end_pose.theta - next_pose.theta) > theta_epsilon) {
         return true;
       }
@@ -1615,20 +1640,26 @@ bool ParallelRulePlanner::getLeftForwardPose(const Pose2D &start_pose, const dou
   return true;
 }
 
-bool ParallelRulePlanner::getRightBackwardPose(const Pose2D &start_pose, const double min_step_size, 
-                                               const double theta_epsilon, Pose2D &next_pose) {
-  next_pose = checker_.rotateMaxPose(start_pose, -1, -1, clothoid::ShapeType::OCTAGON, 
-                                            para_.min_radius, false, para_.lat, para_.lon);
-  Pose2D end_pose = checker_.rotateMaxPose(next_pose, 1, 1, clothoid::ShapeType::OCTAGON, 
-                                           para_.min_radius, false, para_.lat, para_.lon);
+bool ParallelRulePlanner::getRightBackwardPose(const Pose2D &start_pose,
+                                               const double min_step_size,
+                                               const double theta_epsilon,
+                                               Pose2D &next_pose) {
+  next_pose =
+      checker_.rotateMaxPose(start_pose, -1, -1, clothoid::ShapeType::OCTAGON,
+                             para_.min_radius, false, para_.lat, para_.lon);
+  Pose2D end_pose =
+      checker_.rotateMaxPose(next_pose, 1, 1, clothoid::ShapeType::OCTAGON,
+                             para_.min_radius, false, para_.lat, para_.lon);
   double deta_theta = std::abs(next_pose.theta - start_pose.theta);
   if (deta_theta < theta_epsilon) {
     return false;
   }
   double rotate_theta = end_pose.theta - next_pose.theta;
   if (rotate_theta < theta_epsilon) {
-    double start_pose_center_x = start_pose.x + para_.min_radius * std::sin(start_pose.theta);
-    double start_pose_center_y = start_pose.y - para_.min_radius * std::cos(start_pose.theta);
+    double start_pose_center_x =
+        start_pose.x + para_.min_radius * std::sin(start_pose.theta);
+    double start_pose_center_y =
+        start_pose.y - para_.min_radius * std::cos(start_pose.theta);
     double step_theta = deta_theta - theta_epsilon;
     int i = 0;
     while (i < 5) {
@@ -1636,8 +1667,9 @@ bool ParallelRulePlanner::getRightBackwardPose(const Pose2D &start_pose, const d
       next_pose.x = start_pose_center_x - para_.min_radius * std::sin(alpha);
       next_pose.y = start_pose_center_y + para_.min_radius * std::cos(alpha);
       next_pose.theta = alpha;
-      end_pose = checker_.rotateMaxPose(next_pose, 1, 1, clothoid::ShapeType::OCTAGON, 
-                                        para_.min_radius, false, para_.lat, para_.lon);
+      end_pose =
+          checker_.rotateMaxPose(next_pose, 1, 1, clothoid::ShapeType::OCTAGON,
+                                 para_.min_radius, false, para_.lat, para_.lon);
       if (end_pose.theta - next_pose.theta > theta_epsilon) {
         return true;
       }
@@ -1652,10 +1684,14 @@ bool ParallelRulePlanner::getRightBackwardPose(const Pose2D &start_pose, const d
   return true;
 }
 
-bool ParallelRulePlanner::getRealRotatePose(const Pose2D &start_pose, const double min_step_size, 
-                                            const double theta_epsilon, Pose2D &next_pose) {
-  double rot_center_x = start_pose.x - para_.min_radius * std::sin(start_pose.theta);
-  double rot_center_y = start_pose.y + para_.min_radius * std::cos(start_pose.theta);
+bool ParallelRulePlanner::getRealRotatePose(const Pose2D &start_pose,
+                                            const double min_step_size,
+                                            const double theta_epsilon,
+                                            Pose2D &next_pose) {
+  double rot_center_x =
+      start_pose.x - para_.min_radius * std::sin(start_pose.theta);
+  double rot_center_y =
+      start_pose.y + para_.min_radius * std::cos(start_pose.theta);
   planning_math::Vec2d rot_center(rot_center_x, rot_center_y);
   std::vector<planning_math::Vec2d> next_pose_corners;
   csg_.getRawShape(next_pose, next_pose_corners, 0.0, 0.0);
@@ -1663,7 +1699,9 @@ bool ParallelRulePlanner::getRealRotatePose(const Pose2D &start_pose, const doub
     double l2 = rot_center.DistanceTo(next_pose_corners[5]);
     planning_math::Vec2d next_pose_vec2d(next_pose.x, next_pose.y);
     double l3 = next_pose_vec2d.DistanceTo(next_pose_corners[5]);
-    double cos_constant_theta = (para_.min_radius * para_.min_radius + l2 * l2 - l3 * l3) / (2 * para_.min_radius * l2);
+    double cos_constant_theta =
+        (para_.min_radius * para_.min_radius + l2 * l2 - l3 * l3) /
+        (2 * para_.min_radius * l2);
     double constant_theta = std::acos(cos_constant_theta);
     double cos_alpha = (rot_center_y - impl_.right_corner.y()) / l2;
     double alpha = std::acos(cos_alpha);
@@ -1695,12 +1733,15 @@ bool ParallelRulePlanner::getRealRotatePose(const Pose2D &start_pose, const doub
   return true;
 }
 
-bool ParallelRulePlanner::isEscapable(const Pose2D &start_pose, const int steer_dirct, 
-                                      const int travel_direct, const bool is_init,
-                                      double obs_distance) {
+bool ParallelRulePlanner::isEscapable(const Pose2D &start_pose,
+                                      const int steer_dirct,
+                                      const int travel_direct,
+                                      const bool is_init, double obs_distance) {
   // to get rotate centor, vehicle corners and min safe radius
-  double rot_center_x = start_pose.x - para_.min_radius * std::sin(start_pose.theta);
-  double rot_center_y = start_pose.y + para_.min_radius * std::cos(start_pose.theta);
+  double rot_center_x =
+      start_pose.x - para_.min_radius * std::sin(start_pose.theta);
+  double rot_center_y =
+      start_pose.y + para_.min_radius * std::cos(start_pose.theta);
   planning_math::Vec2d rot_center(rot_center_x, rot_center_y);
   std::vector<planning_math::Vec2d> corners;
   csg_.getRawShape(start_pose, corners, 0.0, 0.0);
@@ -1709,9 +1750,9 @@ bool ParallelRulePlanner::isEscapable(const Pose2D &start_pose, const int steer_
   double min_r_dis = std::max(l1, l2) + obs_distance;
 
   // to get remotest rotate pose
-  Pose2D next_pose = checker_.rotateMaxPose(start_pose, steer_dirct, travel_direct, 
-                                            clothoid::ShapeType::OCTAGON, para_.min_radius, 
-                                            is_init, para_.lat, para_.lon);
+  Pose2D next_pose = checker_.rotateMaxPose(
+      start_pose, steer_dirct, travel_direct, clothoid::ShapeType::OCTAGON,
+      para_.min_radius, is_init, para_.lat, para_.lon);
 
   double deta_theta = next_pose.theta - start_pose.theta;
   std::vector<planning_math::Vec2d> rotate_corners;
@@ -1719,7 +1760,8 @@ bool ParallelRulePlanner::isEscapable(const Pose2D &start_pose, const int steer_
 
   if (rotate_corners[5].y() > impl_.right_corner.y() || deta_theta > M_PI_2) {
     std::vector<planning_math::Vec2d> obs_poses_in_distance;
-    planning_math::Vec2d obs_poses_center(impl_.right_corner.x(), impl_.right_corner.y());
+    planning_math::Vec2d obs_poses_center(impl_.right_corner.x(),
+                                          impl_.right_corner.y());
 
     // to get obs points in safe ditance
     for (planning_math::Vec2d obs_pose : checker_.obs_pts_) {
@@ -1734,7 +1776,8 @@ bool ParallelRulePlanner::isEscapable(const Pose2D &start_pose, const int steer_
       planning_math::Vec2d obs_line_end = obs_line.end();
       double obs_line_start_dis = obs_poses_center.DistanceTo(obs_line_start);
       double obs_line_end_dis = obs_poses_center.DistanceTo(obs_line_end);
-      if (obs_line_start_dis < obs_distance || obs_line_end_dis < obs_distance) {
+      if (obs_line_start_dis < obs_distance ||
+          obs_line_end_dis < obs_distance) {
         obs_poses_in_distance.push_back(obs_poses_center);
       }
     }
@@ -1778,7 +1821,8 @@ bool ParallelRulePlanner::findEscapePose(Pose2D &escape_pose,
 
   // add by xhy: to calc min_r_dis
   std::vector<double> obs_poses_distance;
-  planning_math::Vec2d obs_poses_center(impl_.right_corner.x(), impl_.right_corner.y());
+  planning_math::Vec2d obs_poses_center(impl_.right_corner.x(),
+                                        impl_.right_corner.y());
   double obs_distance = para_.side_safe_distance;
   double min_r_dis = std::max(l1, l2) + para_.side_safe_distance;
   // to get obs points in safe ditance
@@ -1909,7 +1953,7 @@ bool ParallelRulePlanner::findEscapePose(Pose2D &escape_pose,
     // get x1
     if (height_y > new_rot_center.y()) {
       LOCAL_LOG(LOCAL_DEBUG, "right corner height %.3f is too high than %.3f",
-                  height_y, new_rot_center.y());
+                height_y, new_rot_center.y());
       if (!is_narrow_slot) {
         return false;
       } else {
@@ -2101,11 +2145,11 @@ bool ParallelRulePlanner::Plan(const std::vector<SbpObstaclePtr> &obs_ptrs,
   }
 
   int block_direc = is_in_slot
-                    ? impl_.block_direc
-                    : 0; // consider block direction when car is in slot
+                        ? impl_.block_direc
+                        : 0; // consider block direction when car is in slot
   OutSlotPathSegments outslot_path_segments;
-  
-  if(planOneTry(target_pose_,init_pose_,block_direc)){
+
+  if (planOneTry(target_pose_, init_pose_, block_direc)) {
     LOCAL_LOG(LOCAL_DEBUG, "successful to plan a path in one try");
     return true;
   }
@@ -2192,7 +2236,8 @@ bool ParallelRulePlanner::planInSlotKeepStraight(
     InSlotPathSegemnts &path_segments, const Pose2D &start_pose, bool is_init,
     int block_direc) {
   double x_diff = std::abs(start_pose.x - target_pose_.x);
-  if (std::abs(start_pose.theta) > 0.03 || x_diff > 3.5 || x_diff < para_.min_block_len) {
+  if (std::abs(start_pose.theta) > 0.03 || x_diff > 3.5 ||
+      x_diff < para_.min_block_len) {
     return false;
   }
 
@@ -2233,7 +2278,8 @@ bool ParallelRulePlanner::planInSlotCurve(InSlotPathSegemnts &path_segments,
                                           const Pose2D &pose, bool is_init_pose,
                                           int block_direc, bool is_final) {
   Pose2D start_pose = pose;
-  double min_step_size = std::max(para_.min_block_len, para_.lon - 0.2); // 最小弧长
+  double min_step_size =
+      std::max(para_.min_block_len, para_.lon - 0.2); // 最小弧长
   double theta_epsilon = min_step_size / para_.min_radius - 1e-6; // 最小转角
   using SinglePath = std::pair<std::vector<Pose2D>, double>;
   std::vector<SinglePath> candidates;
@@ -2242,8 +2288,9 @@ bool ParallelRulePlanner::planInSlotCurve(InSlotPathSegemnts &path_segments,
 
   Pose2D turning_pose, next_pose;
   next_pose = start_pose;
-  double forward_dis_all = checker_.moveForward(next_pose, para_.lat, para_.lon,
-                                                clothoid::ShapeType::RAW); // max move forward distance in slot
+  double forward_dis_all = checker_.moveForward(
+      next_pose, para_.lat, para_.lon,
+      clothoid::ShapeType::RAW); // max move forward distance in slot
   double backward_dis_all = checker_.moveBackward(
       next_pose, para_.lat, para_.lon, clothoid::ShapeType::RAW);
   bool is_success = false;
@@ -2255,7 +2302,8 @@ bool ParallelRulePlanner::planInSlotCurve(InSlotPathSegemnts &path_segments,
     forward_dis_list.push_back(0.0);
 
     if (max_forward_dis > para_.min_block_len) {
-      max_forward_dis = std::max(para_.min_block_len, std::min(1.5, max_forward_dis - 1e-6));
+      max_forward_dis =
+          std::max(para_.min_block_len, std::min(1.5, max_forward_dis - 1e-6));
       int step_num = std::floor(max_forward_dis / 0.2);
       double step_dis = max_forward_dis / (step_num + 1);
       if (step_num > 0) {
@@ -2279,7 +2327,8 @@ bool ParallelRulePlanner::planInSlotCurve(InSlotPathSegemnts &path_segments,
         no_straight = true;
         temp_next_pose = start_pose;
       } else {
-        if (block_direc == 1) { // block_direc, 0: 前后都能走, 1: 前面不能走, -1: 后面不能走, 只限制第一把
+        if (block_direc == 1) { // block_direc, 0: 前后都能走, 1: 前面不能走,
+                                // -1: 后面不能走, 只限制第一把
           continue;
         }
         temp_next_pose = Pose2D(start_pose.x + dis * cos(start_pose.theta),
@@ -2358,7 +2407,8 @@ bool ParallelRulePlanner::planInSlotCurve(InSlotPathSegemnts &path_segments,
       forward_dis_list.push_back(0.0);
 
       if (max_forward_dis > para_.min_block_len) {
-        max_forward_dis = std::max(para_.min_block_len, std::min(1.5, max_forward_dis - 1e-6));
+        max_forward_dis = std::max(para_.min_block_len,
+                                   std::min(1.5, max_forward_dis - 1e-6));
         int step_num = std::floor(max_forward_dis / 0.2);
         double step_dis = max_forward_dis / (step_num + 1);
         if (step_num > 0) {
@@ -2457,7 +2507,8 @@ bool ParallelRulePlanner::planInSlotCurve(InSlotPathSegemnts &path_segments,
     forward_dis_list.push_back(0.0);
 
     if (max_forward_dis > para_.min_block_len) {
-      max_forward_dis = std::max(para_.min_block_len, std::min(1.5, max_forward_dis - 1e-6));
+      max_forward_dis =
+          std::max(para_.min_block_len, std::min(1.5, max_forward_dis - 1e-6));
       int step_num = std::floor(max_forward_dis / 0.2);
       double step_dis = max_forward_dis / (step_num + 1);
       if (step_num > 0) {
@@ -2550,21 +2601,24 @@ bool ParallelRulePlanner::planInSlotCurve(InSlotPathSegemnts &path_segments,
     } // end for dis
   }   // end else
 
-  double max_offset_desired = getMaxOffsetCover(target_pose_, min_step_size, theta_epsilon);
+  double max_offset_desired =
+      getMaxOffsetCover(target_pose_, min_step_size, theta_epsilon);
   if (!is_success && candidates.empty()) {
     // add by xhy
     if (is_final) {
       std::vector<Pose2D> local_key_points;
       local_key_points.push_back(start_pose);
-      if (planInSlotHorizon(local_key_points, start_pose, min_step_size, theta_epsilon, max_offset_desired, is_init_pose, block_direc)) {
+      if (planInSlotHorizon(local_key_points, start_pose, min_step_size,
+                            theta_epsilon, max_offset_desired, is_init_pose,
+                            block_direc)) {
         if (local_key_points.size() == 1) {
           LOCAL_LOG(LOCAL_INFO, "candidates empty");
           return false;
         }
         double offset_y = local_key_points.back().y;
-        double score = (offset_y < 0 ? 2 : 1.0) * std::abs(offset_y); 
+        double score = (offset_y < 0 ? 2 : 1.0) * std::abs(offset_y);
         candidates.emplace_back(local_key_points, score);
-      } else{
+      } else {
         LOCAL_LOG(LOCAL_INFO, "candidates empty");
         return false;
       }
@@ -2584,7 +2638,9 @@ bool ParallelRulePlanner::planInSlotCurve(InSlotPathSegemnts &path_segments,
   // add by xhy
   if (is_final) {
     Pose2D start_offset_pose = local_key_points.back();
-    planInSlotHorizon(local_key_points, start_offset_pose, min_step_size, theta_epsilon, max_offset_desired, is_init_pose, block_direc);
+    planInSlotHorizon(local_key_points, start_offset_pose, min_step_size,
+                      theta_epsilon, max_offset_desired, is_init_pose,
+                      block_direc);
   }
 
   next_pose = local_key_points.back();
@@ -2603,9 +2659,11 @@ bool ParallelRulePlanner::planInSlotCurve(InSlotPathSegemnts &path_segments,
   return true;
 }
 
-double ParallelRulePlanner::getMaxOffsetCover(const Pose2D &pose, double min_step_size, 
+double ParallelRulePlanner::getMaxOffsetCover(const Pose2D &pose,
+                                              double min_step_size,
                                               double theta_epsilon) {
-  double max_len = std::abs(impl_.left_corner.x()) + std::abs(impl_.right_corner.x()) - para_.length;
+  double max_len = std::abs(impl_.left_corner.x()) +
+                   std::abs(impl_.right_corner.x()) - para_.length;
   if (max_len < (2 * min_step_size)) {
     return 0.0;
   }
@@ -2621,10 +2679,10 @@ double ParallelRulePlanner::getMaxOffsetCover(const Pose2D &pose, double min_ste
   return max_offset;
 }
 
-bool ParallelRulePlanner::planInSlotHorizon(std::vector<Pose2D> &local_planning_key_points, 
-                                          const Pose2D &pose, double min_step_size, 
-                                          double theta_epsilon, double max_offset_desired,
-                                          bool is_init, int block_direc) {
+bool ParallelRulePlanner::planInSlotHorizon(
+    std::vector<Pose2D> &local_planning_key_points, const Pose2D &pose,
+    double min_step_size, double theta_epsilon, double max_offset_desired,
+    bool is_init, int block_direc) {
   Pose2D start_pose = pose;
   Pose2D end_pose = start_pose;
   Pose2D next_pose = start_pose;
@@ -2632,8 +2690,11 @@ bool ParallelRulePlanner::planInSlotHorizon(std::vector<Pose2D> &local_planning_
   using PointsAndOffset = std::pair<std::vector<Pose2D>, double>;
   std::vector<PointsAndOffset> points_and_offset;
   double max_arc_length = std::abs(start_pose.theta) * para_.min_radius;
-  if (std::abs(start_pose.theta) <= theta_epsilon || max_arc_length <= min_step_size) {
-    if (planInSlotOffset(local_planning_key_points, start_pose, min_step_size, theta_epsilon, max_offset_desired, is_init, block_direc)) {
+  if (std::abs(start_pose.theta) <= theta_epsilon ||
+      max_arc_length <= min_step_size) {
+    if (planInSlotOffset(local_planning_key_points, start_pose, min_step_size,
+                         theta_epsilon, max_offset_desired, is_init,
+                         block_direc)) {
       return true;
     } else {
       return false;
@@ -2642,16 +2703,18 @@ bool ParallelRulePlanner::planInSlotHorizon(std::vector<Pose2D> &local_planning_
 
   if (start_pose.theta > 0.0) {
     if ((is_init && block_direc != 1) || !is_init) {
-      next_pose = checker_.rotateMaxPose(start_pose, -direc, direc, // 右，前
-                                        clothoid::ShapeType::OCTAGON,
-                                        para_.min_radius, is_init, para_.lat, para_.lon);
+      next_pose =
+          checker_.rotateMaxPose(start_pose, -direc, direc, // 右，前
+                                 clothoid::ShapeType::OCTAGON, para_.min_radius,
+                                 is_init, para_.lat, para_.lon);
       if (next_pose.theta < 0.0) {
-        end_pose = Pose2D(start_pose.x + para_.min_radius * sin(start_pose.theta),
-                          start_pose.y + para_.min_radius * (1 - cos(start_pose.theta)),
-                          0.0);
+        end_pose = Pose2D(
+            start_pose.x + para_.min_radius * sin(start_pose.theta),
+            start_pose.y + para_.min_radius * (1 - cos(start_pose.theta)), 0.0);
         std::vector<Pose2D> tmp_points;
         tmp_points.push_back(end_pose);
-        if (planInSlotOffset(tmp_points, end_pose, min_step_size, theta_epsilon, max_offset_desired, is_init, block_direc)) {
+        if (planInSlotOffset(tmp_points, end_pose, min_step_size, theta_epsilon,
+                             max_offset_desired, is_init, block_direc)) {
           Pose2D tmp_back_point = tmp_points.back();
           double end_offset = tmp_back_point.y;
           points_and_offset.emplace_back(tmp_points, end_offset);
@@ -2660,16 +2723,18 @@ bool ParallelRulePlanner::planInSlotHorizon(std::vector<Pose2D> &local_planning_
     }
 
     if ((is_init && block_direc != -1) || !is_init) {
-      next_pose = checker_.rotateMaxPose(start_pose, direc, -direc, // 左，后
-                                        clothoid::ShapeType::OCTAGON,
-                                        para_.min_radius, is_init, para_.lat, para_.lon);
+      next_pose =
+          checker_.rotateMaxPose(start_pose, direc, -direc, // 左，后
+                                 clothoid::ShapeType::OCTAGON, para_.min_radius,
+                                 is_init, para_.lat, para_.lon);
       if (next_pose.theta < 0.0) {
-        end_pose = Pose2D(start_pose.x - para_.min_radius * sin(start_pose.theta),
-                          start_pose.y - para_.min_radius * (1 - cos(start_pose.theta)),
-                          0.0);
+        end_pose = Pose2D(
+            start_pose.x - para_.min_radius * sin(start_pose.theta),
+            start_pose.y - para_.min_radius * (1 - cos(start_pose.theta)), 0.0);
         std::vector<Pose2D> tmp_points;
         tmp_points.push_back(end_pose);
-        if (planInSlotOffset(tmp_points, end_pose, min_step_size, theta_epsilon, max_offset_desired, is_init, block_direc)) {
+        if (planInSlotOffset(tmp_points, end_pose, min_step_size, theta_epsilon,
+                             max_offset_desired, is_init, block_direc)) {
           Pose2D tmp_back_point = tmp_points.back();
           double end_offset = tmp_back_point.y;
           points_and_offset.emplace_back(tmp_points, end_offset);
@@ -2678,16 +2743,20 @@ bool ParallelRulePlanner::planInSlotHorizon(std::vector<Pose2D> &local_planning_
     }
   } else {
     if ((is_init && block_direc != 1) || !is_init) {
-      next_pose = checker_.rotateMaxPose(start_pose, direc, direc, // 左，前
-                                        clothoid::ShapeType::OCTAGON,
-                                        para_.min_radius, is_init, para_.lat, para_.lon);
+      next_pose =
+          checker_.rotateMaxPose(start_pose, direc, direc, // 左，前
+                                 clothoid::ShapeType::OCTAGON, para_.min_radius,
+                                 is_init, para_.lat, para_.lon);
       if (next_pose.theta > 0.0) {
-        end_pose = Pose2D(start_pose.x + para_.min_radius * sin(std::abs(start_pose.theta)),
-                          start_pose.y - para_.min_radius * (1 - cos(std::abs(start_pose.theta))),
-                          0.0);
+        end_pose = Pose2D(
+            start_pose.x + para_.min_radius * sin(std::abs(start_pose.theta)),
+            start_pose.y -
+                para_.min_radius * (1 - cos(std::abs(start_pose.theta))),
+            0.0);
         std::vector<Pose2D> tmp_points;
         tmp_points.push_back(end_pose);
-        if (planInSlotOffset(tmp_points, end_pose, min_step_size, theta_epsilon, max_offset_desired, is_init, block_direc)) {
+        if (planInSlotOffset(tmp_points, end_pose, min_step_size, theta_epsilon,
+                             max_offset_desired, is_init, block_direc)) {
           Pose2D tmp_back_point = tmp_points.back();
           double end_offset = tmp_back_point.y;
           points_and_offset.emplace_back(tmp_points, end_offset);
@@ -2696,16 +2765,20 @@ bool ParallelRulePlanner::planInSlotHorizon(std::vector<Pose2D> &local_planning_
     }
 
     if ((is_init && block_direc != -1) || !is_init) {
-      next_pose = checker_.rotateMaxPose(start_pose, -direc, -direc, // 右，后
-                                        clothoid::ShapeType::OCTAGON,
-                                        para_.min_radius, is_init, para_.lat, para_.lon);
+      next_pose =
+          checker_.rotateMaxPose(start_pose, -direc, -direc, // 右，后
+                                 clothoid::ShapeType::OCTAGON, para_.min_radius,
+                                 is_init, para_.lat, para_.lon);
       if (next_pose.theta > 0.0) {
-        end_pose = Pose2D(start_pose.x - para_.min_radius * sin(std::abs(start_pose.theta)),
-                          start_pose.y + para_.min_radius * (1 - cos(std::abs(start_pose.theta))),
-                          0.0);
+        end_pose = Pose2D(
+            start_pose.x - para_.min_radius * sin(std::abs(start_pose.theta)),
+            start_pose.y +
+                para_.min_radius * (1 - cos(std::abs(start_pose.theta))),
+            0.0);
         std::vector<Pose2D> tmp_points;
         tmp_points.push_back(end_pose);
-        if (planInSlotOffset(tmp_points, end_pose, min_step_size, theta_epsilon, max_offset_desired, is_init, block_direc)) {
+        if (planInSlotOffset(tmp_points, end_pose, min_step_size, theta_epsilon,
+                             max_offset_desired, is_init, block_direc)) {
           Pose2D tmp_back_point = tmp_points.back();
           double end_offset = tmp_back_point.y;
           points_and_offset.emplace_back(tmp_points, end_offset);
@@ -2719,24 +2792,25 @@ bool ParallelRulePlanner::planInSlotHorizon(std::vector<Pose2D> &local_planning_
     return false;
   }
 
-  std::sort(points_and_offset.begin(), points_and_offset.end(), 
-            [](PointsAndOffset a, PointsAndOffset b) {return a.second < b.second;});
+  std::sort(
+      points_and_offset.begin(), points_and_offset.end(),
+      [](PointsAndOffset a, PointsAndOffset b) { return a.second < b.second; });
   std::vector<Pose2D> local_offset_key_points = points_and_offset.front().first;
   local_planning_key_points.insert(local_planning_key_points.end(),
-                                    local_offset_key_points.begin(),
-                                    local_offset_key_points.end());
+                                   local_offset_key_points.begin(),
+                                   local_offset_key_points.end());
   return true;
 }
 
-bool ParallelRulePlanner::planInSlotOffset(std::vector<Pose2D> &local_planning_key_points, 
-                                          const Pose2D &pose, double min_step_size, 
-                                          double theta_epsilon, double max_offset_desired,
-                                          bool is_init, int block_direc) {
+bool ParallelRulePlanner::planInSlotOffset(
+    std::vector<Pose2D> &local_planning_key_points, const Pose2D &pose,
+    double min_step_size, double theta_epsilon, double max_offset_desired,
+    bool is_init, int block_direc) {
   Pose2D end_pose = pose; // to select true end point
   double end_offset = end_pose.y;
   double target_offset = end_offset;
   double end_offset_limit = 0.05; // m
-  double offset_step = 0.005; // m
+  double offset_step = 0.005;     // m
   using PointsAndOffset = std::pair<std::vector<Pose2D>, double>;
   std::vector<PointsAndOffset> points_and_offset;
   using PointAndDirect = std::pair<Pose2D, int>;
@@ -2747,7 +2821,7 @@ bool ParallelRulePlanner::planInSlotOffset(std::vector<Pose2D> &local_planning_k
   int direc = 1;
   int path_block_direct = 0;
   double added_dis = 0.0;
-  double straight_dis_limit = 5.0; // m 
+  double straight_dis_limit = 5.0;     // m
   double lon_left_dis = lon_left_dis_; // m
 
   if (end_offset < end_offset_limit) {
@@ -2760,13 +2834,15 @@ bool ParallelRulePlanner::planInSlotOffset(std::vector<Pose2D> &local_planning_k
   // }
   double offset_to_staight_len = end_offset / straight_dis_limit;
   double straight_len_to_offset = straight_dis_limit / end_offset;
-  double sin_rotate_angle = 2 / (offset_to_staight_len + straight_len_to_offset);
+  double sin_rotate_angle =
+      2 / (offset_to_staight_len + straight_len_to_offset);
   double max_rotate_radiu = straight_dis_limit / (2 * sin_rotate_angle);
   std::vector<double> rotate_radiu_list;
   rotate_radiu_list.push_back(para_.min_radius);
   if (max_rotate_radiu > para_.min_radius) {
     double radiu_step = (max_rotate_radiu - para_.min_radius) / 5.0;
-    for (double radiu_tmp = radiu_step + para_.min_radius;radiu_tmp <= max_rotate_radiu;radiu_tmp += radiu_step) {
+    for (double radiu_tmp = radiu_step + para_.min_radius;
+         radiu_tmp <= max_rotate_radiu; radiu_tmp += radiu_step) {
       rotate_radiu_list.push_back(radiu_tmp);
     }
   }
@@ -2781,13 +2857,17 @@ bool ParallelRulePlanner::planInSlotOffset(std::vector<Pose2D> &local_planning_k
     offset_dis_list.push_back(offset_dis);
   }
 
-  getStartPoseAndDirect(local_planning_key_points, min_step_size, start_pose, path_block_direct, added_dis);
+  getStartPoseAndDirect(local_planning_key_points, min_step_size, start_pose,
+                        path_block_direct, added_dis);
   bool is_forward_point = false;
-  double forward_dis = checker_.moveForward(start_pose, para_.lat, para_.lon,
-                                            clothoid::ShapeType::RAW); // max move forward distance in slot
-  double max_forward_dis = std::max(0.0, std::min(forward_dis - lon_left_dis, straight_dis_limit));
+  double forward_dis = checker_.moveForward(
+      start_pose, para_.lat, para_.lon,
+      clothoid::ShapeType::RAW); // max move forward distance in slot
+  double max_forward_dis =
+      std::max(0.0, std::min(forward_dis - lon_left_dis, straight_dis_limit));
   if (max_forward_dis + added_dis > min_step_size && path_block_direct != 1) {
-    Pose2D start_pose_forward = Pose2D(start_pose.x + max_forward_dis, start_pose.y, start_pose.theta);
+    Pose2D start_pose_forward =
+        Pose2D(start_pose.x + max_forward_dis, start_pose.y, start_pose.theta);
     point_and_direct.emplace_back(start_pose_forward, -direc);
     is_forward_point = true;
   } else {
@@ -2797,11 +2877,14 @@ bool ParallelRulePlanner::planInSlotOffset(std::vector<Pose2D> &local_planning_k
   }
 
   bool is_backward_point = false;
-  double backward_dis = checker_.moveBackward(start_pose, para_.lat, para_.lon, 
-                                              clothoid::ShapeType::RAW); // max move backward distance in slot
-  double max_backward_dis = std::max(0.0, std::min(backward_dis - lon_left_dis, straight_dis_limit));
+  double backward_dis = checker_.moveBackward(
+      start_pose, para_.lat, para_.lon,
+      clothoid::ShapeType::RAW); // max move backward distance in slot
+  double max_backward_dis =
+      std::max(0.0, std::min(backward_dis - lon_left_dis, straight_dis_limit));
   if (max_backward_dis + added_dis > min_step_size && path_block_direct != -1) {
-    Pose2D start_pose_backward = Pose2D(start_pose.x - max_backward_dis, start_pose.y, start_pose.theta);
+    Pose2D start_pose_backward =
+        Pose2D(start_pose.x - max_backward_dis, start_pose.y, start_pose.theta);
     point_and_direct.emplace_back(start_pose_backward, direc);
     is_backward_point = true;
   } else {
@@ -2809,15 +2892,15 @@ bool ParallelRulePlanner::planInSlotOffset(std::vector<Pose2D> &local_planning_k
       point_and_direct.emplace_back(start_pose, direc);
     }
   }
-  
+
   for (PointAndDirect point_direct_memeber : point_and_direct) {
     Pose2D straight_pose = point_direct_memeber.first;
     int member_direct = point_direct_memeber.second;
-    double forward_dis_max = checker_.moveForward(straight_pose, para_.lat, para_.lon,
-                                                  clothoid::ShapeType::RAW); 
+    double forward_dis_max = checker_.moveForward(
+        straight_pose, para_.lat, para_.lon, clothoid::ShapeType::RAW);
     double forward_dis_all = std::min(forward_dis_max, straight_dis_limit);
-    double backward_dis_max = checker_.moveBackward(straight_pose, para_.lat, para_.lon, 
-                                                    clothoid::ShapeType::RAW); 
+    double backward_dis_max = checker_.moveBackward(
+        straight_pose, para_.lat, para_.lon, clothoid::ShapeType::RAW);
     double backward_dis_all = std::min(backward_dis_max, straight_dis_limit);
 
     bool is_forward_success = false;
@@ -2827,7 +2910,8 @@ bool ParallelRulePlanner::planInSlotOffset(std::vector<Pose2D> &local_planning_k
         theta_epsilon = min_step_size / rotate_radiu - 1e-6; // 最小转角
         double cos_alpha = 1 - (offset_dis / (2.0 * rotate_radiu));
         double rotate_alpha = std::acos(cos_alpha);
-        double to_cover_offset_length = 2.0 * rotate_radiu * std::sin(rotate_alpha);
+        double to_cover_offset_length =
+            2.0 * rotate_radiu * std::sin(rotate_alpha);
         if (rotate_alpha < theta_epsilon) {
           continue;
         }
@@ -2837,19 +2921,20 @@ bool ParallelRulePlanner::planInSlotOffset(std::vector<Pose2D> &local_planning_k
             if (!is_forward_success) {
               if (forward_dis_all >= to_cover_offset_length) {
                 next_pose = checker_.rotateMaxPose(
-                        straight_pose, -direc, direc, clothoid::ShapeType::OCTAGON,
-                        rotate_radiu, is_init, para_.lat, para_.lon); // direc, 1: 左, -1: 右; direc, 1: 前, -1: 后; 
+                    straight_pose, -direc, direc, clothoid::ShapeType::OCTAGON,
+                    rotate_radiu, is_init, para_.lat,
+                    para_.lon); // direc, 1: 左, -1: 右; direc, 1: 前, -1: 后;
                 if (std::abs(next_pose.theta) > rotate_alpha) {
-                  turning_pose = Pose2D(straight_pose.x + to_cover_offset_length / 2.0,
-                                        straight_pose.y - offset_dis / 2.0,
-                                        -rotate_alpha);
+                  turning_pose =
+                      Pose2D(straight_pose.x + to_cover_offset_length / 2.0,
+                             straight_pose.y - offset_dis / 2.0, -rotate_alpha);
                   next_pose = checker_.rotateMaxPose(
-                        turning_pose, direc, direc, clothoid::ShapeType::OCTAGON,
-                        rotate_radiu, is_init, para_.lat, para_.lon);
+                      turning_pose, direc, direc, clothoid::ShapeType::OCTAGON,
+                      rotate_radiu, is_init, para_.lat, para_.lon);
                   if (next_pose.theta > 0) {
-                    next_pose = Pose2D(turning_pose.x + to_cover_offset_length / 2.0,
-                                      turning_pose.y - offset_dis / 2.0,
-                                      0.0);
+                    next_pose =
+                        Pose2D(turning_pose.x + to_cover_offset_length / 2.0,
+                               turning_pose.y - offset_dis / 2.0, 0.0);
                     std::vector<Pose2D> tmp_points;
                     if (is_backward_point) {
                       tmp_points.push_back(straight_pose);
@@ -2870,19 +2955,20 @@ bool ParallelRulePlanner::planInSlotOffset(std::vector<Pose2D> &local_planning_k
             if (!is_backward_success) {
               if (backward_dis_all >= to_cover_offset_length) {
                 next_pose = checker_.rotateMaxPose(
-                        straight_pose, -direc, -direc, clothoid::ShapeType::OCTAGON,
-                        rotate_radiu, is_init, para_.lat, para_.lon); // direc, 1: 左, -1: 右; direc, 1: 前, -1: 后; 
+                    straight_pose, -direc, -direc, clothoid::ShapeType::OCTAGON,
+                    rotate_radiu, is_init, para_.lat,
+                    para_.lon); // direc, 1: 左, -1: 右; direc, 1: 前, -1: 后;
                 if (next_pose.theta > rotate_alpha) {
-                  turning_pose = Pose2D(straight_pose.x - to_cover_offset_length / 2.0,
-                                        straight_pose.y - offset_dis / 2.0,
-                                        rotate_alpha);
+                  turning_pose =
+                      Pose2D(straight_pose.x - to_cover_offset_length / 2.0,
+                             straight_pose.y - offset_dis / 2.0, rotate_alpha);
                   next_pose = checker_.rotateMaxPose(
-                        turning_pose, direc, -direc, clothoid::ShapeType::OCTAGON,
-                        rotate_radiu, is_init, para_.lat, para_.lon);
+                      turning_pose, direc, -direc, clothoid::ShapeType::OCTAGON,
+                      rotate_radiu, is_init, para_.lat, para_.lon);
                   if (next_pose.theta < 0) {
-                    next_pose = Pose2D(turning_pose.x - to_cover_offset_length / 2.0,
-                                        turning_pose.y - offset_dis / 2.0,
-                                        0.0);
+                    next_pose =
+                        Pose2D(turning_pose.x - to_cover_offset_length / 2.0,
+                               turning_pose.y - offset_dis / 2.0, 0.0);
                     std::vector<Pose2D> tmp_points;
                     if (is_forward_point) {
                       tmp_points.push_back(straight_pose);
@@ -2906,18 +2992,20 @@ bool ParallelRulePlanner::planInSlotOffset(std::vector<Pose2D> &local_planning_k
     return false;
   }
 
-  std::sort(points_and_offset.begin(), points_and_offset.end(), 
-            [](PointsAndOffset a, PointsAndOffset b) {return a.second > b.second;});
+  std::sort(
+      points_and_offset.begin(), points_and_offset.end(),
+      [](PointsAndOffset a, PointsAndOffset b) { return a.second > b.second; });
   std::vector<Pose2D> local_offset_key_points = points_and_offset.front().first;
   local_planning_key_points.insert(local_planning_key_points.end(),
-                                    local_offset_key_points.begin(),
-                                    local_offset_key_points.end());
+                                   local_offset_key_points.begin(),
+                                   local_offset_key_points.end());
   return true;
 }
 
-void ParallelRulePlanner::getStartPoseAndDirect(const std::vector<Pose2D> &local_planning_key_points, 
-                                                const double min_step_size, const Pose2D &pose, 
-                                                int &path_block_direc, double &added_dis) {
+void ParallelRulePlanner::getStartPoseAndDirect(
+    const std::vector<Pose2D> &local_planning_key_points,
+    const double min_step_size, const Pose2D &pose, int &path_block_direc,
+    double &added_dis) {
   int len_key_points = local_planning_key_points.size();
   int block_direct = 0; // 0:都可以, 1:不能向前, -1:不能向后
   double pose_dis = 0.0;
@@ -2930,15 +3018,15 @@ void ParallelRulePlanner::getStartPoseAndDirect(const std::vector<Pose2D> &local
       block_direct = 0;
       pose_dis = 0.0;
     } else {
-      block_direct = second_pose.x - first_pose.x > 0? -1 : 1;
+      block_direct = second_pose.x - first_pose.x > 0 ? -1 : 1;
       pose_dis = tmp_dis;
     }
-  } 
+  }
 
   if (len_key_points > 2) {
     int turn_pose_index = 0;
     bool has_turn_pose = false;
-    for (int i = len_key_points - 1;i > 1;i--) {
+    for (int i = len_key_points - 1; i > 1; i--) {
       Pose2D first_pose = local_planning_key_points[i];
       Pose2D second_pose = local_planning_key_points[i - 1];
       Pose2D third_pose = local_planning_key_points[i - 2];
@@ -2953,14 +3041,14 @@ void ParallelRulePlanner::getStartPoseAndDirect(const std::vector<Pose2D> &local
 
     if (has_turn_pose) {
       Pose2D first_pose = local_planning_key_points[turn_pose_index];
-      Pose2D second_pose = local_planning_key_points.back();  
+      Pose2D second_pose = local_planning_key_points.back();
       double tmp_dis = calcPose2DDistance(first_pose, second_pose);
-      
+
       if (tmp_dis > min_step_size) {
         block_direct = 0;
         pose_dis = 0.0;
       } else {
-        block_direct = second_pose.x - first_pose.x > 0? -1 : 1;
+        block_direct = second_pose.x - first_pose.x > 0 ? -1 : 1;
         pose_dis = tmp_dis;
       }
     } else {
@@ -2971,7 +3059,7 @@ void ParallelRulePlanner::getStartPoseAndDirect(const std::vector<Pose2D> &local
         block_direct = 0;
         pose_dis = 0.0;
       } else {
-        block_direct = second_pose.x - first_pose.x > 0? -1 : 1;
+        block_direct = second_pose.x - first_pose.x > 0 ? -1 : 1;
         pose_dis = tmp_dis;
       }
     }
@@ -2981,7 +3069,8 @@ void ParallelRulePlanner::getStartPoseAndDirect(const std::vector<Pose2D> &local
   added_dis = pose_dis;
 }
 
-double ParallelRulePlanner::calcPose2DDistance(const Pose2D &pose1, const Pose2D &pose2) {
+double ParallelRulePlanner::calcPose2DDistance(const Pose2D &pose1,
+                                               const Pose2D &pose2) {
   double deta_x = pose1.x - pose2.x;
   double deta_y = pose1.y - pose2.y;
   double dis = std::sqrt(deta_x * deta_x + deta_y * deta_y);
@@ -3154,7 +3243,7 @@ void ParallelRulePlanner::refactorRightCorner(
   double max_y = 1.5 * para_.width;
   double min_x = para_.front_to_rear;
   double max_x = std::max(nx + 1.0, para_.front_to_rear + 3.0);
-  if(is_front_empty_ && max_x2 > max_x){
+  if (is_front_empty_ && max_x2 > max_x) {
     max_x = max_x2;
     nx = max_x;
     ny = min_y;

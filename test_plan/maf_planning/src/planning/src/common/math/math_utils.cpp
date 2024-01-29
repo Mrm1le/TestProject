@@ -156,7 +156,7 @@ Pose2D calc_projection_point(const Pose2D &point1, const Pose2D &point2,
 }
 
 Pose2D calc_projection_point2(const Pose2D &point1, const Pose2D &point2,
-                             const Pose2D &point) {
+                              const Pose2D &point) {
   Pose2D projection_point;
   double k =
       ((point.x - point1.x) * (point2.x - point1.x) +
@@ -220,10 +220,9 @@ void get_rotate_matrix(float rotate_angle, float *rotate_matrix_ptr) {
   rotate_matrix_ptr[3] = cos_theta;
 }
 
-double getRemainDistance(
-       std::vector<Pose2D>& traj_pose_array_,
-       std::vector<float>& traj_vel_array_,
-       const Pose2D ego_pose) {
+double getRemainDistance(std::vector<Pose2D> &traj_pose_array_,
+                         std::vector<float> &traj_vel_array_,
+                         const Pose2D ego_pose) {
   std::vector<Pose2D>::iterator iter = traj_pose_array_.begin();
   std::vector<Pose2D>::iterator iter_min = traj_pose_array_.begin();
 
@@ -239,8 +238,7 @@ double getRemainDistance(
   int index_min = 0;
   for (iter = traj_pose_array_.begin(); iter != traj_pose_array_.end();
        iter++) {
-    dist = std::hypot(iter->x - ego_pose.x,
-                      iter->y - ego_pose.y);
+    dist = std::hypot(iter->x - ego_pose.x, iter->y - ego_pose.y);
     if (dist < dist_min) {
       dist_min = dist;
       iter_min = iter;
@@ -321,8 +319,8 @@ Eigen::Quaterniond EulerZYX2Quat(Eigen::Vector3d &euler_zyx) {
   double s2 = std::sin(euler_zyx.y() / 2.0);
   double s3 = std::sin(euler_zyx.z() / 2.0);
   Eigen::Quaterniond q(c1 * c2 * c3 + s1 * s2 * s3, c1 * c2 * s3 - c3 * s1 * s2,
-                        c1 * c3 * s2 + c2 * s1 * s3,
-                        c2 * c3 * s1 - c1 * s2 * s3);
+                       c1 * c3 * s2 + c2 * s1 * s3,
+                       c2 * c3 * s1 - c1 * s2 * s3);
   return q;
 }
 Eigen::AngleAxisd EulerZYX2AxisAngle(Eigen::Vector3d &euler_zyx) {
@@ -339,10 +337,9 @@ Eigen::Matrix2d Angle2Rotm2d(const double &angle) {
   return R.block(0, 0, 2, 2);
 }
 
-double getRemainDistanceControlWay(
-       std::vector<Pose2D>& traj_pose_array_,
-       std::vector<float>& traj_vel_array_,
-       const Pose2D ego_pose){
+double getRemainDistanceControlWay(std::vector<Pose2D> &traj_pose_array_,
+                                   std::vector<float> &traj_vel_array_,
+                                   const Pose2D ego_pose) {
   int PARKING_PATH_EXTEND_POINTS = 10;
   double match_point_dist = 9999.99;
   int match_point_index = 0;
@@ -352,8 +349,7 @@ double getRemainDistanceControlWay(
   }
   for (int i = 0; i < static_cast<int>(traj_pose_array_.size()) - 1; ++i) {
     ref_pos_i << traj_pose_array_[i].x, traj_pose_array_[i].y;
-    Eigen::Vector2d dp (ego_pose.x - ref_pos_i.x(),
-                        ego_pose.y - ref_pos_i.y());
+    Eigen::Vector2d dp(ego_pose.x - ref_pos_i.x(), ego_pose.y - ref_pos_i.y());
     double dist = dp.norm();
     if (dist < match_point_dist) {
       match_point_dist = dist;
@@ -375,8 +371,8 @@ double getRemainDistanceControlWay(
        i < static_cast<int>(traj_pose_array_.size()); ++i) {
     Eigen::Vector2d ref_pos_i = Eigen::Vector2d::Zero();
     ref_pos_i << traj_pose_array_[i].x, traj_pose_array_[i].y;
-    Eigen::Vector2d dis_pos_i (ref_pos_i.x() - ego_pose.x,
-                              ref_pos_i.y() - ego_pose.y); 
+    Eigen::Vector2d dis_pos_i(ref_pos_i.x() - ego_pose.x,
+                              ref_pos_i.y() - ego_pose.y);
     Eigen::Matrix2d rotm2d = Angle2Rotm2d(ego_pose.theta);
     Eigen::Vector2d dis_pos_b = rotm2d.transpose() * dis_pos_i;
     if (count == 0) {
@@ -400,7 +396,7 @@ double getRemainDistanceControlWay(
     // }
     count++;
   }
-  
+
   double s_right_side = 0.0;
   double s_left_side = 0.0;
   double s_mid = 0.0;
@@ -439,12 +435,12 @@ double getRemainDistanceControlWay(
   project_pos << project_pos_x, project_pos_y;
   // projection_point.x = project_pos_x;
   // projection_point.y = project_pos_y;
-  int s_final_index = (int)traj_pose_array_.size() - PARKING_PATH_EXTEND_POINTS -
-                      match_point_index - dp_count;
+  int s_final_index = (int)traj_pose_array_.size() -
+                      PARKING_PATH_EXTEND_POINTS - match_point_index - dp_count;
   double s_without_extend = 0;
   if (s_fit_vec.size() > 0) {
-    s_final_index = planning_math::Clamp(s_final_index, 0,
-                                        static_cast<int>(s_fit_vec.size()) - 1);
+    s_final_index = planning_math::Clamp(
+        s_final_index, 0, static_cast<int>(s_fit_vec.size()) - 1);
     s_without_extend = s_fit_vec[s_final_index];
   }
   double remain_s_plan = s_without_extend - s_proj;

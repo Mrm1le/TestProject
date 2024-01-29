@@ -1,12 +1,12 @@
 #include "planner/motion_planner/parking_longitudinal_motion_planner.h"
-#include "common/math/math_utils.h"
-#include "planner/motion_planner/optimizers/openspace_optimizer/config.h"
-#include "planning/common/common.h"
-#include "planner/motion_planner/optimizers/parking_speed_optimizer/st_pieceewise_jerk_speed_optimizer.h"
 #include "common/math/linear_interpolation.h"
-#include "planner/trajectory_point.h"
-#include "planner/message_type.h"
+#include "common/math/math_utils.h"
 #include "common/speed/speed_data.h"
+#include "planner/message_type.h"
+#include "planner/motion_planner/optimizers/openspace_optimizer/config.h"
+#include "planner/motion_planner/optimizers/parking_speed_optimizer/st_pieceewise_jerk_speed_optimizer.h"
+#include "planner/trajectory_point.h"
+#include "planning/common/common.h"
 #include <chrono>
 #include <ctime>
 #include <vector>
@@ -74,8 +74,9 @@ bool ParkingLongitudinalMotionPlanner::run_calculate() {
                 prediction_obstacles, ego_state.ego_vel,
                 ego_state.ego_steer_angle, status_type, is_entrance, scene_avp,
                 planning_mpc_diff);
-  const auto& sv_config2 = msquare::CarParams::GetInstance()->car_config.sv_config;
-  if(!sv_config2.use_sv_speed_generator){
+  const auto &sv_config2 =
+      msquare::CarParams::GetInstance()->car_config.sv_config;
+  if (!sv_config2.use_sv_speed_generator) {
     fs_blocked_ = checkBlock(lead_cars, free_space, fs_line);
   }
   *PlanningContext::Instance()->mutable_planning_debug_info() +=
@@ -117,10 +118,10 @@ bool ParkingLongitudinalMotionPlanner::run_calculate() {
   }
   gear_ = PlanningContext::Instance()->planning_status().planning_result.gear;
 
-  auto& lon_config = msquare::CarParams::GetInstance()->car_config.lon_config;
-  if(lon_config.use_margin_speed || lon_config.use_osqp_speed){
+  auto &lon_config = msquare::CarParams::GetInstance()->car_config.lon_config;
+  if (lon_config.use_margin_speed || lon_config.use_osqp_speed) {
     set_planning_resultV2(ego_state.ego_vel);
-  }else{
+  } else {
     set_planning_result(ego_state.ego_vel);
   }
   return true;
@@ -135,28 +136,25 @@ bool ParkingLongitudinalMotionPlanner::compute(
     const std::vector<int> prediction_obstacles, const double v_ego,
     const double angle_steers, const StatusType status_type,
     const bool is_entrance, const int scene_avp,
-    const std::vector<double> planning_mpc_diff){
-    
-    auto& lon_config = msquare::CarParams::GetInstance()->car_config.lon_config;
+    const std::vector<double> planning_mpc_diff) {
 
-    if(lon_config.use_margin_speed || lon_config.use_osqp_speed){
+  auto &lon_config = msquare::CarParams::GetInstance()->car_config.lon_config;
+
+  if (lon_config.use_margin_speed || lon_config.use_osqp_speed) {
     // use sop version speed planner
-      computeVelV2(lead_cars, freespace, fs_line, multidirectional_cars,
-                multidirectional_human, intention_status_obstacles,
-                prediction_obstacles, v_ego,
-                angle_steers, status_type, is_entrance, scene_avp,
-                planning_mpc_diff);
-      fs_blocked_ = checkBlockV2(lead_cars, freespace, fs_line);
-      return true;
-    }
+    computeVelV2(lead_cars, freespace, fs_line, multidirectional_cars,
+                 multidirectional_human, intention_status_obstacles,
+                 prediction_obstacles, v_ego, angle_steers, status_type,
+                 is_entrance, scene_avp, planning_mpc_diff);
+    fs_blocked_ = checkBlockV2(lead_cars, freespace, fs_line);
+    return true;
+  }
 
-    //  use old version
-    return computeVel(lead_cars, freespace, fs_line, multidirectional_cars,
-                multidirectional_human, intention_status_obstacles,
-                prediction_obstacles, v_ego,
-                angle_steers, status_type, is_entrance, scene_avp,
-                planning_mpc_diff);
-
+  //  use old version
+  return computeVel(lead_cars, freespace, fs_line, multidirectional_cars,
+                    multidirectional_human, intention_status_obstacles,
+                    prediction_obstacles, v_ego, angle_steers, status_type,
+                    is_entrance, scene_avp, planning_mpc_diff);
 }
 
 bool ParkingLongitudinalMotionPlanner::computeVel(
@@ -269,7 +267,7 @@ bool ParkingLongitudinalMotionPlanner::computeVel(
 
   (void)compute_speed_for_freespace(fs_line, v_ego);
   vec_target_speed_debug_.emplace_back(v_target_);
-  
+
   // std::cout<<"compute_speed_for_obs_line = "<<v_target_<<std::endl;
   // std::cout<<"scene_avp = "<<scene_avp<<std::endl;
   // }
@@ -277,13 +275,13 @@ bool ParkingLongitudinalMotionPlanner::computeVel(
 
   (void)compute_speed_for_near_obstacle(v_ego, scene_avp);
   vec_target_speed_debug_.emplace_back(v_target_);
-  
+
   // std::cout<<"compute_speed_for_near_obstacle: "<< v_target_ <<std::endl;
   v_target_ = std::max(v_target_, 0.0);
 
   (void)limit_speed_for_avoid_obstacle(v_ego);
   vec_target_speed_debug_.emplace_back(v_target_);
-  
+
   // std::cout<<"compute_speed_for_avoid_obstacle: "<< v_target_ <<std::endl;
 
   if (status_type == StatusType::AVP && !is_openspace) {
@@ -298,7 +296,6 @@ bool ParkingLongitudinalMotionPlanner::computeVel(
     (void)compute_speed_for_parking(dist, v_ego, is_openspace);
   }
   vec_target_speed_debug_.emplace_back(v_target_);
-  
 
   MSD_LOG(INFO, "%s: traj_length = %f", __FUNCTION__,
           PlanningContext::Instance()
@@ -318,7 +315,7 @@ bool ParkingLongitudinalMotionPlanner::computeVel(
                        static_distance_;
   (void)compute_speed_for_parking(traj_length, v_ego);
   vec_target_speed_debug_.emplace_back(v_target_);
-  
+
   if (PlanningContext::Instance()
           ->longitudinal_behavior_planner_output()
           .deviated &&
@@ -342,12 +339,12 @@ bool ParkingLongitudinalMotionPlanner::computeVel(
     // std::cout<<"compute_speed_for_multihuman: "<<v_target_<<std::endl;
   }
   vec_target_speed_debug_.emplace_back(v_target_);
-  
+
   // compute_speed_for_intention_obstacle(intention_status_obstacles, v_ego);
   // std::cout<<"compute_speed_for_intention_obs: "<<v_target_<<std::endl;
   (void)compute_speed_for_prediction_obstacle(prediction_obstacles, v_ego);
   vec_target_speed_debug_.emplace_back(v_target_);
-  
+
   // std::cout<<"compute_speed_for_prediction_obs: "<<v_target_<<std::endl;
   if (world_model_->is_parking_svp()) {
     (void)compute_speed_for_gate(v_ego);
@@ -362,7 +359,7 @@ bool ParkingLongitudinalMotionPlanner::computeVel(
     (void)compute_speed_for_apa();
   }
   vec_target_speed_debug_.emplace_back(v_target_);
-  
+
   // std::cout << "compute_speed_for_apa: "<< v_target_ <<std::endl;
 
   // std::cout<<"v_target_final_: "<<v_target_<<std::endl;
@@ -375,18 +372,21 @@ bool ParkingLongitudinalMotionPlanner::computeVel(
 
   compute_speed_for_uxe(force_stop);
   vec_target_speed_debug_.emplace_back(v_target_);
-  
+
   MSD_LOG(ERROR, "compute_speed_for_uxe: v_target_ = %.3f", v_target_);
 
   return true;
 }
 
-bool ParkingLongitudinalMotionPlanner::checkBlock(const LeaderPair &lead_cars, const FreespacePoint &fs_point, const FreespaceLine &fs_line){
-  bool use_new_fs_block = msquare::CarParams::GetInstance()->car_config.common_config.use_new_fs_block;
-  if(!use_new_fs_block){
+bool ParkingLongitudinalMotionPlanner::checkBlock(
+    const LeaderPair &lead_cars, const FreespacePoint &fs_point,
+    const FreespaceLine &fs_line) {
+  bool use_new_fs_block = msquare::CarParams::GetInstance()
+                              ->car_config.common_config.use_new_fs_block;
+  if (!use_new_fs_block) {
     return fs_blocked_;
   }
-  if(fs_blocked_){
+  if (fs_blocked_) {
     return fs_blocked_;
   }
 
@@ -395,36 +395,48 @@ bool ParkingLongitudinalMotionPlanner::checkBlock(const LeaderPair &lead_cars, c
   auto &lead_one = lead_cars.first;
 
   if (fs_point.id >= 0) {
-    remaining_distance = std::min(fs_point.d_rel - lon_inflation_min, remaining_distance);
+    remaining_distance =
+        std::min(fs_point.d_rel - lon_inflation_min, remaining_distance);
   }
   if (lead_one.id >= 0 && lead_one.type == ObjectType::PEDESTRIAN) {
-    remaining_distance = std::min(lead_one.d_rel - lon_inflation_min, remaining_distance);
+    remaining_distance =
+        std::min(lead_one.d_rel - lon_inflation_min, remaining_distance);
   }
-  if (lead_one.id >= 0 && lead_one.type == ObjectType::COUPE && !lead_one.is_static) {
-    remaining_distance = std::min(lead_one.d_rel - lon_inflation_min, remaining_distance);
+  if (lead_one.id >= 0 && lead_one.type == ObjectType::COUPE &&
+      !lead_one.is_static) {
+    remaining_distance =
+        std::min(lead_one.d_rel - lon_inflation_min, remaining_distance);
   }
   if (fs_line.id >= 0) {
-    remaining_distance = std::min(fs_line.d_rel - lon_inflation_min, remaining_distance);
+    remaining_distance =
+        std::min(fs_line.d_rel - lon_inflation_min, remaining_distance);
   }
   MSD_LOG(ERROR, "remaining_distance in fs_block: %.3f", remaining_distance);
 
-  double min_finish_len = CarParams::GetInstance()->car_config.common_config.min_finish_len;
-  bool is_gear_changing = PlanningContext::Instance()->planning_status().planning_result.gear_changing;
-  bool is_block = (remaining_distance < min_finish_len) && (!is_gear_changing) && world_model_->get_ego_state().is_static;
-  MSD_LOG(ERROR, "is_gear_changing: %d  is_static:%d",   is_gear_changing, world_model_->get_ego_state().is_static);
+  double min_finish_len =
+      CarParams::GetInstance()->car_config.common_config.min_finish_len;
+  bool is_gear_changing = PlanningContext::Instance()
+                              ->planning_status()
+                              .planning_result.gear_changing;
+  bool is_block = (remaining_distance < min_finish_len) &&
+                  (!is_gear_changing) &&
+                  world_model_->get_ego_state().is_static;
+  MSD_LOG(ERROR, "is_gear_changing: %d  is_static:%d", is_gear_changing,
+          world_model_->get_ego_state().is_static);
 
-  return remaining_distance < min_finish_len ;
+  return remaining_distance < min_finish_len;
 }
 
-bool ParkingLongitudinalMotionPlanner::compute_speed_for_uxe(bool force_stop){
-  const auto& sv_config = msquare::CarParams::GetInstance()->car_config.sv_config;
+bool ParkingLongitudinalMotionPlanner::compute_speed_for_uxe(bool force_stop) {
+  const auto &sv_config =
+      msquare::CarParams::GetInstance()->car_config.sv_config;
   const ParkingBehaviorPlannerOutput &parking_behavior_planner_output =
       PlanningContext::Instance()->parking_behavior_planner_output();
-  if(!sv_config.use_sv_speed_generator){
+  if (!sv_config.use_sv_speed_generator) {
     return true;
   }
 
-  if(std::abs(v_target_) < 0.1){
+  if (std::abs(v_target_) < 0.1) {
     v_target_ = 0.0;
     return true;
   }
@@ -433,32 +445,40 @@ bool ParkingLongitudinalMotionPlanner::compute_speed_for_uxe(bool force_stop){
     v_target_ = 0.0;
     return true;
   }
-  
 
-  const auto& planning_result =
-    PlanningContext::Instance()->planning_status().planning_result;
-  const auto &pbpo = PlanningContext::Instance()->parking_behavior_planner_output();
+  const auto &planning_result =
+      PlanningContext::Instance()->planning_status().planning_result;
+  const auto &pbpo =
+      PlanningContext::Instance()->parking_behavior_planner_output();
   bool is_reverse = (planning_result.gear == GearState::REVERSE);
-  const auto& status_type = PlanningContext::Instance()->planning_status().scenario.status_type;
+  const auto &status_type =
+      PlanningContext::Instance()->planning_status().scenario.status_type;
 
   // sv speed for UXE
-  sv_speed_param_.has_ever_been_inside_slot =  pbpo.has_ever_been_inside_slot;
+  sv_speed_param_.has_ever_been_inside_slot = pbpo.has_ever_been_inside_slot;
   sv_speed_param_.is_reverse = is_reverse;
-  sv_speed_param_.force_stop = force_stop; 
+  sv_speed_param_.force_stop = force_stop;
   sv_speed_param_.no_slot = (status_type == StatusType::RPA_STRAIGHT);
   sv_speed_param_.out_slot_coeff = sv_config.out_slot_coeff;
   sv_speed_param_.large_curv_coeff = sv_config.large_curv_coeff;
   sv_speed_param_.in_slot_coeff = sv_config.in_slot_coeff;
-  sv_speed_param_.max_v = msquare::TrajectoryOptimizerConfig::GetInstance()->param_max_speed_forward;
-  sv_speed_param_.width_wo_rearview_mirror = msquare::VehicleParam::Instance()->width_wo_rearview_mirror;
+  sv_speed_param_.max_v = msquare::TrajectoryOptimizerConfig::GetInstance()
+                              ->param_max_speed_forward;
+  sv_speed_param_.width_wo_rearview_mirror =
+      msquare::VehicleParam::Instance()->width_wo_rearview_mirror;
   sv_speed_param_.length = msquare::VehicleParam::Instance()->length;
-  sv_speed_param_.curv_limit = 1.0 / CarParams::GetInstance()->min_turn_radius * sv_config.min_radius_coeff;
-  bool is_in_slot =false ;
-  const Pose2D & ego_pose = world_model_->get_ego_state().ego_pose;
-  const planning_math::Box2d& slot_box = pbpo.parking_lot->getBox();
-  v_target_ = SvSpeedGenerator::getSpeed(slot_box, ego_pose, planning_result.traj_curvature, sv_speed_param_, is_in_slot);
+  sv_speed_param_.curv_limit = 1.0 / CarParams::GetInstance()->min_turn_radius *
+                               sv_config.min_radius_coeff;
+  bool is_in_slot = false;
+  const Pose2D &ego_pose = world_model_->get_ego_state().ego_pose;
+  const planning_math::Box2d &slot_box = pbpo.parking_lot->getBox();
+  v_target_ = SvSpeedGenerator::getSpeed(slot_box, ego_pose,
+                                         planning_result.traj_curvature,
+                                         sv_speed_param_, is_in_slot);
   MSD_LOG(ERROR, "compute_speed_for_uxe: is_in_slot = %d", is_in_slot);
-  PlanningContext::Instance()->mutable_parking_behavior_planner_output()->has_ever_been_inside_slot = is_in_slot;
+  PlanningContext::Instance()
+      ->mutable_parking_behavior_planner_output()
+      ->has_ever_been_inside_slot = is_in_slot;
   return true;
 }
 
@@ -498,16 +518,17 @@ bool ParkingLongitudinalMotionPlanner::compute_speed_with_leads(
                                   lead_cars.second.v_lon, a_lead_p_2,
                                   v_target_lead_2, a_target);
       v_target_lead = v_target_lead_2;
-      if (lead_cars.second.type != ObjectType::PEDESTRIAN){
-        if (!(lead_cars.second.type == ObjectType::COUPE && !lead_cars.second.is_static
-            && VehicleParam::Instance()->car_type == "C03")) {
+      if (lead_cars.second.type != ObjectType::PEDESTRIAN) {
+        if (!(lead_cars.second.type == ObjectType::COUPE &&
+              !lead_cars.second.is_static &&
+              VehicleParam::Instance()->car_type == "C03")) {
           v_target_lead = std::max(
               VehicleParam::Instance()->velocity_deadzone * 2, v_target_lead);
         }
       }
 
-      //if (lead_cars.second.type != ObjectType::PEDESTRIAN) {
-       // v_target_lead = std::max(
+      // if (lead_cars.second.type != ObjectType::PEDESTRIAN) {
+      //  v_target_lead = std::max(
       //      VehicleParam::Instance()->velocity_deadzone * 2, v_target_lead);
       //}
 
@@ -528,13 +549,14 @@ bool ParkingLongitudinalMotionPlanner::compute_speed_with_leads(
       (void)calc_acc_accel_limits(lead_cars.first.d_rel, d_des, v_ego,
                                   lead_cars.first.v_lon, a_lead_p,
                                   v_target_lead, a_target);
-      //if (lead_cars.first.type != ObjectType::PEDESTRIAN) {
-       // v_target_lead = std::max(
-         //   VehicleParam::Instance()->velocity_deadzone * 2, v_target_lead);
+      // if (lead_cars.first.type != ObjectType::PEDESTRIAN) {
+      //  v_target_lead = std::max(
+      //    VehicleParam::Instance()->velocity_deadzone * 2, v_target_lead);
       //}
-      if (lead_cars.first.type != ObjectType::PEDESTRIAN){
-        if (!(lead_cars.first.type == ObjectType::COUPE && !lead_cars.first.is_static
-             && VehicleParam::Instance()->car_type == "C03")) {
+      if (lead_cars.first.type != ObjectType::PEDESTRIAN) {
+        if (!(lead_cars.first.type == ObjectType::COUPE &&
+              !lead_cars.first.is_static &&
+              VehicleParam::Instance()->car_type == "C03")) {
           v_target_lead = std::max(
               VehicleParam::Instance()->velocity_deadzone * 2, v_target_lead);
         }
@@ -1944,7 +1966,8 @@ bool ParkingLongitudinalMotionPlanner::calc_cruise_accel_limits(
     const double v_ego) {
   a_target_.first = interp(v_ego, _A_CRUISE_MIN_BP, _A_CRUISE_MIN_V);
   a_target_.second = interp(v_ego, _A_CRUISE_MAX_BP, _A_CRUISE_MAX_V);
-  MSD_LOG(ERROR, "a_target_.first: %.3f, a_target_.second: %.3f", a_target_.first, a_target_.second);
+  MSD_LOG(ERROR, "a_target_.first: %.3f, a_target_.second: %.3f",
+          a_target_.first, a_target_.second);
 
   return true;
 }
@@ -2090,11 +2113,11 @@ void ParkingLongitudinalMotionPlanner::set_planning_result(const double v_ego) {
   ++current_v_count_debug_;
   create_planning_debug_string(a_target_);
 
-  bool no_acc_limit = msquare::CarParams::GetInstance()->car_config.sv_config.no_acc_limit;
-  if(no_acc_limit){
+  bool no_acc_limit =
+      msquare::CarParams::GetInstance()->car_config.sv_config.no_acc_limit;
+  if (no_acc_limit) {
     current_v_ = v_target_;
   }
-
 
   planning_result.a_array.push_back(a_target_.first);
   planning_result.a_array.push_back(a_target_.second);
@@ -2130,7 +2153,7 @@ bool ParkingLongitudinalMotionPlanner::create_planning_debug_string(
       debug_info += "apa";
     if (i == 11)
       debug_info += "ux";
-    debug_info += 
+    debug_info +=
         std::to_string(vec_target_speed_debug_.at(i)).substr(0, 5) + ",";
   }
   debug_info += ")}";

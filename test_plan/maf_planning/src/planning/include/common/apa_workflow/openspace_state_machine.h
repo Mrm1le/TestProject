@@ -94,8 +94,10 @@ private:
 
   //[fenix.refactor] end of (former) openspace statemachine callback functions
 private:
-  void runTransitionOpenspaceRunning(hfsm::Machine<openspace_state_machine::Context>::Control &control);
-  void runTransitionOpenspaceRunningSOP(hfsm::Machine<openspace_state_machine::Context>::Control &control);
+  void runTransitionOpenspaceRunning(
+      hfsm::Machine<openspace_state_machine::Context>::Control &control);
+  void runTransitionOpenspaceRunningSOP(
+      hfsm::Machine<openspace_state_machine::Context>::Control &control);
 
 private:
   bool can_follow_plan_traj(double dist_threshold,

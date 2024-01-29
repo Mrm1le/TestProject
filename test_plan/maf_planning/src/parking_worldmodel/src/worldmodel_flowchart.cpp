@@ -21,11 +21,11 @@ void SetPSDFusionTask::on_running() {
     if (ret) {
       (void)worldmodel_pec::WorldModelPEC::getInstance()->feedInitAPAMode(
           frame);
-      if (frame.cmd.value ==
-          maf_system_manager::SystemCmdTypeEnum::PLANNING_HIGHWAY_FUNCTION_MODE) {
-        const auto& mode = frame.highway_info.function_mode.value;
-        if (mode == maf_system_manager::FunctionModeEnum::APA
-           || mode == maf_system_manager::FunctionModeEnum::PNP) {
+      if (frame.cmd.value == maf_system_manager::SystemCmdTypeEnum::
+                                 PLANNING_HIGHWAY_FUNCTION_MODE) {
+        const auto &mode = frame.highway_info.function_mode.value;
+        if (mode == maf_system_manager::FunctionModeEnum::APA ||
+            mode == maf_system_manager::FunctionModeEnum::PNP) {
           reschedule("mode_running");
         } else {
           reschedule("mode_idle");
@@ -51,7 +51,8 @@ void SetPSDFusionTask::on_running() {
       *parkingslot_output_ =
           worldmodel_pec::WorldModelPEC::getInstance()->getParkingSlotOutput();
 
-      auto tmp_parkingslot_output = std::make_shared<maf_worldmodel::FusionAPA>();
+      auto tmp_parkingslot_output =
+          std::make_shared<maf_worldmodel::FusionAPA>();
       *tmp_parkingslot_output = *parkingslot_output_;
       tmp_parkingslot_output->header.seq = ++parking_slot_seq_;
 
@@ -81,8 +82,8 @@ void SetPSDFusionTask::on_running() {
   if (!wireless_charger_report_recv_->empty()) {
     MSD_LOG(ERROR, "wlc %s: %d", __FUNCTION__, __LINE__);
     std::shared_ptr<maf_endpoint::WirelessChargerReport> frame{};
-    auto ret =
-        wireless_charger_report_recv_->fetch_newest_and_clear(frame); // 获取最新帧
+    auto ret = wireless_charger_report_recv_->fetch_newest_and_clear(
+        frame); // 获取最新帧
     if (ret) {
       worldmodel_pec::WorldModelPEC::getInstance()->feedWirelessChargerReport(
           *frame);

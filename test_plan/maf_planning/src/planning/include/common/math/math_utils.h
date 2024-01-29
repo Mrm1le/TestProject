@@ -16,7 +16,8 @@
 namespace msquare {
 namespace planning_math {
 
-// copy from src/planning/include/planner/motion_planner/planner_cubic_spline/fast_math.hpp
+// copy from
+// src/planning/include/planner/motion_planner/planner_cubic_spline/fast_math.hpp
 /**
  * @brief Fast compute pow of 2 without using slow std::pow
  */
@@ -30,8 +31,9 @@ template <typename T> T integer_pow_3(const T &in) { return in * in * in; }
 /**
  * @brief Fast compute sum of square
  */
-template <typename T> T sum_square(const T &x, const T &y) { return x * x + y * y; }
-
+template <typename T> T sum_square(const T &x, const T &y) {
+  return x * x + y * y;
+}
 
 double Sqr(const double x);
 
@@ -238,7 +240,7 @@ void interpsVector(const std::vector<double> &y, const std::vector<double> &x,
 Pose2D calc_projection_point(const Pose2D &point1, const Pose2D &point2,
                              const Pose2D &point);
 Pose2D calc_projection_point2(const Pose2D &point1, const Pose2D &point2,
-                             const Pose2D &point);
+                              const Pose2D &point);
 
 // Cartesian coordinates to Polar coordinates
 std::pair<double, double> Cartesian2Polar(double x, double y);
@@ -249,20 +251,18 @@ inline void trans_rot_2d(double x, double y, double x_offset, double y_offset,
   y_local = y + y_offset;
 }
 
-double getRemainDistance(
-       std::vector<Pose2D>& traj_pose_array_,
-       std::vector<float>& traj_vel_array_,
-       const Pose2D ego_pose);
+double getRemainDistance(std::vector<Pose2D> &traj_pose_array_,
+                         std::vector<float> &traj_vel_array_,
+                         const Pose2D ego_pose);
 
 Eigen::AngleAxisd Quat2AxisAngle(Eigen::Quaterniond q);
 Eigen::Quaterniond EulerZYX2Quat(Eigen::Vector3d &euler_zyx);
 Eigen::AngleAxisd EulerZYX2AxisAngle(Eigen::Vector3d &euler_zyx);
 Eigen::Matrix3d EulerZYX2Rotm(Eigen::Vector3d &euler_zyx);
 Eigen::Matrix2d Angle2Rotm2d(const double &angle);
-double getRemainDistanceControlWay(
-       std::vector<Pose2D>& traj_pose_array_,
-       std::vector<float>& traj_vel_array_,
-       const Pose2D ego_pose);
+double getRemainDistanceControlWay(std::vector<Pose2D> &traj_pose_array_,
+                                   std::vector<float> &traj_vel_array_,
+                                   const Pose2D ego_pose);
 
 /**
  * @brief for local point (lx, ly) in frame (ox, oy, theta), calculate the
@@ -287,8 +287,7 @@ inline void rotate2d(double lx, double ly, double theta, double ox, double oy,
 LineSegment2d tf2d(const Pose2D &local_frame, const LineSegment2d &line);
 Box2d tf2d(const Pose2D &local_frame, const Box2d &box);
 Pose2D tf2d(const Pose2D &local_frame, const Pose2D &pose);
-template <typename T>
-Vec2d tf2d(const T &local_frame, const Vec2d &point) {
+template <typename T> Vec2d tf2d(const T &local_frame, const Vec2d &point) {
   double x_local, y_local;
 
   rotate2d(point.x() - local_frame.x, point.y() - local_frame.y,
@@ -302,7 +301,7 @@ Box2d tf2d_inv(const Pose2D &local_frame, const Box2d &box_local);
 Pose2D tf2d_inv(const Pose2D &local_frame, const Pose2D &frame_local);
 template <typename T>
 Vec2d tf2d_inv(const T &local_frame, const Vec2d &point_local) {
-    double x_global, y_global;
+  double x_global, y_global;
   rotate2d(point_local.x(), point_local.y(), local_frame.theta, local_frame.x,
            local_frame.y, x_global, y_global);
   return Vec2d(x_global, y_global);

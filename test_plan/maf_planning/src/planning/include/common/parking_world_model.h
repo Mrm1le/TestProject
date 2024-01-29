@@ -159,7 +159,8 @@ public:
     return gear_report_;
   }
 
-  const maf_endpoint::WirelessChargerReportData &get_wireless_charger_report_data() const {
+  const maf_endpoint::WirelessChargerReportData &
+  get_wireless_charger_report_data() const {
     return wireless_charger_report_data_;
   }
 
@@ -359,7 +360,8 @@ private:
   void feed_gear_report(const maf_vehicle_status::GearData &gear_report) {
     gear_report_ = gear_report;
   }
-  void feed_wireless_charger_report_data(const maf_endpoint::WirelessChargerReportData &data) {
+  void feed_wireless_charger_report_data(
+      const maf_endpoint::WirelessChargerReportData &data) {
     wireless_charger_report_data_ = data;
   }
   void feed_wheel_speed_report(

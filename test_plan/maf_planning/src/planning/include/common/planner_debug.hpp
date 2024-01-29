@@ -173,8 +173,8 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(IntelligentAvdInfo, count_active_avd,
                                    last_active_avd_state,
                                    last_active_avd_obs_id,
                                    last_active_avd_obs_id_count,
-                                   lc_end_clear_count,
-                                   ego_faster_truck, overlap_lane)
+                                   lc_end_clear_count, ego_faster_truck,
+                                   overlap_lane)
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(LatDebugInfo, sample_s_type)
 

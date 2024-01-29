@@ -395,7 +395,8 @@ bool EnvironmentGenerator::set_channel_of_env() {
     return false;
   }
   if (env_.bottom_points.size() != 6 * param_.virtual_slot_ids.size()) {
-    // std::cout << "wrong number of bottom points in environment!" << std::endl;
+    // std::cout << "wrong number of bottom points in environment!" <<
+    // std::endl;
     return false;
   }
 
@@ -473,13 +474,13 @@ bool EnvironmentGenerator::set_channel_of_env() {
     // if(slot_id > 2) {
     //   continue;
     // }
-    const auto& top_obs = points_in_virtural_top_slots_[slot_id];
-    for(int j = 0; j < top_obs.size(); j++) {
-      const auto& pt = top_obs[j];
+    const auto &top_obs = points_in_virtural_top_slots_[slot_id];
+    for (int j = 0; j < top_obs.size(); j++) {
+      const auto &pt = top_obs[j];
       if (pt.x() < p_left_.x()) {
         continue;
       }
-      if(none_left_top_boundary > pt.y()) {
+      if (none_left_top_boundary > pt.y()) {
         // virtual_index = i;
         // obstacle_index = j;
         none_left_top_boundary = pt.y();
@@ -488,19 +489,21 @@ bool EnvironmentGenerator::set_channel_of_env() {
   }
 
   // if(is_on_left_) {
-  //   const auto& pt = points_in_virtural_top_slots_[param_.virtual_slot_ids.at(virtual_index)][obstacle_index];
+  //   const auto& pt =
+  //   points_in_virtural_top_slots_[param_.virtual_slot_ids.at(virtual_index)][obstacle_index];
   //   planning_math::Vec2d new_p = MirrorInjection(pt);
   //   const auto global_pt = planning_math::tf2d_inv(local_frame_pose_, new_p);
-  //   std::cout << "----> top obs PT:" << global_pt.x() << "  " << global_pt.y() << std::endl;
+  //   std::cout << "----> top obs PT:" << global_pt.x() << "  " <<
+  //   global_pt.y() << std::endl;
   // }
   // std::vector<planning_math::Vec2d> none_left_top_points{};
   // for (const auto &point : env_.top_points) {
   //   if (point.x() > p_left_.x()) {
   //     planning_math::Vec2d new_p = MirrorInjection(point);
-  //     const auto global_pt = planning_math::tf2d_inv(local_frame_pose_, new_p);
-  //     std::cout << "----> P_0 " << point.x() << "  " << point.y() << std::endl;
-  //     std::cout << "----> P_1 " << global_pt.x() << "  " << global_pt.y() << std::endl;
-  //     none_left_top_points.push_back(point);
+  //     const auto global_pt = planning_math::tf2d_inv(local_frame_pose_,
+  //     new_p); std::cout << "----> P_0 " << point.x() << "  " << point.y() <<
+  //     std::endl; std::cout << "----> P_1 " << global_pt.x() << "  " <<
+  //     global_pt.y() << std::endl; none_left_top_points.push_back(point);
   //   }
   // }
   // get_min_y(none_left_top_boundary, none_left_top_points);
@@ -513,13 +516,13 @@ bool EnvironmentGenerator::set_channel_of_env() {
     // if(slot_id > 2) {
     //   continue;
     // }
-    const auto& bottom_obs = points_in_virtural_bottom_slots_[slot_id];
-    for(int j = 0; j < bottom_obs.size(); j++) {
-      const auto& pt = bottom_obs[j];
+    const auto &bottom_obs = points_in_virtural_bottom_slots_[slot_id];
+    for (int j = 0; j < bottom_obs.size(); j++) {
+      const auto &pt = bottom_obs[j];
       if (pt.x() < p_left_.x()) {
         continue;
       }
-      if(pt.y() > none_left_bottom_boundary) {
+      if (pt.y() > none_left_bottom_boundary) {
         // virtual_index = i;
         // obstacle_index = j;
         none_left_bottom_boundary = pt.y();
@@ -527,19 +530,22 @@ bool EnvironmentGenerator::set_channel_of_env() {
     }
   }
   // if(is_on_left_) {
-  //   const auto& pt = points_in_virtural_bottom_slots_[param_.virtual_slot_ids.at(virtual_index)][obstacle_index];
-  //   std::cout << "the virtual_index" << virtual_index << " j " << obstacle_index << std::endl;
-  //   planning_math::Vec2d new_p = MirrorInjection(pt);
-  //   const auto global_pt = planning_math::tf2d_inv(local_frame_pose_, new_p);
-  //   std::cout << "----> bottom obs PT:" << global_pt.x() << "  " << global_pt.y() << std::endl;
+  //   const auto& pt =
+  //   points_in_virtural_bottom_slots_[param_.virtual_slot_ids.at(virtual_index)][obstacle_index];
+  //   std::cout << "the virtual_index" << virtual_index << " j " <<
+  //   obstacle_index << std::endl; planning_math::Vec2d new_p =
+  //   MirrorInjection(pt); const auto global_pt =
+  //   planning_math::tf2d_inv(local_frame_pose_, new_p); std::cout << "---->
+  //   bottom obs PT:" << global_pt.x() << "  " << global_pt.y() << std::endl;
   // }
   // std::vector<planning_math::Vec2d> none_left_bottom_points{};
   // for (const auto &point : env_.bottom_points) {
   //   if (point.x() > p_left_.x()) {
   //     planning_math::Vec2d new_p = MirrorInjection(point);
-  //     const auto global_pt = planning_math::tf2d_inv(local_frame_pose_, new_p);
-  //     // std::cout << "----> P" << global_pt.x() << "  " << global_pt.y() << std::endl;
-  //     none_left_bottom_points.push_back(point);
+  //     const auto global_pt = planning_math::tf2d_inv(local_frame_pose_,
+  //     new_p);
+  //     // std::cout << "----> P" << global_pt.x() << "  " << global_pt.y() <<
+  //     std::endl; none_left_bottom_points.push_back(point);
   //   }
   // }
   // get_max_y(none_left_bottom_boundary, none_left_bottom_points);

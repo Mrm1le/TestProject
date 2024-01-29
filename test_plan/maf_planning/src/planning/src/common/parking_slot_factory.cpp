@@ -1,9 +1,9 @@
 #include <cstdint>
 
-#include "common/parking_slot_factory.h"
 #include "common/angle_parking_slot.h"
 #include "common/parallel_parking_slot.h"
 #include "common/parking_lot.h"
+#include "common/parking_slot_factory.h"
 #include "common/planning_context.h"
 
 namespace msquare {
@@ -26,12 +26,14 @@ std::shared_ptr<ParkingSlotInterface> ParkingSlotFactory::create(
   corners_ = corners;
 
   std::ostringstream slot_debug;
-  for(const auto& cpt: corners_){
-    slot_debug<<cpt.x<<" "<<cpt.y<<" ";
+  for (const auto &cpt : corners_) {
+    slot_debug << cpt.x << " " << cpt.y << " ";
   }
-  slot_debug<<initial_pose.x<<" "<<initial_pose.y<<" "<< initial_pose.theta;
+  slot_debug << initial_pose.x << " " << initial_pose.y << " "
+             << initial_pose.theta;
   MSD_LOG(ERROR, "ParkingSlotFactory slot_debug=%s", slot_debug.str().c_str());
-  MSD_LOG(ERROR, "initial_pose x = %.3f, y = %.3f theta = %.3f",initial_pose.x, initial_pose.y, initial_pose.theta);
+  MSD_LOG(ERROR, "initial_pose x = %.3f, y = %.3f theta = %.3f", initial_pose.x,
+          initial_pose.y, initial_pose.theta);
 
   checkCorners();
   initBox();

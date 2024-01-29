@@ -11,5 +11,6 @@ struct MSDPlanningTimeConfig {
   mtime::MTimeConfig time_config;
 };
 
-MSD_API void MSDPlanning_set_time_config(const MSDPlanningTimeConfig &config, mtime::MTimeClockFeeder &feeder);
+MSD_API void MSDPlanning_set_time_config(const MSDPlanningTimeConfig &config,
+                                         mtime::MTimeClockFeeder &feeder);
 } // namespace msd_planning

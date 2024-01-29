@@ -6,7 +6,8 @@
 
 namespace msd_planning {
 
-void MSDPlanning_set_time_config(const MSDPlanningTimeConfig &config, mtime::MTimeClockFeeder &feeder) {
+void MSDPlanning_set_time_config(const MSDPlanningTimeConfig &config,
+                                 mtime::MTimeClockFeeder &feeder) {
 
   constexpr auto PARAM_KEY_TIMER = "timer";
   constexpr auto PARAM_KEY_TIMELINE_TYPE = "timeline_type";

@@ -40,9 +40,10 @@ void RoadState::None::callback(Control &control, FsmContext &context) {
   double initial_protect_time = 0.2;
   double curr_time = get_system_time();
   // if target lane invalid over 2.0, clear lc request
-  double KLaneProtectTime = ConfigurationContext::Instance()
-            ->planner_config()
-            .lateral_behavior_planner_config.time_lc_wait_limit;
+  double KLaneProtectTime =
+      ConfigurationContext::Instance()
+          ->planner_config()
+          .lateral_behavior_planner_config.time_lc_wait_limit;
   constexpr double KKeepToWaitDelayTime = 0.8;
   constexpr double KReadyMaxTime = 0.5;
   if (lc_request == NO_CHANGE)
@@ -525,9 +526,10 @@ void RoadState::LC::process_wait(Control &control, FsmContext &context) {
     delay_time = 0.0;
   }
   constexpr double KWaitToKeepDelayTime = 5.0;
-  double KWaitToKeepDelayTimeHard = ConfigurationContext::Instance()
-            ->planner_config()
-            .lateral_behavior_planner_config.time_lc_wait_limit;
+  double KWaitToKeepDelayTimeHard =
+      ConfigurationContext::Instance()
+          ->planner_config()
+          .lateral_behavior_planner_config.time_lc_wait_limit;
   double wait_to_keep_protect_time = KWaitToKeepDelayTime;
   double wait_to_cancel_protect_time = KWaitToKeepDelayTimeHard;
   if (lc_req_mgr.act_request_source() == "avoid_int_cutin_obj") {

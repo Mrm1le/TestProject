@@ -65,7 +65,7 @@ public:
                           : PlanningConfig::Instance()
                                 ->config_files()
                                 .openspace_apoa_parallel_planner_config_file;
-    }
+      }
     } else if (status_type == StatusType::RPA_STRAIGHT) {
       config_file = PlanningConfig::Instance()
                         ->config_files()
@@ -107,9 +107,11 @@ public:
             car_type.c_str(), architecture.c_str());
 
     rewriteKino(status_type, parking_slot_type);
-    MSD_LOG(ERROR, "vel_backward:%f, vel_forward:%f",   
-      msquare::TrajectoryOptimizerConfig::GetInstance()->param_max_speed_reverse,
-      msquare::TrajectoryOptimizerConfig::GetInstance()->param_max_speed_forward);
+    MSD_LOG(ERROR, "vel_backward:%f, vel_forward:%f",
+            msquare::TrajectoryOptimizerConfig::GetInstance()
+                ->param_max_speed_reverse,
+            msquare::TrajectoryOptimizerConfig::GetInstance()
+                ->param_max_speed_forward);
 
     return true;
   }
@@ -239,36 +241,47 @@ public:
     return true;
   }
 
-static void rewriteKino(StatusType status_type, uint8_t parking_slot_type){
-  msquare::KinoDynamicConfig kino_config;
+  static void rewriteKino(StatusType status_type, uint8_t parking_slot_type) {
+    msquare::KinoDynamicConfig kino_config;
     if (status_type == StatusType::APA) {
-        if(parking_slot_type == ParkingSlotType::PARALLEL){
-            kino_config = CarParams::GetInstance()->car_config.kino_config.apa_parallel;
-        }else if(parking_slot_type == ParkingSlotType::PERPENDICULAR){
-            kino_config = CarParams::GetInstance()->car_config.kino_config.apa_vertical;
-        }else if(parking_slot_type == ParkingSlotType::OBLIQUE){
-            kino_config = CarParams::GetInstance()->car_config.kino_config.apa_oblique;
-        }else{
-            kino_config = CarParams::GetInstance()->car_config.kino_config.apa_vertical;
-        }
+      if (parking_slot_type == ParkingSlotType::PARALLEL) {
+        kino_config =
+            CarParams::GetInstance()->car_config.kino_config.apa_parallel;
+      } else if (parking_slot_type == ParkingSlotType::PERPENDICULAR) {
+        kino_config =
+            CarParams::GetInstance()->car_config.kino_config.apa_vertical;
+      } else if (parking_slot_type == ParkingSlotType::OBLIQUE) {
+        kino_config =
+            CarParams::GetInstance()->car_config.kino_config.apa_oblique;
+      } else {
+        kino_config =
+            CarParams::GetInstance()->car_config.kino_config.apa_vertical;
+      }
     } else if (status_type == StatusType::APOA) {
-        if(parking_slot_type == ParkingSlotType::PARALLEL){
-            kino_config = CarParams::GetInstance()->car_config.kino_config.apoa_parallel;
-        }else if(parking_slot_type == ParkingSlotType::PERPENDICULAR){
-            kino_config = CarParams::GetInstance()->car_config.kino_config.apoa_vertical;
-        }else if(parking_slot_type == ParkingSlotType::OBLIQUE){
-            kino_config = CarParams::GetInstance()->car_config.kino_config.apoa_oblique;
-        }else{
-            kino_config = CarParams::GetInstance()->car_config.kino_config.apoa_vertical;
-        }
+      if (parking_slot_type == ParkingSlotType::PARALLEL) {
+        kino_config =
+            CarParams::GetInstance()->car_config.kino_config.apoa_parallel;
+      } else if (parking_slot_type == ParkingSlotType::PERPENDICULAR) {
+        kino_config =
+            CarParams::GetInstance()->car_config.kino_config.apoa_vertical;
+      } else if (parking_slot_type == ParkingSlotType::OBLIQUE) {
+        kino_config =
+            CarParams::GetInstance()->car_config.kino_config.apoa_oblique;
+      } else {
+        kino_config =
+            CarParams::GetInstance()->car_config.kino_config.apoa_vertical;
+      }
     } else if (status_type == StatusType::RPA_STRAIGHT) {
-        kino_config = CarParams::GetInstance()->car_config.kino_config.rpa;
+      kino_config = CarParams::GetInstance()->car_config.kino_config.rpa;
     } else {
-        kino_config = CarParams::GetInstance()->car_config.kino_config.apa_vertical;
+      kino_config =
+          CarParams::GetInstance()->car_config.kino_config.apa_vertical;
     }
-    msquare::TrajectoryOptimizerConfig::GetInstance()->param_max_speed_reverse = kino_config.vel_backward;
-    msquare::TrajectoryOptimizerConfig::GetInstance()->param_max_speed_forward = kino_config.vel_forward;
-}
+    msquare::TrajectoryOptimizerConfig::GetInstance()->param_max_speed_reverse =
+        kino_config.vel_backward;
+    msquare::TrajectoryOptimizerConfig::GetInstance()->param_max_speed_forward =
+        kino_config.vel_forward;
+  }
 };
 
 } // namespace parking

@@ -20,7 +20,6 @@
 #include "planner/motion_planner/speed_planner_ceres/speed_planner_constants.hpp"
 #include "planning/common/inner_snapshot.h"
 #include "planning_task_interface.h"
-#include "common/hmi/hmi_manager.h"
 
 #ifdef ENABLE_XAVIER_SAFETY_MODEL
 #include <cuda_runtime.h>
@@ -139,7 +138,7 @@ public:
     } else {
       _runner = std::bind(&PlanningTask::_run_in_reality, this);
     }
-    
+
     hmi_manager_ = std::make_unique<HmiManager>();
   }
 
@@ -170,7 +169,7 @@ public:
   void _run_in_simulation() {
     _run_in_reality();
     if (module_control_cmd_request_.running_mode.value !=
-            maf_system_manager::RunningModeEnum::PILOT) {
+        maf_system_manager::RunningModeEnum::PILOT) {
       return;
     }
     std::string ss = "";
@@ -864,8 +863,9 @@ private:
         ego_pose_timestamp_us_ = mla_localization->meta.timestamp_us;
         last_feed_time_[FEED_EGO_VEL] = current_time;
 
-        // auto ego_pose_manager = ddp::DdpContext::Instance()->ego_pose_manager();
-        // if (ego_pose_manager != nullptr) {
+        // auto ego_pose_manager =
+        // ddp::DdpContext::Instance()->ego_pose_manager(); if (ego_pose_manager
+        // != nullptr) {
         //   ego_pose_manager->feed_ego_velocity(ego_pose_timestamp_us_ / 1e6,
         //                                       mla_localization->velocity);
         // }
@@ -921,8 +921,9 @@ private:
         MSD_LOG(INFO, "ENU_DEBUG,enu.yaw:%3.5f",
                 mla_localization->orientation.euler_local.yaw);
 
-        // auto ego_pose_manager = ddp::DdpContext::Instance()->ego_pose_manager();
-        // if (ego_pose_manager != nullptr) {
+        // auto ego_pose_manager =
+        // ddp::DdpContext::Instance()->ego_pose_manager(); if (ego_pose_manager
+        // != nullptr) {
         //   ego_pose_manager->feed_ego_position(
         //       ego_pose_timestamp_us_ / 1e6, location_enu,
         //       mla_localization->orientation.euler_local.yaw);
@@ -3045,16 +3046,15 @@ private:
     info["longitudinal_planning_info"] = longitudinal_planning_info;
 
     auto baselin_info =
-          world_model_->get_baseline_info(PlanningContext::Instance()
-                                              ->planning_status()
-                                              .lane_status.target_lane_id);
+        world_model_->get_baseline_info(PlanningContext::Instance()
+                                            ->planning_status()
+                                            .lane_status.target_lane_id);
 
     hmi_manager_->Update(world_model_, baselin_info);
-    bool need_acc_takeover = 
+    bool need_acc_takeover =
         speed_planner_input.acc_takeover_info.need_acc_takeover;
     mjson::Json::object acc_safety_info;
-    acc_safety_info["need_takeover"] =
-        mjson::Json(need_acc_takeover);
+    acc_safety_info["need_takeover"] = mjson::Json(need_acc_takeover);
     info["acc_safety_info"] = acc_safety_info;
 
     // cipv_lost

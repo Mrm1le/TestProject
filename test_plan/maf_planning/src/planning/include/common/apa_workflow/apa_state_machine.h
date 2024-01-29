@@ -13,14 +13,13 @@
 #include "common/parking_slot_manager.h"
 #include "planner/behavior_planner/deciders/collision_checker.h"
 
-#include "openspace_state_machine.h"
 #include "apa_behavior_calculator_parkin.h"
 #include "apa_behavior_calculator_parkout.h"
 #include "apa_behavior_decider_parkin.h"
-#include "planner/motion_planner/openspace_motion_planner/path_sampler.h"
+#include "openspace_state_machine.h"
 #include "planner/behavior_planner/parking_longitudinal_behavior_planner.h"
+#include "planner/motion_planner/openspace_motion_planner/path_sampler.h"
 #include "planner/motion_planner/parking_longitudinal_motion_planner.h"
-
 
 // simpify the definition of State with callback
 #ifndef DEFINE_STATE_CLASS
@@ -209,7 +208,6 @@ private:
   bool is_request_to_ego_slot();
   std::string status_text;
 
-
   StatusType current_state_ = StatusType::WAIT;
   StatusType next_state_ = StatusType::WAIT;
   void init();
@@ -270,7 +268,7 @@ private:
   };
 
   StateParkingConfig state_parking_cfg_;
-  
+
   //[fenix.refactor] dynamic planning :TODO: move to somewhere else
   struct DynamicPlanSimpleMpcResult {
     bool traj_success;
@@ -279,15 +277,14 @@ private:
 
   DynamicPlanSimpleMpcResult
   dynamic_planning_simple_mpc(const Pose2D &ego_pose,
-                              const Pose2D &target_pose_lot, 
-                              std::vector<TrajectoryPoint>& curve_traj);
+                              const Pose2D &target_pose_lot,
+                              std::vector<TrajectoryPoint> &curve_traj);
 
-  //parkout behavior functions
-  //TODO: move to parkout behavior planner
+  // parkout behavior functions
+  // TODO: move to parkout behavior planner
   bool manualSelectParkoutDirection(uint32_t direction);
   bool autoSelectParkOutDirection();
   bool setParkOutInitAndTarget();
-
 };
 
 } // namespace parking

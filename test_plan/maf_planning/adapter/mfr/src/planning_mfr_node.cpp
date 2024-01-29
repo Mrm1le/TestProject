@@ -200,7 +200,6 @@ public:
     pub_planning_proto_debug_topic_ =
         param_reader.get<std::string>("pub_planning_proto_debug_topic").c_str();
 
-
     // for wm
     sub_perception_fusion_topic_ =
         param_reader.get<std::string>("sub_perception_fusion_topic").c_str();
@@ -249,7 +248,7 @@ public:
     pub_parking_wm_node_status_topic_ =
         param_reader.get<std::string>("pub_parking_wm_node_status_topic")
             .c_str();
-    
+
     pub_node_status_apa_planning_topic_ =
         param_reader.get<std::string>("pub_node_status_apa_planning_topic")
             .c_str();
@@ -719,10 +718,9 @@ public:
 
       if (HAS_MSG_MODE(sub_simulation_query_mode_,
                        MSG_MODE_MFR_SOCKET | MSG_MODE_MFR_SHM)) {
-        LOGI("subscribe mfr socket %s",
-             sub_simulation_query_topic_.c_str());
-        subscribe_mfr_socket_simulation_query(
-            sub_simulation_query_mode_, communication_manager);
+        LOGI("subscribe mfr socket %s", sub_simulation_query_topic_.c_str());
+        subscribe_mfr_socket_simulation_query(sub_simulation_query_mode_,
+                                              communication_manager);
       }
 
       if (HAS_MSG_MODE(sub_parking_wm_control_cmd_request_mode_,
@@ -1095,8 +1093,7 @@ public:
       } else if (info.topic_name == sub_fusion_parking_slot_topic_) {
         // parking worldmodel
         fusion_parking_slot_callback();
-      } else if (info.topic_name ==
-                  sub_parking_wm_control_cmd_request_topic_) {
+      } else if (info.topic_name == sub_parking_wm_control_cmd_request_topic_) {
         parking_wm_control_cmd_request_callback();
       } else if (info.topic_name == sub_parking_wm_request_topic_) {
         parking_wm_request_callback();
@@ -1113,7 +1110,7 @@ public:
         for (auto item : mfr_subscriber_map_) {
           (void)item.second->get_monitor_result(hz, delay);
           LOGD("monitor subscriber topic=%s hz=%.2f delay=%.2fms",
-                item.first.c_str(), hz, delay / 1e6);
+               item.first.c_str(), hz, delay / 1e6);
         }
       }
     }
@@ -1560,27 +1557,29 @@ private:
 
     // for wm
     auto &pub_map = mfr_publisher_map_[pub_map_topic_];
-    planning_engine_->set_processed_map_callback([&pub_map,
-                                                  this](msquare::ProcessedMapPtr
-                                                            processed_map) {
-      if (HAS_MSG_MODE(pub_map_mode_, MSG_MODE_MFR_SOCKET | MSG_MODE_MFR_SHM)) {
-        LOGD("publish mfr %s", pub_map_topic_.c_str());
-        mmessage::worldmodel_mfrmsgs::MFRMessageProcessedMap
-            processed_map_msg{};
+    planning_engine_->set_processed_map_callback(
+        [&pub_map, this](msquare::ProcessedMapPtr processed_map) {
+          if (HAS_MSG_MODE(pub_map_mode_,
+                           MSG_MODE_MFR_SOCKET | MSG_MODE_MFR_SHM)) {
+            LOGD("publish mfr %s", pub_map_topic_.c_str());
+            mmessage::worldmodel_mfrmsgs::MFRMessageProcessedMap
+                processed_map_msg{};
 
-        processed_map_msg.get_internal_data()->set_original_data(processed_map);
-        processed_map_msg.get_internal_data()->set_serialize_preprocessor(
-            [&processed_map,         // parasoft-suppress AUTOSAR-A5_1_4
-             &processed_map_msg]() { // parasoft-suppress AUTOSAR-A5_1_4
-              mfr_cpp_struct_convert::to_mfr(*processed_map, processed_map_msg);
-            });
-        pub_map->publish(processed_map_msg);
+            processed_map_msg.get_internal_data()->set_original_data(
+                processed_map);
+            processed_map_msg.get_internal_data()->set_serialize_preprocessor(
+                [&processed_map,         // parasoft-suppress AUTOSAR-A5_1_4
+                 &processed_map_msg]() { // parasoft-suppress AUTOSAR-A5_1_4
+                  mfr_cpp_struct_convert::to_mfr(*processed_map,
+                                                 processed_map_msg);
+                });
+            pub_map->publish(processed_map_msg);
 
-        if (internal_feed_) {
-          planning_engine_->feed_worldmodel_map(processed_map);
-        }
-      }
-    });
+            if (internal_feed_) {
+              planning_engine_->feed_worldmodel_map(processed_map);
+            }
+          }
+        });
 
     auto &pub_object = mfr_publisher_map_[pub_object_topic_];
     planning_engine_->set_objects_interface_callback(
@@ -1731,7 +1730,7 @@ private:
           mfr_subscriber_map_[sub_simulation_query_topic_]
               ->pop<mmessage::std_mfrmsgs::MFRMessageHeader>();
       auto query = mfr_simulation_query.get_internal_data()
-                         ->get_original_data<maf_std::Header>();
+                       ->get_original_data<maf_std::Header>();
       if (query == nullptr) {
         query = mmemory::MFMakeShared<maf_std::Header>();
         mfr_cpp_struct_convert::from_mfr(mfr_simulation_query, *query);
@@ -1771,7 +1770,7 @@ private:
         pause_subscribers();
         pause_publishers();
       } else if (request->module_control_cmd.value ==
-                  maf_system_manager::ModuleControlCmdEnum::RESUME) {
+                 maf_system_manager::ModuleControlCmdEnum::RESUME) {
         run_planning_engine();
         resume_subscribers();
         resume_publishers();

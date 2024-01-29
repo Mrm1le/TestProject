@@ -18,7 +18,8 @@ BaseOpenspaceDecider::BaseOpenspaceDecider(
 void BaseOpenspaceDecider::feedOutput() {
   auto output = PlanningContext::Instance()->mutable_openspace_decider_output();
   auto apa_meta_state = PlanningContext::Instance()
-                                   ->parking_behavior_planner_output().apa_meta_state;
+                            ->parking_behavior_planner_output()
+                            .apa_meta_state;
   output->init_state = ego_state_;
   output->target_state = target_state_;
   output->map_boundary = map_boundary_;

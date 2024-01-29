@@ -88,7 +88,9 @@ inline ObjectType from_perception_fusion_type(
       case maf_perception_interface::VRUTypeEnum::VRU_TYPE_TRICYCLIST: {
         dst = ObjectType::OFO;
       } break;
-      default: { dst = ObjectType::OFO; } break;
+      default: {
+        dst = ObjectType::OFO;
+      } break;
       }
     } break;
     case maf_perception_interface::ObjectTypePropertyEnum::
