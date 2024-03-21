@@ -807,9 +807,9 @@ void list<_Tp, _Alloc>::sort()
     while (!empty()) {
       __carry.splice(__carry.begin(), *this, begin());
       int __i = 0;
-      while(__i < __fill && !__counter[__i].empty()) {
-        __counter[__i].merge(__carry);
-        __carry.swap(__counter[__i++]);
+      while(__i < __fill && !__counter[__i].empty()) { // 检查 __carry 是否可以与 __counter 数组中的某个非空链表进行合并
+        __counter[__i].merge(__carry); //_carry 合并到 __counter[__i] 中
+        __carry.swap(__counter[__i++]); // 交换它们的内容，以便下一次循环中能继续操作
       }
       __carry.swap(__counter[__i]);         
       if (__i == __fill) ++__fill;
